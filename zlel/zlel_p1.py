@@ -1,59 +1,159 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sat Feb 22 12:52:08 2025
+.. module:: zlel_main.py
+    :synopsis:
 
-@author: ALVARO
+.. moduleauthor:: YOUR NAME AND E-MAIL
+
+
 """
 
 import numpy as np
+import sys
 
-def leer_circuito(archivo):
-    """Lee un archivo .cir y extrae sus datos"""
-    cir_el, cir_nd, cir_val, cir_ctr = [], [], [], []
-    
-    with open(archivo, 'r') as f:
-        for linea in f:
-            partes = linea.split()
-            if len(partes) < 5:
-                continue  # Ignorar líneas vacías o incompletas
-            
-            cir_el.append(partes[0])  # Nombre del elemento
-            cir_nd.append([int(n) for n in partes[1:5]])  # Nodos
-            cir_val.append([float(v) for v in partes[5:8]])  # Valores
-            cir_ctr.append(partes[8] if len(partes) > 8 else "0")  # Control
-    
-    return np.array(cir_el), np.array(cir_nd), np.array(cir_val), np.array(cir_ctr)
 
-def obtener_nodos(cir_nd):
-    """Devuelve la lista única de nodos en el circuito"""
-    nodos = np.unique(cir_nd)
-    return nodos[nodos != 0]  # Excluir nodo de referencia 0
+def cir_parser(filename):
+    """
+        This function takes a .cir test circuit and parse it into
+        4 matices.
+        If the file has not the proper dimensions it warns and exit.
 
-def construir_matriz_incidencia(cir_el, cir_nd):
-    """Genera la matriz de incidencia Aa"""
-    nodos = obtener_nodos(cir_nd)
-    Aa = np.zeros((len(nodos), len(cir_el)))
+    Args:
+        filename: string with the name of the file
 
-    for j, (elem, nodos_elem) in enumerate(zip(cir_el, cir_nd)):
-        if nodos_elem[0] in nodos:
-            Aa[np.where(nodos == nodos_elem[0]), j] = 1
-        if nodos_elem[1] in nodos:
-            Aa[np.where(nodos == nodos_elem[1]), j] = -1
-    
-    return Aa
+    Returns:
+        | cir_el: np array of strings with the elements to parse. size(1,b)
+        | cir_nd: np array with the nodes to the circuit. size(b,4)
+        | cir_val: np array with the values of the elements. size(b,3)
+        | cir_ctrl: np array of strings with the element which branch
+        | controls the controlled sources. size(1,b)
 
-def validar_circuito(cir_nd):
-    """Comprueba errores en el circuito"""
-    if 0 not in cir_nd:
-        print("Error: No hay nodo de referencia (0).")
+    Rises:
+        SystemExit
+
+    """
+    try:
+        cir = np.array(np.loadtxt(filename, dtype=str))
+    except ValueError:
+        sys.exit("File corrupted: .cir size is incorrect.")
+
+    # numpy usefull exmaples
+    print("================ cir ==========")
+    print(cir)
+    print("\n======== a = np.array (cir[:,1], dtype = int) ==========")
+    a = np.array(cir[:, 1], dtype=int)
+    print(a)
+    print("\n======== a = np.append(a,300) ==========")
+    a = np.append(a, 300)
+    print(a)
+    print("\n======== b = a[a > 3] ==========")
+    b = a[a > 3]
+    print(b)
+    print("\n======== c = np.unique(a) ==========")
+    c = np.unique(a)
+    print(c)
+    print("\n======== d = np.flatnonzero(a != 0) ==========")
+    d = np.flatnonzero(a != 0)
+    print(d)
+    print("\n======== e = np.flatnonzero(a == 0) ==========")
+    e = np.flatnonzero(a == 0)
+    print(e)
+    print("\n======== f = np.array(cir[:, 1:2]) ==========")
+    f = np.array(cir[:, 1:2])
+    print(f)
+    print("\n======== g = np.array(cir[2:4, :]) ==========")
+    g = np.array(cir[2:4, :])
+    print(g)
+    print("\n======== h = np.empty([0], dtype=int) ==========")
+    h = np.empty([0], dtype=int)
+    print(h)
+    print("\n======== i = np.append(h, 1) ==========")
+    i = np.append(h, 1)
+    print(i)
+    print("\n======== i[0] = 2 ==========")
+    i[0] = 2
+    print(i)
+    print("\n======== j = np.empty([0], dtype=str ==========")
+    j = np.empty([0], dtype=str)
+    print(j)
+    print("\n======== k = np.append(j, \"123456\") ==========")
+    k = np.append(j, "123456")
+    print(k)
+    print("\n======== k[0] = \"987654321\" ==========")
+    k[0] = "987654321"
+    print(k)
+    ''' https://www.geeksforgeeks.org/modify-numpy-array-to-store-an-arbitrary-length-string/
+    The dtype of any numpy array containing string values is the maximum
+    length of any string present in the array. Once set, it will only be able
+    to store new string having length not more than the maximum length at the
+    time of the creation. If we try to reassign some another string value
+    having length greater than the maximum length of the existing elements,
+    it simply discards all the values beyond the maximum length.'''
+
+    # THIS FUNCTION IS NOT COMPLETE
+
+
+def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
+    """ Prints the info of the circuit:
+        |     1.- Elements info
+        |     2.- Node info
+        |     3.- Branch info
+        |     4.- Variable info
+    Args:
+        | cir_el: reshaped cir_el
+        | cir_nd: reshaped cir_nd. Now it will be a(b,2) matrix
+        | b: # of branches
+        | n: # number of nodes
+        | nodes: an array with the circuit nodes sorted
+        | el_num:  the # of elements
+
+    """
+    # Element info
+    print(str(el_num) + ' Elements')
+    # Node info
+    print(str(n) + ' Different nodes: ' +
+          str(nodes))
+    # Branch info
+    print("\n" + str(b) + " Branches: ")
+
+    for i in range(1, b+1):
+        indent = 12  # Number of blanks for indent
+        string = ("\t" + str(i) + ". branch:\t" +
+                  str(cir_el[i-1]) + "i".rjust(indent  - len(cir_el[i-1])) +
+                  str(i) + "v".rjust(indent  - len(str(i))) + str(i) +
+                  " = e" + str(cir_nd[i-1, 0]) +
+                  " - e" + str(cir_nd[i-1, 1]))
+        print(string)
+
+    # Variable info
+    print("\n" + str(2*b + (n-1)) + " variables: ")
+    # print all the nodes but the first(0 because is sorted)
+    for i in nodes[1:]:
+        print("e"+str(i)+", ", end="", flush=True)
+    for i in range(b):
+        print("i"+str(i+1)+", ", end="", flush=True)
+    # print all the branches but the last to close it properly
+    # It works because the minuimum amount of branches in a circuit must be 2.
+    for i in range(b-1):
+        print("v"+str(i+1)+", ", end="", flush=True)
+    print("v"+str(b))
+
+    # IT IS RECOMMENDED TO USE THIS FUNCTION WITH NO MODIFICATION.
+
+
+"""
+https://stackoverflow.com/questions/419163/what-does-if-name-main-do
+https://stackoverflow.com/questions/19747371/
+python-exit-commands-why-so-many-and-when-should-each-be-used
+"""
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
     else:
-        print("Circuito válido.")
+        filename = "../cirs/examples/0_zlel_V_R_Q.cir"
+    # Parse the circuit
+    # [cir_el,cir_nd,cir_val,cir_ctr]=cir_parser(filename)
+    cir_parser(filename)
 
-# MAIN
-archivo = "circuito.cir"  # Nombre del archivo de entrada
-cir_el, cir_nd, cir_val, cir_ctr = leer_circuito(archivo)
-print("Elementos:", cir_el)
-print("Nodos:", obtener_nodos(cir_nd))
-Aa = construir_matriz_incidencia(cir_el, cir_nd)
-print("Matriz de incidencia:\n", Aa)
-validar_circuito(cir_nd)
+#    THIS FUNCTION IS NOT COMPLETE
