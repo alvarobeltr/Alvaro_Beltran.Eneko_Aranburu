@@ -181,7 +181,9 @@ def getInzidentziaMatrix(n, b, cir_nd2):
 
 
 def getMurriztutakoIntzidentziaMatrix(Aa, n):
-    return np.array(Aa[1:n, :])      
+    return np.array(Aa[1:n, :])
+
+
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
