@@ -184,6 +184,10 @@ def getMurriztutakoIntzidentziaMatrix(Aa, n):
     return np.array(Aa[1:n, :])
 
 
+def Erroreak(cir):
+    pass
+
+
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
