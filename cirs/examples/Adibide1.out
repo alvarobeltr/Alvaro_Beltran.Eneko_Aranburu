@@ -1,0 +1,68 @@
+
+**** 02/25/25 15:00:47 *********** Evaluation PSpice (Nov 1999) **************
+
+ Circuito 1
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+v1 1 0 10
+r1 1 2 2k
+r2 2 0 3k
+r3 2 3 5k
+i2 3 4 2m
+r4 4 0 1k
+.op
+.end
+
+**** 02/25/25 15:00:47 *********** Evaluation PSpice (Nov 1999) **************
+
+ Circuito 1
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(    1)   10.0000  (    2)    3.6000  (    3)   -6.4000  (    4)    2.0000  
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    v1          -3.200E-03
+
+    TOTAL POWER DISSIPATION   3.20E-02  WATTS
+
+
+**** 02/25/25 15:00:47 *********** Evaluation PSpice (Nov 1999) **************
+
+ Circuito 1
+
+
+ ****     OPERATING POINT INFORMATION      TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+
+          JOB CONCLUDED
+
+          TOTAL JOB TIME             .05
+

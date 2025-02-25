@@ -4,7 +4,7 @@
 .. module:: zlel_main.py
     :synopsis:
 
-.. moduleauthor:: YOUR NAME AND E-MAIL
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
 
 
 """

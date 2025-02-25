@@ -1,0 +1,9 @@
+Circuito 1
+v1 1 0 10
+r1 1 2 2k
+r2 2 0 3k
+r3 2 3 5k
+i2 3 4 2m
+r4 4 0 1k
+.op
+.end
