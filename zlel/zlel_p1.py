@@ -163,9 +163,25 @@ def getElementNumber(cir_el):
     return np.size(cir_el)
 
 
-def getInzidentziaMatrix(cir_nd):
+def getInzidentziaMatrix(n, b, cir_nd2):
+    Aa = np.zeros((n, b), dtype=int)  # Crear matriz de ceros de tamaño n x b
+    nodes = getNodes(cir_nd2)  # Obtener nodos únicos
     
-    pass
+    for col, branch in enumerate(cir_nd2):  # Iterar sobre cada rama
+        node_start, node_end = branch[0], branch[1]  # Supongamos que los nodos están en las 2 primeras posiciones
+        
+        if node_start in nodes:
+            row_start = np.where(nodes == node_start)[0][0]  # Encontrar índice de nodo en la lista de nodos
+            Aa[row_start, col] = 1  # Nodo de inicio
+        
+        if node_end in nodes:
+            row_end = np.where(nodes == node_end)[0][0]  # Encontrar índice del nodo final
+            Aa[row_end, col] = -1  # Nodo de destino    
+    return Aa
+
+
+def getMurriztutakoIntzidentziaMatrix(Aa, n):
+    return np.array(Aa[1:n, :])      
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
