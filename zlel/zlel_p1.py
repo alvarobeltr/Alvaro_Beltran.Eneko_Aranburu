@@ -35,6 +35,7 @@ def cir_parser(filename):
     """
     try:
         cir = np.array(np.loadtxt(filename, dtype=str))
+        cir = np.delete(cir, -1, axis=0)
     except ValueError:
         sys.exit("File corrupted: .cir size is incorrect.")
 
@@ -43,6 +44,7 @@ def cir_parser(filename):
     print(cir)
     print("\n======== a = np.array (cir[:,1], dtype = int) ==========")
     a = np.array(cir[:, 1], dtype=int)
+    #a = np.array(cir[:, 1:3], dtype=int)
     print(a)
     print("\n======== a = np.append(a,300) ==========")
     a = np.append(a, 300)
@@ -83,6 +85,7 @@ def cir_parser(filename):
     print("\n======== k[0] = \"987654321\" ==========")
     k[0] = "987654321"
     print(k)
+
     ''' https://www.geeksforgeeks.org/modify-numpy-array-to-store-an-arbitrary-length-string/
     The dtype of any numpy array containing string values is the maximum
     length of any string present in the array. Once set, it will only be able
@@ -90,8 +93,79 @@ def cir_parser(filename):
     time of the creation. If we try to reassign some another string value
     having length greater than the maximum length of the existing elements,
     it simply discards all the values beyond the maximum length.'''
-
     # THIS FUNCTION IS NOT COMPLETE
+    cir_el = np.array(cir[:, 0:1], dtype=str)
+    cir_nd = np.array(cir[:, 1:5], dtype=int)
+    cir_val = np.array(cir[:, 5:8], dtype=float)
+    cir_ctr = np.array(cir[:, 8:9], dtype=str)
+    return (cir_el, cir_nd, cir_val, cir_ctr)
+
+
+def luzatu_cir(cir_el, cir_nd, cir_val, cir_ctr):
+    '''
+    Elementu guztiak zeharkatu ikusteko zeintzuk diren adar bi baino gehiago 
+    dituztenak.
+    '''
+    cir_el2 = []
+    cir_nd2 = []
+    cir_val2 = []
+    cir_ctr2 = []
+    for i in range(0, np.size(cir_el)):
+        if cir_el[i][0].lower() == "q":
+            cir_el2.append(cir_el[i]+"_be")
+            cir_el2.append(cir_el[i]+"_bc")
+            cir_nd2.append([cir_nd[i][1], cir_nd[i][2], 0, 0])
+            cir_nd2.append([cir_nd[i][1], cir_nd[i][0], 0, 0])
+            cir_val2.append(cir_val[i])
+            cir_val2.append(cir_val[i])
+            cir_ctr2.append(cir_ctr[i])
+            cir_ctr2.append(cir_ctr[i])
+        elif cir_el[i][0].lower() == "a":
+            cir_el2.append(cir_el[i]+"_in")
+            cir_el2.append(cir_el[i]+"_ou")
+            cir_nd2.append([cir_nd[i][0], cir_nd[i][1], 0, 0])
+            cir_nd2.append([cir_nd[i][2], cir_nd[i][3], 0, 0])
+            cir_val2.append(cir_val[i])
+            cir_val2.append(cir_val[i])
+            cir_ctr2.append(cir_ctr[i])
+            cir_ctr2.append(cir_ctr[i])
+
+        else:
+            cir_el2.append(cir_el[i])
+            cir_nd2.append(cir_nd[i])
+            cir_val2.append(cir_val[i])
+            cir_ctr2.append(cir_ctr[i])
+        i += 1
+
+    return [cir_el2, cir_nd2, cir_val2, cir_ctr2]
+
+
+def getAdarrak(cir_el):
+    b = 0
+    for s in cir_el:
+        if s[0].lower() == "a" or s[0].lower() == "q":
+            b = b+2
+        else:
+            b = b+1
+    return b
+
+
+def getNodes(cir_nd):
+    nodes = np.unique(cir_nd)
+    return np.sort(nodes)
+
+
+def getNodesNumber(cir_nd):
+    return np.size(getNodes(cir_nd))
+
+
+def getElementNumber(cir_el):
+    return np.size(cir_el)
+
+
+def getInzidentziaMatrix(cir_nd):
+    
+    pass
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
