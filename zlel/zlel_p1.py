@@ -94,6 +94,9 @@ def cir_parser(filename):
     having length greater than the maximum length of the existing elements,
     it simply discards all the values beyond the maximum length.'''
     # THIS FUNCTION IS NOT COMPLETE
+    for x in cir:
+        if np.size(x) != 9:
+            sys.exit("Sarrerako fitxategiko matrizearen neurriak ez dira egokiak.")
     cir_el = np.array(cir[:, 0:1], dtype=str)
     cir_nd = np.array(cir[:, 1:5], dtype=int)
     cir_val = np.array(cir[:, 5:8], dtype=float)
@@ -184,10 +187,24 @@ def getMurriztutakoIntzidentziaMatrix(Aa, n):
     return np.array(Aa[1:n, :])
 
 
-def Erroreak(cir):
-    pass
+def Erroreak1(nodes):
+    if nodes[0] != 0:
+        sys.exit("Erreferentzia nodoa falta da.")
 
 
+def Erroreak2(Aa, nodes):
+    for n,x in enumerate(Aa):
+        if np.size(np.flatnonzero(x != 0)) < 2:
+            node = nodes[n]
+            sys.exit(f"{node}. nodoa adar bakarrera konektatuta dago.")
+
+def Erroreak3(cir_el2, cir_val2, Aa):
+    adarrak = []
+    for adar,x in enumerate(cir_el2):
+        if x[0].lower == "v" and x[1].lower == "_":
+            adarrak.append(adar)
+    for i,j in enumerate(Aa):
+        pass
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
