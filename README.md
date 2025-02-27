@@ -37,5 +37,5 @@ R_2 2 3 0 0 2e3 0 0 0
 MIT Lizentzia.
 
 ## 🤝 Egileak
-- **[Zure Izena]**
-- **[Taldekideen izenak]**
+- **Alvaro Beltrán de Nanclares**
+- **Eneko Aranburu**
