@@ -44,7 +44,7 @@ def cir_parser(filename):
     print(cir)
     print("\n======== a = np.array (cir[:,1], dtype = int) ==========")
     a = np.array(cir[:, 1], dtype=int)
-    #a = np.array(cir[:, 1:3], dtype=int)
+    # a = np.array(cir[:, 1:3], dtype=int)
     print(a)
     print("\n======== a = np.append(a,300) ==========")
     a = np.append(a, 300)
@@ -169,14 +169,11 @@ def getElementNumber(cir_el):
 def getInzidentziaMatrix(n, b, cir_nd2):
     Aa = np.zeros((n, b), dtype=int)  # Crear matriz de ceros de tamaño n x b
     nodes = getNodes(cir_nd2)  # Obtener nodos únicos
-    
     for col, branch in enumerate(cir_nd2):  # Iterar sobre cada rama
         node_start, node_end = branch[0], branch[1]  # Supongamos que los nodos están en las 2 primeras posiciones
-        
         if node_start in nodes:
             row_start = np.where(nodes == node_start)[0][0]  # Encontrar índice de nodo en la lista de nodos
             Aa[row_start, col] = 1  # Nodo de inicio
-        
         if node_end in nodes:
             row_end = np.where(nodes == node_end)[0][0]  # Encontrar índice del nodo final
             Aa[row_end, col] = -1  # Nodo de destino    
@@ -193,17 +190,18 @@ def Erroreak1(nodes):
 
 
 def Erroreak2(Aa, nodes):
-    for n,x in enumerate(Aa):
+    for n, x in enumerate(Aa):
         if np.size(np.flatnonzero(x != 0)) < 2:
             node = nodes[n]
             sys.exit(f"{node}. nodoa adar bakarrera konektatuta dago.")
 
+
 def Erroreak3(cir_el2, cir_val2, Aa):
     adarrak = []
-    for adar,x in enumerate(cir_el2):
+    for adar, x in enumerate(cir_el2):
         if x[0].lower == "v" and x[1].lower == "_":
             adarrak.append(adar)
-    for i,j in enumerate(Aa):
+    for i, j in enumerate(Aa):
         pass
 
 
