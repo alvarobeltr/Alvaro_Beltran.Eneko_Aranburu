@@ -196,13 +196,30 @@ def Erroreak2(Aa, nodes):
             sys.exit(f"{node}. nodoa adar bakarrera konektatuta dago.")
 
 
+
 def Erroreak3(cir_el2, cir_val2, Aa):
+    """
+    Tentsio iturri ezberdinak (tentsio desberdina dutenak) nodo berdinetara konektatuta
+    badaude (paraleloan), errorea sortzen du. Gainera, tentsio berdina duten baina
+    norantza desberdina duten iturriak badaude, errorea sortuko du.
+    """
     adarrak = []
+    adar_tentsioak = {}
+
     for adar, x in enumerate(cir_el2):
-        if x[0].lower == "v" and x[1].lower == "_":
+        if (x[0].lower() == "v" or x[0].lower() == "e") and "_" in x:
             adarrak.append(adar)
-    for i, j in enumerate(Aa):
-        pass
+            adar_tentsioak[adar] = cir_val2[adar][0]  # Adarraren tentsioa gorde
+
+    for i in range(len(adarrak)):
+        for j in range(i + 1, len(adarrak)):
+            adar1, adar2 = adarrak[i], adarrak[j]
+
+            if np.array_equal(abs(Aa[:, adar1]), abs(Aa[:, adar2])):
+                if adar_tentsioak[adar1] != adar_tentsioak[adar2]:
+                    sys.exit(f"Errorea: {cir_el2[adar1]} ({adar_tentsioak[adar1]}V) eta {cir_el2[adar2]} ({adar_tentsioak[adar2]}V) tentsio ezberdinekin paraleloan daude.")
+                if not np.array_equal(Aa[:, adar1], Aa[:, adar2]):
+                    sys.exit(f"Errorea: {cir_el2[adar1]} eta {cir_el2[adar2]} tentsio berdinekin paraleloan baina norantza kontrakoan daude.")
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
@@ -266,5 +283,6 @@ if __name__ == "__main__":
     # Parse the circuit
     # [cir_el,cir_nd,cir_val,cir_ctr]=cir_parser(filename)
     cir_parser(filename)
+    
 
 #    THIS FUNCTION IS NOT COMPLETE
