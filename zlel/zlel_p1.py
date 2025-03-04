@@ -207,19 +207,31 @@ def Erroreak3(cir_el2, cir_val2, Aa):
     adar_tentsioak = {}
 
     for adar, x in enumerate(cir_el2):
-        if (x[0].lower() == "v" or x[0].lower() == "e") and "_" in x:
+        if (x[0].lower() == "v" or x[0].lower() == "e") and "_" == x[1]:
             adarrak.append(adar)
             adar_tentsioak[adar] = cir_val2[adar][0]  # Adarraren tentsioa gorde
 
     for i in range(len(adarrak)):
         for j in range(i + 1, len(adarrak)):
             adar1, adar2 = adarrak[i], adarrak[j]
-
             if np.array_equal(abs(Aa[:, adar1]), abs(Aa[:, adar2])):
                 if adar_tentsioak[adar1] != adar_tentsioak[adar2]:
                     sys.exit(f"Errorea: {cir_el2[adar1]} ({adar_tentsioak[adar1]}V) eta {cir_el2[adar2]} ({adar_tentsioak[adar2]}V) tentsio ezberdinekin paraleloan daude.")
                 if not np.array_equal(Aa[:, adar1], Aa[:, adar2]):
                     sys.exit(f"Errorea: {cir_el2[adar1]} eta {cir_el2[adar2]} tentsio berdinekin paraleloan baina norantza kontrakoan daude.")
+
+
+def Erroreak4(cir_el2, cir_val2, Aa):
+    adarrak = []
+    adar_tentsioak = {}
+
+    for adar, x in enumerate(cir_el2):
+        if (x[0].lower() == "i" or x[0].lower() == "g") and "_" == x[1]:
+            adarrak.append(adar)
+            adar_tentsioak[adar] = cir_val2[adar][0]
+    
+    for i in range(len(adarrak)):
+        
 
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
