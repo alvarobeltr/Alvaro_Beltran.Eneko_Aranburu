@@ -338,7 +338,7 @@ def KonexioBakarrekoNodoak(Aa, nodes):
             sys.exit(f"{node}. nodoa adar bakarrera konektatuta dago.")
 
 
-def TentsioIturriakParaleloan:(cir_el2, cir_val2, Aa):
+def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
     """
     This function is used to detect if Voltage sources are connected in parallel.
 
@@ -383,47 +383,35 @@ def TentsioIturriakParaleloan:(cir_el2, cir_val2, Aa):
                 if not np.array_equal(Aa[:, adar1], Aa[:, adar2]):
                     sys.exit(f"Errorea: {cir_el2[adar1]} eta {cir_el2[adar2]} tentsio berdinekin paraleloan baina norantza kontrakoan daude.")
 
-def KorronteIturriakSeriean(elementos_circuito, nodos_circuito, valores_circuito, matriz_corriente, num_ramas):
+def KorronteIturriakSeriean(elementos_circuito, nodos_circuito, cir_val2, matriz_corriente, num_ramas):
     elementos = {}
     nodos_problema = set()
-
-<<<<<<< HEAD
-def Erroreak4(cir_el2, cir_val2, Aa):
-    adarrak = []
-    adar_tentsioak = {}
-
-    for adar, x in enumerate(cir_el2):
-        if (x[0].lower() == "i" or x[0].lower() == "g") and "_" == x[1]:
-            adarrak.append(adar)
-            adar_tentsioak[adar] = cir_val2[adar][0]
-    
-    for i in range(len(adarrak)):
-        
-
-
-=======
     for indice, elemento in enumerate(elementos_circuito):
-        if elemento[0].lower() in ("i", "g", "y"):
-            elementos[indice] = {"nodos": nodos_circuito[indice], "tipo": elemento[0].lower(), "valor": valores_circuito[indice][0]}
+        if elemento[0].lower() in ("i", "g"):
+            elementos[indice] = {"nodos": nodos_circuito[indice], "tipo": elemento[0].lower(), "valor": cir_val2[indice][0]}
 
     for indice_x, datos_x in elementos.items():
         for indice_y, datos_y in elementos.items():
             if indice_x != indice_y:
                 nodos_x = datos_x["nodos"]
                 nodos_y = datos_y["nodos"]
-                if (nodos_x[0] == nodos_y[0] and nodos_x[1] != nodos_y[1]) or \
-                   (nodos_x[0] == nodos_y[1] and nodos_x[1] != nodos_y[0]) or \
-                   (nodos_x[1] == nodos_y[0] and nodos_x[0] != nodos_y[1]) or \
-                   (nodos_x[1] == nodos_y[1] and nodos_x[0] != nodos_y[0]):
-                    nodos_problema.add((nodos_x[0],nodos_x[1]))
-                    nodos_problema.add((nodos_y[0],nodos_y[1]))
-
+                if (nodos_x[0] == nodos_y[0] and nodos_x[1] != nodos_y[1]):
+                    nodos_problema.add(nodos_x[0])
+                elif (nodos_x[0] == nodos_y[1] and nodos_x[1] != nodos_y[0]):
+                    nodos_problema.add(nodos_x[0])
+                elif (nodos_x[1] == nodos_y[0] and nodos_x[0] != nodos_y[1]):
+                    nodos_problema.add(nodos_x[0])
+                elif (nodos_x[1] == nodos_y[1] and nodos_x[0] != nodos_y[0]):
+                    nodos_problema.add(nodos_x[1])
+    suma_corriente = 0
     for nodo in nodos_problema:
         rama_lista = obtener_ramas(nodo[0], elementos_circuito, nodos_circuito)
-        if all(elemento[0].lower() in ("i", "g", "y") for elemento in rama_lista):
-            suma_corriente = sum(map(lambda i: valores_circuito[i][0] * matriz_corriente[nodo[0]][i], range(num_ramas)))
+        if all(elemento[0].lower() in ("i", "g") for elemento in rama_lista):
+            for i in range(num_ramas):
+                suma_corriente += cir_val2[i][0] * matriz_corriente[nodo][i]
+            #suma_corriente = sum(map(lambda i: cir_val2[i][0] * matriz_corriente[nodo[0]][i], range(num_ramas)))
             if suma_corriente != 0:
-                print(f"Fuentes de corriente en serie en el nodo {nodo}.")
+                sys.exit(f"Fuentes de corriente en serie en el nodo {nodo}.")
 
 def obtener_ramas(nodo, cir_el2, cir_nd2):
     """
@@ -432,10 +420,10 @@ def obtener_ramas(nodo, cir_el2, cir_nd2):
 
     Parameters
     ----------
-    nodoa : an integer which represents a node in the circuit
-    cir_el_luz: np array of strings with the elements to parse.
+    nodo : an integer which represents a node in the circuit
+    cir_el2: np array of strings with the elements to parse.
     size(b,n-1). cir_el extended
-    cir_nd_luz: np array with the nodes to the circuit. size(b,4).
+    cir_nd2: np array with the nodes to the circuit. size(b,4).
     cir_nd extended
 
     Returns
@@ -444,12 +432,12 @@ def obtener_ramas(nodo, cir_el2, cir_nd2):
 
     """
     lista = []
-    for i in range(0, np.size(cir_el_luz)):
-        for x in cir_nd_luz[i]:
-            if x == nodoa:
-                lista.append(cir_el_luz[i])
+    for i in range(0, np.size(cir_el2)):
+        for x in cir_nd2[i]:
+            if x == nodo:
+                lista.append(cir_el2[i])
     return lista
->>>>>>> a28db1fa268019836a34c83c8a55ebf8f288636c
+
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
     """ Prints the info of the circuit:
         |     1.- Elements info
