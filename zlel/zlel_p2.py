@@ -211,7 +211,7 @@ def cir_parser(filename):
     
     return (cir_el, cir_nd, cir_val, cir_ctr, sim_cmds)
 
-def getElemPosition(elem, cir_el_luz):
+def getElemPosition(elem, cir_el2):
     """
     Gives the position of an element in cir_el_luz
 
@@ -226,9 +226,11 @@ def getElemPosition(elem, cir_el_luz):
     i : Integer with the position of the element
 
     """
-    for i in range(0, np.size(cir_el_luz)):
-        if cir_el_luz[i].lower() == elem.lower():
+    for i in range(0, np.size(cir_el2)):
+        if cir_el2[i].lower() == elem.lower():
             return i
+
+
 def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
     """
     Gives M, N and Us matrixes thath will be used in Tableau equations:
@@ -299,10 +301,10 @@ def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
     
 
 
-def Tableau(a, M, N, Us):
+def Tableau(A, M, N, Us):
     """
     This function evaluates the Tableau equations,
-    using the M,N and Us matrices and the A incidence matrix.\n
+    using the M,N and Us matrices and the A reduced incidence matrix.\n
     Args:
         | **M**: Voltage matrix.
         | **N**: Current matrix.
@@ -313,7 +315,6 @@ def Tableau(a, M, N, Us):
         **Sol**: List of all Tableau equation solutions, in order e,...,v,...,i
     """
     
-    A = np.array(a[1:])  # Elimina la primera fila de 'a'
     b1, b2 = A.shape  # Filas y columnas de A
     T_size = b1 + 2 * b2  # Tamaño total de la matriz T
     T = np.zeros((T_size, T_size), dtype=float)
@@ -343,12 +344,10 @@ def Tableau(a, M, N, Us):
     for i in range(len(Us)):
         u[b1 + b2 + i, 0] = Us[i]
 
-    # Verificación de determinante
     if np.linalg.det(T) == 0:
-        raise ValueError("Error resolviendo las ecuaciones de Tableau: det(T) = 0. Revise la configuración del circuito.")
-
-    # Resolución del sistema de ecuaciones
-    sol = np.linalg.solve(T, u)
+        sys.exit("Error solving Tableau equations: det(T) != 0.")
+    else:
+        sol = np.linalg.solve(T, u)
     
     return T, sol
 """
