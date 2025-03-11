@@ -211,7 +211,24 @@ def cir_parser(filename):
     
     return (cir_el, cir_nd, cir_val, cir_ctr, sim_cmds)
 
+def getElemPosition(elem, cir_el_luz):
+    """
+    Gives the position of an element in cir_el_luz
 
+    Parameters
+    ----------
+    elem : String with the name of the element
+    cir_el_luz : extended np array of strings with the elements to parse.
+    size(b,1)
+
+    Returns
+    -------
+    i : Integer with the position of the element
+
+    """
+    for i in range(0, np.size(cir_el_luz)):
+        if cir_el_luz[i].lower() == elem.lower():
+            return i
 def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
     """
     Gives M, N and Us matrixes thath will be used in Tableau equations:
