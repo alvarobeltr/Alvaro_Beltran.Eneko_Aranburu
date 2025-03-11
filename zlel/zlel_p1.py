@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-.. module:: zlel_main.py
+.. module:: zlel_p1.py
     :synopsis: This module contains functions that are used in the main program
     in order to parse the matrixes that will be used to solve the circuit.
 

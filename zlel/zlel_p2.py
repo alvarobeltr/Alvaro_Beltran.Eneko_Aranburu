@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-.. module:: zlel_main.py
+.. module:: zlel_p2.py
     :synopsis:
 
-.. moduleauthor:: YOUR NAME AND E-MAIL
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
 
 
 """
