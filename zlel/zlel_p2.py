@@ -212,7 +212,75 @@ def cir_parser(filename):
     return (cir_el, cir_nd, cir_val, cir_ctr, sim_cmds)
 
 
-def getMNUs():
+def getMatrixes(b, cir_el_luz, cir_val_luz, cir_ctr_luz):
+    """
+    Gives M, N and Us matrixes thath will be used in Tableau equations:
+        M*v + N*i = Us
+
+    Parameters
+    ----------
+    b : Integer with the number of branches in the circuit
+    cir_el_luz : extended np array of strings with the elements to parse.
+    size(b,1)
+    cir_val_luz : extended np array with the values of the elements.
+    size(b,3)
+    cir_ctr_luz : extended np array of strings with the element which branch
+    controls the controlled sources. size(b,1)
+
+    Returns
+    -------
+    M : np array that contains the first matrix of Tableau equations. size(b,b)
+    N : np array that contains the second matrix of Tableau equations.
+    size(b,b)
+    Us : np array that contains the third matrix of Tableau equations.
+
+    """
+    M = np.zeros((b, b), dtype=float)
+    N = np.zeros((b, b), dtype=float)
+    Us = np.zeros((b, 1), dtype=float)
+    i = 0
+    while i < b:
+        if cir_el_luz[i][0].lower() == "r":
+            M[i][i] = 1
+            N[i][i] = -cir_val_luz[i][0]
+        if cir_el_luz[i][0].lower() == "v":
+            M[i][i] = 1
+            Us[i] = cir_val_luz[i][0]
+        if cir_el_luz[i][0].lower() == "i":
+            N[i][i] = 1
+            Us[i] = cir_val_luz[i][0]
+        if cir_el_luz[i][0].lower() == "a":
+            M[i][i] = 1
+            N[i+1][i] = 1
+            i = i+1
+        if cir_el_luz[i][0].lower() == "e":
+            j = getElemPosition(cir_ctr_luz[i], cir_el_luz)
+            M[i][i] = 1
+            M[i][j] = cir_val_luz[i][0]*-1
+        if cir_el_luz[i][0].lower() == "g":
+            j = getElemPosition(cir_ctr_luz[i], cir_el_luz)
+            N[i][i] = 1
+            M[i][j] = cir_val_luz[i][0]*-1
+        if cir_el_luz[i][0].lower() == "h":
+            j = getElemPosition(cir_ctr_luz[i], cir_el_luz)
+            N[i][i] = 1
+            N[i][j] = cir_val_luz[i][0]*-1
+        if cir_el_luz[i][0].lower() == "f":
+            j = getElemPosition(cir_ctr_luz[i], cir_el_luz)
+            M[i][i] = 1
+            N[i][j] = cir_val_luz[i][0]*-1
+        if cir_el_luz[i][0].lower() == "b":
+            M[i][i] = 1
+            Us[i] = cir_val_luz[i][0]
+        if cir_el_luz[i][0].lower() == "y":
+            N[i][i] = 1
+            Us[i] = cir_val_luz[i][0]
+        i += 1
+    lista = []
+    lista.append(M)
+    lista.append(N)
+    lista.append(Us)
+    return lista:
     
 
 
