@@ -162,7 +162,58 @@ def plot_from_cvs(filename, x, y, title):
     ax1.set_ylabel(y)
     plt.show()
 
+def Tableau(a, M, N, Us):
+    """
+    This function evaluates the Tableau equations,
+    using the M,N and Us matrices and the A incidence matrix.\n
+    Args:
+        | **M**: Voltage matrix.
+        | **N**: Current matrix.
+        | **Us**: Vector of non V controlled elements.
+    Returns:
+        | **T**: Tableau matrix, formed by all Tableau equations,
+            in order e,...,v,...,i.
+        **Sol**: List of all Tableau equation solutions, in order e,...,v,...,i
+    """
+    
+    A = np.array(a[1:])  # Elimina la primera fila de 'a'
+    b1, b2 = A.shape  # Filas y columnas de A
+    T_size = b1 + 2 * b2  # Tamaño total de la matriz T
+    T = np.zeros((T_size, T_size), dtype=float)
+    u = np.zeros((T_size, 1), dtype=float)
+    
+    # Construcción de la matriz Tableau
+    A_T = A.T  # Transpuesta de A para eficiencia
 
+    # Primer bloque (Ecuaciones de las ramas)
+    for i in range(b1):
+        for j in range(b2):
+            T[i, b1 + b2 + j] = A[i, j]
+
+    # Segundo bloque (Leyes de Kirchhoff)
+    for i in range(b2):
+        for j in range(b1):
+            T[b1 + i, j] = -A_T[i, j]
+        T[b1 + i, b1 + i] = 1  # Matriz identidad
+
+    # Tercer bloque (Ecuaciones de elementos pasivos)
+    for i in range(b2):
+        for j in range(b2):
+            T[b1 + b2 + i, b1 + j] = M[i, j]
+            T[b1 + b2 + i, b1 + b2 + j] = N[i, j]
+    
+    # Vector de términos independientes (Us)
+    for i in range(len(Us)):
+        u[b1 + b2 + i, 0] = Us[i]
+
+    # Verificación de determinante
+    if np.linalg.det(T) == 0:
+        raise ValueError("Error resolviendo las ecuaciones de Tableau: det(T) = 0. Revise la configuración del circuito.")
+
+    # Resolución del sistema de ecuaciones
+    sol = np.linalg.solve(T, u)
+    
+    return T, sol
 """
 https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 https://stackoverflow.com/questions/19747371/
