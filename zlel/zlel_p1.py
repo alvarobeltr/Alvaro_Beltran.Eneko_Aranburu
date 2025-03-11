@@ -39,54 +39,7 @@ def cir_parser(filename):
         cir = np.delete(cir, -1, axis=0)
     except ValueError:
         sys.exit("File corrupted: .cir size is incorrect.")
-    """
-    # numpy usefull exmaples
-    print("================ cir ==========")
-    print(cir)
-    print("\n======== a = np.array (cir[:,1], dtype = int) ==========")
-    a = np.array(cir[:, 1], dtype=int)
-    # a = np.array(cir[:, 1:3], dtype=int)
-    print(a)
-    print("\n======== a = np.append(a,300) ==========")
-    a = np.append(a, 300)
-    print(a)
-    print("\n======== b = a[a > 3] ==========")
-    b = a[a > 3]
-    print(b)
-    print("\n======== c = np.unique(a) ==========")
-    c = np.unique(a)
-    print(c)
-    print("\n======== d = np.flatnonzero(a != 0) ==========")
-    d = np.flatnonzero(a != 0)
-    print(d)
-    print("\n======== e = np.flatnonzero(a == 0) ==========")
-    e = np.flatnonzero(a == 0)
-    print(e)
-    print("\n======== f = np.array(cir[:, 1:2]) ==========")
-    f = np.array(cir[:, 1:2])
-    print(f)
-    print("\n======== g = np.array(cir[2:4, :]) ==========")
-    g = np.array(cir[2:4, :])
-    print(g)
-    print("\n======== h = np.empty([0], dtype=int) ==========")
-    h = np.empty([0], dtype=int)
-    print(h)
-    print("\n======== i = np.append(h, 1) ==========")
-    i = np.append(h, 1)
-    print(i)
-    print("\n======== i[0] = 2 ==========")
-    i[0] = 2
-    print(i)
-    print("\n======== j = np.empty([0], dtype=str ==========")
-    j = np.empty([0], dtype=str)
-    print(j)
-    print("\n======== k = np.append(j, \"123456\") ==========")
-    k = np.append(j, "123456")
-    print(k)
-    print("\n======== k[0] = \"987654321\" ==========")
-    k[0] = "987654321"
-    print(k)
-"""
+
     ''' https://www.geeksforgeeks.org/modify-numpy-array-to-store-an-arbitrary-length-string/
     The dtype of any numpy array containing string values is the maximum
     length of any string present in the array. Once set, it will only be able
@@ -94,7 +47,6 @@ def cir_parser(filename):
     time of the creation. If we try to reassign some another string value
     having length greater than the maximum length of the existing elements,
     it simply discards all the values beyond the maximum length.'''
-    # THIS FUNCTION IS NOT COMPLETE
     for x in cir:
         if np.size(x) != 9:
             sys.exit("Sarrerako fitxategiko matrizearen neurriak ez dira egokiak.")
@@ -106,7 +58,6 @@ def cir_parser(filename):
 
 
 def luzatu_cir(cir_el, cir_nd, cir_val, cir_ctr):
-    #Comprobarr returns
     """
     This function expands the matrixes we obtained in the function before
     in order to fit with the number of the branches of the elements added.
@@ -365,7 +316,7 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
     adar_tentsioak = {}
 
     for adar, x in enumerate(cir_el2):
-        if (x[0].lower() == "v" or x[0].lower() == "e") and "_" == x[1]:
+        if (x[0].lower() == "v" or x[0].lower() == "e" or x[0].lower() == "b") and "_" == x[1]:
             adarrak.append(adar)
             adar_tentsioak[adar] = cir_val2[adar][0]  # Adarraren tentsioa gorde
 
@@ -411,7 +362,7 @@ def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
     elementos = {}
     nodos_problema = set()
     for indice, elemento in enumerate(cir_el2):
-        if elemento[0].lower() in ("i", "g"):
+        if elemento[0].lower() in ("i", "g", "y"):
             elementos[indice] = {"nodos": cir_nd2[indice], "tipo": elemento[0].lower(), "valor": cir_val2[indice][0]}
 
     for indice_x, datos_x in elementos.items():

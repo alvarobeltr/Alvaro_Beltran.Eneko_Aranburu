@@ -161,6 +161,56 @@ def plot_from_cvs(filename, x, y, title):
     ax1.set_xlabel(x)
     ax1.set_ylabel(y)
     plt.show()
+
+
+def cir_parser(filename):
+    """
+        This function takes a .cir test circuit and parse it into
+        4 matices.
+        If the file has not the proper dimensions it warns and exit.
+
+    Args:
+        filename: string with the name of the file
+
+    Returns:
+        | cir_el: np array of strings with the elements to parse. size(1,b)
+        | cir_nd: np array with the nodes to the circuit. size(b,4)
+        | cir_val: np array with the values of the elements. size(b,3)
+        | cir_ctrl: np array of strings with the element which branch
+        | controls the controlled sources. size(1,b)
+
+    Rises:
+        SystemExit
+
+    """
+    try:
+        cir = np.array(np.loadtxt(filename, dtype=str))
+    except ValueError:
+        sys.exit("File corrupted: .cir size is incorrect.")
+    
+    # Simulazio komandoen lerroak identifikatu (.-z hasten direnak)
+    sim_start = np.where(np.char.startswith(cir[:, 0], '.' ))[0]
+    
+    if sim_start.size == 0:
+        sys.exit("Ez da simulazio komando bat ere aurkitu.")
+    
+    # Zirkuituaren datuak (simulazio komandoak kenduta)
+    cir_data = cir[:sim_start[0], :]
+    
+    for x in cir_data:
+        if np.size(x) != 9:
+            sys.exit("Sarrerako fitxategiko matrizearen neurriak ez dira egokiak.")
+    
+    cir_el = np.array(cir_data[:, 0:1], dtype=str)
+    cir_nd = np.array(cir_data[:, 1:5], dtype=int)
+    cir_val = np.array(cir_data[:, 5:8], dtype=float)
+    cir_ctr = np.array(cir_data[:, 8:9], dtype=str)
+    
+    # Simulazio komandoak
+    sim_cmds = cir[sim_start, :]
+    
+    return (cir_el, cir_nd, cir_val, cir_ctr)
+
     
 def MNUs(cir_el, cir_val, cir_ctr, b, denbora, V, h, g):
     """This function creates the M, N and Us matrices
