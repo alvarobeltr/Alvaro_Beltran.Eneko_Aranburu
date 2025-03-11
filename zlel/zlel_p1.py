@@ -361,11 +361,6 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
     SystemExit.
 
     """
-    """
-    Tentsio iturri ezberdinak (tentsio desberdina dutenak) nodo berdinetara konektatuta
-    badaude (paraleloan), errorea sortzen du. Gainera, tentsio berdina duten baina
-    norantza desberdina duten iturriak badaude, errorea sortuko du.
-    """
     adarrak = []
     adar_tentsioak = {}
 
@@ -383,7 +378,36 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
                 if not np.array_equal(Aa[:, adar1], Aa[:, adar2]):
                     sys.exit(f"Errorea: {cir_el2[adar1]} eta {cir_el2[adar2]} tentsio berdinekin paraleloan baina norantza kontrakoan daude.")
 
+
 def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
+    """
+    This function is used to detect if Current sources are connected in serial and they break KCL.
+
+    Parameters
+    ----------
+    Aa : a np array which represents the incident matrix of the circuit.
+    
+    cir_el2: np array of strings with the elements to parse.
+    size(b,n-1). cir_el extended
+    
+    cir_val2: np array with the values of the elements. size(b,3)
+    cir_val extended.
+    
+    cir_nd2 : np array with the nodes to the circuit. size(b,4).
+    cir_nd extended
+    
+    b : an integer which represents the number of branches in the circuit.
+
+    Returns
+    -------
+    None.
+
+    Rises
+    -------
+    SystemExit.
+
+    """
+
     elementos = {}
     nodos_problema = set()
     for indice, elemento in enumerate(cir_el2):
@@ -438,7 +462,6 @@ def obtener_ramas(nodo, cir_el2, cir_nd2):
                 lista.append(cir_el2[i])
     return lista
 
-def getErroreak()
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
     """ Prints the info of the circuit:
