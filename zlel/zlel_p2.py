@@ -238,6 +238,7 @@ def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
     M = np.zeros((b, b), dtype=float)
     N = np.zeros((b, b), dtype=float)
     Us = np.zeros((b, 1), dtype=float)
+    Bai = True
     for i in range(b):
         if cir_el2[i][0].lower() == "r":
             M[i][i] = 1
@@ -249,9 +250,12 @@ def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
         elif cir_el2[i][0].lower() == "a":
-            M[i][i] = 1
-            N[i+1][i] = 1
-            i = i+1#hfeugfcues
+            if Bai:
+                M[i][i] = 1
+                N[i][i] = 1
+                Bai=False
+            else:
+                Bai=True
         elif cir_el2[i][0].lower() == "e":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
