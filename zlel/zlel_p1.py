@@ -383,12 +383,12 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
                 if not np.array_equal(Aa[:, adar1], Aa[:, adar2]):
                     sys.exit(f"Errorea: {cir_el2[adar1]} eta {cir_el2[adar2]} tentsio berdinekin paraleloan baina norantza kontrakoan daude.")
 
-def KorronteIturriakSeriean(elementos_circuito, nodos_circuito, cir_val2, matriz_corriente, num_ramas):
+def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
     elementos = {}
     nodos_problema = set()
-    for indice, elemento in enumerate(elementos_circuito):
+    for indice, elemento in enumerate(cir_el2):
         if elemento[0].lower() in ("i", "g"):
-            elementos[indice] = {"nodos": nodos_circuito[indice], "tipo": elemento[0].lower(), "valor": cir_val2[indice][0]}
+            elementos[indice] = {"nodos": cir_nd2[indice], "tipo": elemento[0].lower(), "valor": cir_val2[indice][0]}
 
     for indice_x, datos_x in elementos.items():
         for indice_y, datos_y in elementos.items():
@@ -405,11 +405,11 @@ def KorronteIturriakSeriean(elementos_circuito, nodos_circuito, cir_val2, matriz
                     nodos_problema.add(nodos_x[1])
     suma_corriente = 0
     for nodo in nodos_problema:
-        rama_lista = obtener_ramas(nodo[0], elementos_circuito, nodos_circuito)
+        rama_lista = obtener_ramas(nodo[0], cir_el2, cir_nd2)
         if all(elemento[0].lower() in ("i", "g") for elemento in rama_lista):
-            for i in range(num_ramas):
-                suma_corriente += cir_val2[i][0] * matriz_corriente[nodo][i]
-            #suma_corriente = sum(map(lambda i: cir_val2[i][0] * matriz_corriente[nodo[0]][i], range(num_ramas)))
+            for i in range(b):
+                suma_corriente += cir_val2[i][0] * Aa[nodo][i]
+            #suma_corriente = sum(map(lambda i: cir_val2[i][0] * Aa[nodo[0]][i], range(b)))
             if suma_corriente != 0:
                 sys.exit(f"Fuentes de corriente en serie en el nodo {nodo}.")
 
@@ -437,6 +437,8 @@ def obtener_ramas(nodo, cir_el2, cir_nd2):
             if x == nodo:
                 lista.append(cir_el2[i])
     return lista
+
+def getErroreak()
 
 def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
     """ Prints the info of the circuit:
