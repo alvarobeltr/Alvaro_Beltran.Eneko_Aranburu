@@ -173,11 +173,13 @@ def cir_parser(filename):
         filename: string with the name of the file
 
     Returns:
-        | cir_el: np array of strings with the elements to parse. size(1,b)
-        | cir_nd: np array with the nodes to the circuit. size(b,4)
-        | cir_val: np array with the values of the elements. size(b,3)
-        | cir_ctrl: np array of strings with the element which branch
-        | controls the controlled sources. size(1,b)
+        An array with:
+            - cir_el: np array of strings with the elements to parse. size(1,b)
+            - cir_nd: np array with the nodes to the circuit. size(b,4)
+            - cir_val: np array with the values of the elements. size(b,3)
+            - cir_ctrl: np array of strings with the element which branch
+            controls the controlled sources. size(1,b)
+            - sim_cmds: np array of strings with the information of the simulations.
 
     Rises:
         SystemExit
@@ -209,8 +211,50 @@ def cir_parser(filename):
     # Simulazio komandoak
     sim_cmds = cir[sim_start, :]
     
-    return (cir_el, cir_nd, cir_val, cir_ctr, sim_cmds)
+    return [cir_el, cir_nd, cir_val, cir_ctr, sim_cmds]
 
+
+
+
+
+def execute_simulations(circuit):
+    """
+    Ejecuta las simulaciones especificadas en los comandos.
+    
+    Args:
+        circuit: Objeto del circuito
+        sim_cmds: Lista de comandos de simulación
+        
+    Returns:
+        dict: Diccionario con los resultados de las simulaciones
+    """
+    results = {}
+    
+    for cmd in circuit[4]:
+        cmd_str = cmd[0].lower()
+        
+        if cmd_str == '.op':
+            # Análisis de punto de operación
+            T, sol = Tableau(circuit.A, circuit.M, circuit.N, circuit.Us)
+            results['op'] = sol
+            
+        elif cmd_str == '.tr':
+            # Análisis de transitorio
+            start = float(cmd[3])  # Tiempo inicial
+            end = float(cmd[4])    # Tiempo final
+            step = float(cmd[5])   # Paso de tiempo
+            results['tr'] = tr_analysis(circuit, start, end, step)
+            
+        elif cmd_str == '.pr':
+            # Impresión de resultados
+            print_solution(results.get('op', None), circuit.b, circuit.n)
+            
+        elif cmd_str == '.dc':
+            # Analisis DC
+            
+    return results
+
+    
 def getElemPosition(elem, cir_el2):
     """
     Gives the position of an element in cir_el_luz
@@ -299,8 +343,6 @@ def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
             Us[i] = cir_val2[i][0]
     return M, N, Us
     
-
-
 def Tableau(A, M, N, Us):
     """
     This function evaluates the Tableau equations,
@@ -314,42 +356,51 @@ def Tableau(A, M, N, Us):
             in order e,...,v,...,i.
         **Sol**: List of all Tableau equation solutions, in order e,...,v,...,i
     """
+    # Obtener dimensiones de la matriz de incidencia
+    b1, b2 = A.shape
+    T_size = b1 + 2 * b2  # Tamaño total de la matriz tableau
     
-    b1, b2 = A.shape  # Filas y columnas de A
-    T_size = b1 + 2 * b2  # Tamaño total de la matriz T
+    # Inicializar matrices
     T = np.zeros((T_size, T_size), dtype=float)
     u = np.zeros((T_size, 1), dtype=float)
     
-    # Construcción de la matriz Tableau
-    A_T = A.T  # Transpuesta de A para eficiencia
-
-    # Primer bloque (Ecuaciones de las ramas)
+    # Optimización: calcular transpuesta de A una sola vez
+    A_T = A.T
+    
+    # Bloque 1: Ecuaciones de las ramas
+    # T[i, b1+b2+j] representa la relación entre voltajes y corrientes
     for i in range(b1):
         for j in range(b2):
             T[i, b1 + b2 + j] = A[i, j]
-
-    # Segundo bloque (Leyes de Kirchhoff)
+    
+    # Bloque 2: Leyes de Kirchhoff de corriente
+    # T[b1+i, j] representa la contribución de la rama j al nodo i
     for i in range(b2):
         for j in range(b1):
             T[b1 + i, j] = -A_T[i, j]
-        T[b1 + i, b1 + i] = 1  # Matriz identidad
-
-    # Tercer bloque (Ecuaciones de elementos pasivos)
+        T[b1 + i, b1 + i] = 1  # Diagonal principal para equilibrio
+    
+    # Bloque 3: Ecuaciones de elementos pasivos
+    # M y N representan el comportamiento de los elementos
     for i in range(b2):
         for j in range(b2):
             T[b1 + b2 + i, b1 + j] = M[i, j]
             T[b1 + b2 + i, b1 + b2 + j] = N[i, j]
     
-    # Vector de términos independientes (Us)
+    # Vector de términos independientes
     for i in range(len(Us)):
         u[b1 + b2 + i, 0] = Us[i]
-
+    
+    # Verificar si el sistema es resoluble
     if np.linalg.det(T) == 0:
-        sys.exit("Error solving Tableau equations: det(T) != 0.")
-    else:
-        sol = np.linalg.solve(T, u)
+        raise ValueError("El sistema no tiene solución única: det(T) = 0")
+    
+    # Resolver el sistema usando numpy.linalg.solve
+    sol = np.linalg.solve(T, u)
     
     return T, sol
+
+
 """
 https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 https://stackoverflow.com/questions/19747371/
@@ -362,9 +413,12 @@ if __name__ == "__main__":
     else:
         filename = "../cirs/1_zlel_V_R_op_dc.cir"
 
-    b = 2
-    n = 2    
-    sims_folder_name = "sims"
-    filename = save_sim_output(filename, sims_folder_name, ".tr")
-    save_as_csv(b, n, filename, sims_folder_name)
-    plot_from_cvs(filename, "t", "e1", "")
+    # Obtener información del circuito
+    cir_el, cir_nd, cir_val, cir_ctrl, sim_cmds = cir_parser(filename)
+    
+    # Crear objeto del circuito
+    circuit = Circuit("circuito")
+    # Inicializar el circuito con los elementos
+    
+    # Ejecutar simulaciones
+    results = execute_simulations(circuit, sim_cmds)
