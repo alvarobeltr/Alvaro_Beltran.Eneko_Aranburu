@@ -240,9 +240,9 @@ def execute_simulations(circuit):
             
         elif cmd_str == '.tr':
             # Análisis de transitorio
-            start = float(cmd[3])  # Tiempo inicial
-            end = float(cmd[4])    # Tiempo final
-            step = float(cmd[5])   # Paso de tiempo
+            start = float(cmd[5])  # Tiempo inicial
+            end = float(cmd[6])    # Tiempo final
+            step = float(cmd[7])   # Paso de tiempo
             results['tr'] = tr_analysis(circuit, start, end, step)
             
         elif cmd_str == '.pr':
@@ -251,6 +251,10 @@ def execute_simulations(circuit):
             
         elif cmd_str == '.dc':
             # Analisis DC
+            start = float(cmd[5])  # Tiempo inicial
+            end = float(cmd[6])    # Tiempo final
+            step = float(cmd[7])   # Paso de tiempo
+            source = cmd[8]
             
     return results
 
