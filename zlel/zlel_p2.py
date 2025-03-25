@@ -166,7 +166,7 @@ def plot_from_cvs(filename, x, y, title):
 def cir_parser(filename):
     """
         This function takes a .cir test circuit and parse it into
-        4 matices.
+        5 matrices.
         If the file has not the proper dimensions it warns and exit.
 
     Args:
@@ -214,49 +214,106 @@ def cir_parser(filename):
     return [cir_el, cir_nd, cir_val, cir_ctr, sim_cmds]
 
 
-
-
-
-def execute_simulations(circuit):
+def getSimulations(sim_cmds):
     """
-    Ejecuta las simulaciones especificadas en los comandos.
-    
+    This function takes the sim_cmds matrix and returns a dictionary with
+    the different operations. If a operation is shown in the parser, it will 
+    appear as True in the dictionary and for DC and Transient analysis also some related values.
+            PR : Prints information about the circuit
+            OP : Prints the operating point of the circuit
+            DC : Writes the DC sweep analysis in a cvs file
+            TR : Writes the Transient analysis
     Args:
-        circuit: Objeto del circuito
-        sim_cmds: Lista de comandos de simulación
-        
+        circuit : Array of 4 elements that describe the circuit
     Returns:
-        dict: Diccionario con los resultados de las simulaciones
+        d : Dictionary with .PR, .OP, .DC and .TR words.
     """
-    results = {}
+
+    d = {".PR": False, ".OP": False, ".DC": [False, 0], ".TR": [False, 0]}
     
-    for cmd in circuit[4]:
+    for cmd in enumerate(sim_cmds):
         cmd_str = cmd[0].lower()
-        
+
         if cmd_str == '.op':
-            # Análisis de punto de operación
-            T, sol = Tableau(circuit.A, circuit.M, circuit.N, circuit.Us)
-            results['op'] = sol
-            
+            d[".OP"] = True
+
         elif cmd_str == '.tr':
-            # Análisis de transitorio
-            start = float(cmd[5])  # Tiempo inicial
-            end = float(cmd[6])    # Tiempo final
-            step = float(cmd[7])   # Paso de tiempo
-            results['tr'] = tr_analysis(circuit, start, end, step)
-            
+            start = float(cmd[5])
+            end = float(cmd[6])
+            step = float(cmd[7])
+            d[".TR"] = [True, [start, end, step]]
+
         elif cmd_str == '.pr':
-            # Impresión de resultados
-            print_solution(results.get('op', None), circuit.b, circuit.n)
-            
+            d[".PR"] = True
+
         elif cmd_str == '.dc':
-            # Analisis DC
-            start = float(cmd[5])  # Tiempo inicial
-            end = float(cmd[6])    # Tiempo final
-            step = float(cmd[7])   # Paso de tiempo
+            start = float(cmd[5])
+            end = float(cmd[6])
+            step = float(cmd[7])
             source = cmd[8]
-            
-    return results
+            d[".DC"] = [True, [start, end, step], source]
+    return d
+
+
+def luzatu_cir(circuit):
+    """
+    This function expands the matrixes we obtained in the parser in order to 
+    fit with the number of the branches of the elements added.
+
+    Parameters
+    ----------
+    circuit: Array formed by the next matrices and another matrix including 
+    the simulations:
+        cir_el: np array of strings with the elements to parse. size(1,b)
+        cir_nd: np array with the nodes to the circuit. size(b,4)
+        cir_val: np array with the values of the elements. size(b,3)
+        cir_ctrl: np array of strings with the element which branch
+        controls the controlled sources. size(1,b)
+
+    Returns
+    -------
+    An array including the next matrices:
+        cir_el2: cir_el extended
+        cir_nd2: cir_nd extended
+        cir_val2: cir_val extended.
+        cir_ctrl2: cir_ctrl extended.
+    """
+    cir_el = circuit[0]
+    cir_nd = circuit[1]
+    cir_val = circuit[2]
+    cir_ctr = circuit[3]
+    cir_el2 = []
+    cir_nd2 = []
+    cir_val2 = []
+    cir_ctr2 = []
+    for i in range(0, np.size(cir_el)):
+        if cir_el[i][0].lower() == "q":
+            cir_el2.append(cir_el[i]+"_be")
+            cir_el2.append(cir_el[i]+"_bc")
+            cir_nd2.append([cir_nd[i][1], cir_nd[i][2], 0, 0])
+            cir_nd2.append([cir_nd[i][1], cir_nd[i][0], 0, 0])
+            cir_val2.append(cir_val[i])
+            cir_val2.append(cir_val[i])
+            cir_ctr2.append(cir_ctr[i])
+            cir_ctr2.append(cir_ctr[i])
+        elif cir_el[i][0].lower() == "a":
+            cir_el2.append(cir_el[i]+"_in")
+            cir_el2.append(cir_el[i]+"_ou")
+            cir_nd2.append([cir_nd[i][0], cir_nd[i][1], 0, 0])
+            cir_nd2.append([cir_nd[i][2], cir_nd[i][3], 0, 0])
+            cir_val2.append(cir_val[i])
+            cir_val2.append(cir_val[i])
+            cir_ctr2.append(cir_ctr[i])
+            cir_ctr2.append(cir_ctr[i])
+
+        else:
+            cir_el2.append(cir_el[i])
+            cir_nd2.append(cir_nd[i])
+            cir_val2.append(cir_val[i])
+            cir_ctr2.append(cir_ctr[i])
+        i += 1
+
+    return [cir_el2, cir_nd2, cir_val2, cir_ctr2]
 
     
 def getElemPosition(elem, cir_el2):
@@ -279,7 +336,7 @@ def getElemPosition(elem, cir_el2):
             return i
 
 
-def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
+def getMNUs(circuit2):
     """
     Gives M, N and Us matrixes thath will be used in Tableau equations:
         M*v + N*i = Us
@@ -302,6 +359,12 @@ def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
     Us : np array that contains the third matrix of Tableau equations.
 
     """
+    
+    b = 
+    cir_el2 = 
+    cir_val2 =
+    cir_ctr2 = 
+    
     M = np.zeros((b, b), dtype=float)
     N = np.zeros((b, b), dtype=float)
     Us = np.zeros((b, 1), dtype=float)
@@ -345,8 +408,9 @@ def getMNUs(b, cir_el2, cir_val2, cir_ctr2):
         elif cir_el2[i][0].lower() == "y":
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
-    return M, N, Us
-    
+    return [M, N, Us]
+
+
 def Tableau(A, M, N, Us):
     """
     This function evaluates the Tableau equations,
@@ -415,14 +479,25 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/1_zlel_V_R_op_dc.cir"
+        filename = "../cirs_4/all/4_zlel_P.cir"
 
-    # Obtener información del circuito
-    cir_el, cir_nd, cir_val, cir_ctrl, sim_cmds = cir_parser(filename)
-    
-    # Crear objeto del circuito
-    circuit = Circuit("circuito")
-    # Inicializar el circuito con los elementos
-    
-    # Ejecutar simulaciones
-    results = execute_simulations(circuit, sim_cmds)
+    cp = cir_parser(filename)
+    for i in cp:
+        print(i)
+
+    op = getSimulations(cp[4])
+    print(op)
+
+    elements = elements(cp2)
+    inc_matrix = zl1.inc_matrix(cp2)
+    n = len(inc_matrix)
+    b = len(inc_matrix[0])
+    sol = get_solution(elements, inc_matrix)
+    print_solution(sol, b, n)
+    print("-------------------------")
+    # zl1.print_cir_info(cp[0], cp[1], len(cp[0]), len(zl1.nodes(cp)),\
+    # zl1.nodes(cp), zl1.el_kop(cp))
+    filename = filename[:-3] + "tr"
+    save_as_csv_tr(b, n, filename, op, elements, cp2)
+    plot_from_cvs(filename, "t", "e1", "Graph")
+    # math.sin(math.pi*v1[2][k1]/180)
