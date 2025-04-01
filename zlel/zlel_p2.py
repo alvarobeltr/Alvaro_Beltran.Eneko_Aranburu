@@ -205,7 +205,8 @@ def cir_parser(filename):
 
     for x in cir_data:
         if np.size(x) != 9:
-            sys.exit("Sarrerako fitxategiko matrizearen neurriak ez dira egokiak.")
+            sys.exit("Sarrerako fitxategiko matrizearen neurriak ez "
+                     "dira egokiak.")
 
     cir_el = np.array(cir_data[:, 0:1], dtype=str)
     cir_nd = np.array(cir_data[:, 1:5], dtype=int)
@@ -477,10 +478,12 @@ def Tableau(A, M, N, Us):
 
     # 🔹 Manejo de M y N con verificación de dimensiones
     if N.shape[0] < b2 or N.shape[1] < b2:
-        raise ValueError(f"Dimensiones de N incorrectas: {N.shape}, se esperaba ({b2}, {b2})")
+        raise ValueError(f"Dimensiones de N incorrectas: {N.shape}, "
+                         f"se esperaba ({b2}, {b2})")
 
     if M.shape[0] < b2 or M.shape[1] < b2:
-        raise ValueError(f"Dimensiones de M incorrectas: {M.shape}, se esperaba ({b2}, {b2})")
+        raise ValueError(f"Dimensiones de M incorrectas: {M.shape}, "
+                         f"se esperaba ({b2}, {b2})")
 
     for i in range(b2):
         for j in range(b2):
@@ -491,7 +494,8 @@ def Tableau(A, M, N, Us):
     Us = np.ravel(Us)
 
     if len(Us) != b2:
-        raise ValueError(f"Tamaño de Us incorrecto: {len(Us)}, se esperaba {b2}")
+        raise ValueError(f"Tamaño de Us incorrecto: {len(Us)}, "
+                         f"se esperaba {b2}")
 
     for i in range(b2):
         u[b1 + b2 + i, 0] = Us[i]
