@@ -4,7 +4,8 @@
 .. module:: zlel_p2.py
     :synopsis:
 
-.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) eta Alvaro Beltran
+(abeltrandenanc002@ikasle.ehu.eus)
 
 
 """
@@ -75,6 +76,7 @@ def build_csv_header(tvi, b, n):
         header += ",i" + str(i)
     return header
 
+
 def save_sim_output(filename, sims_folder_name, extension):
     """ This function creates an absolute path to a filename inserting
         a folder given by "sims_folder_name" and changing its extension
@@ -88,7 +90,7 @@ def save_sim_output(filename, sims_folder_name, extension):
         new_file_path: the filename with the sims_folder_name inserted.
     """
 
-    if  not os.path.exists(filename):
+    if not os.path.exists(filename):
         print("file does not exist")
         return
     filename = os.path.abspath(filename)
@@ -97,14 +99,15 @@ def save_sim_output(filename, sims_folder_name, extension):
     new_dir_path = os.path.join(dir_path, sims_folder_name)
     try:
         if not os.path.exists(new_dir_path):
-             os.makedirs(new_dir_path)
+            os.makedirs(new_dir_path)
     except OSError as e:
         print(f"Error creating directory: {e}")
         return
 
     new_filename = f"{base_name}{extension}"
     new_file_path = os.path.join(new_dir_path, new_filename)
-    return new_file_path 
+    return new_file_path
+
 
 def save_as_csv(b, n, filename, sims_folder_name):
     """ This function gnerates a csv file with the name filename.
@@ -137,7 +140,8 @@ def save_as_csv(b, n, filename, sims_folder_name):
             # sol to csv
             sol_csv = ','.join(['%.9f' % num for num in sol])
             print(sol_csv, file=file)
-            t = round(t + 1, 10)   #10 decimals to avoid precision errors
+            t = round(t + 1, 10)  # 10 decimals to avoid precision errors
+
 
 def plot_from_cvs(filename, x, y, title):
     """ This function plots the values corresponding to the x string of the
@@ -179,8 +183,8 @@ def cir_parser(filename):
             - cir_val: np array with the values of the elements. size(b,3)
             - cir_ctrl: np array of strings with the element which branch
             controls the controlled sources. size(1,b)
-            - sim_cmds: np array of strings with the information of the simulations.
-
+            - sim_cmds: np array of strings with the information of the
+            simulations.
     Rises:
         SystemExit
 
@@ -189,36 +193,37 @@ def cir_parser(filename):
         cir = np.array(np.loadtxt(filename, dtype=str))
     except ValueError:
         sys.exit("File corrupted: .cir size is incorrect.")
-    
+
     # Simulazio komandoen lerroak identifikatu (.-z hasten direnak)
-    sim_start = np.where(np.char.startswith(cir[:, 0], '.' ))[0]
-    
+    sim_start = np.where(np.char.startswith(cir[:, 0], '.'))[0]
+
     if sim_start.size == 0:
         sys.exit("Ez da simulazio komando bat ere aurkitu.")
-    
+
     # Zirkuituaren datuak (simulazio komandoak kenduta)
     cir_data = cir[:sim_start[0], :]
-    
+
     for x in cir_data:
         if np.size(x) != 9:
             sys.exit("Sarrerako fitxategiko matrizearen neurriak ez dira egokiak.")
-    
+
     cir_el = np.array(cir_data[:, 0:1], dtype=str)
     cir_nd = np.array(cir_data[:, 1:5], dtype=int)
     cir_val = np.array(cir_data[:, 5:8], dtype=float)
     cir_ctr = np.array(cir_data[:, 8:9], dtype=str)
-    
+
     # Simulazio komandoak
     sim_cmds = cir[sim_start, :]
-    
+
     return [cir_el, cir_nd, cir_val, cir_ctr, sim_cmds]
 
 
 def getSimulations(sim_cmds):
     """
     This function takes the sim_cmds matrix and returns a dictionary with
-    the different operations. If a operation is shown in the parser, it will 
-    appear as True in the dictionary and for DC and Transient analysis also some related values.
+    the different operations. If a operation is shown in the parser, it will
+    appear as True in the dictionary and for DC and Transient analysis also
+    some related values.
             PR : Prints information about the circuit
             OP : Prints the operating point of the circuit
             DC : Writes the DC sweep analysis in a cvs file
@@ -230,8 +235,8 @@ def getSimulations(sim_cmds):
     """
 
     d = {".PR": False, ".OP": False, ".DC": [False, 0], ".TR": [False, 0]}
-    
-    for cmd in enumerate(sim_cmds):
+
+    for _, cmd in enumerate(sim_cmds):
         cmd_str = cmd[0].lower()
 
         if cmd_str == '.op':
@@ -257,12 +262,12 @@ def getSimulations(sim_cmds):
 
 def luzatu_cir(circuit):
     """
-    This function expands the matrixes we obtained in the parser in order to 
+    This function expands the matrixes we obtained in the parser in order to
     fit with the number of the branches of the elements added.
 
     Parameters
     ----------
-    circuit: Array formed by the next matrices and another matrix including 
+    circuit: Array formed by the next matrices and another matrix including
     the simulations:
         cir_el: np array of strings with the elements to parse. size(1,b)
         cir_nd: np array with the nodes to the circuit. size(b,4)
@@ -315,7 +320,7 @@ def luzatu_cir(circuit):
 
     return [cir_el2, cir_nd2, cir_val2, cir_ctr2]
 
-    
+
 def getElemPosition(elem, cir_el2):
     """
     Gives the position of an element in cir_el_luz
@@ -344,7 +349,7 @@ def getAdarrak(cir_el2):
     Parameters
     ----------
     cir_el: np array of strings with the elements to parse. size(1,b)
-    
+
     Returns
     -------
     b : an integer which represents the number of branches in the circuit.
@@ -443,45 +448,33 @@ def Tableau(A, M, N, Us):
     # Obtener dimensiones de la matriz de incidencia
     b1, b2 = A.shape
     T_size = b1 + 2 * b2  # Tamaño total de la matriz tableau
-    
-    # Inicializar matrices
+
     T = np.zeros((T_size, T_size), dtype=float)
     u = np.zeros((T_size, 1), dtype=float)
-    
-    # Optimización: calcular transpuesta de A una sola vez
+
     A_T = A.T
-    
-    # Bloque 1: Ecuaciones de las ramas
-    # T[i, b1+b2+j] representa la relación entre voltajes y corrientes
+
     for i in range(b1):
         for j in range(b2):
             T[i, b1 + b2 + j] = A[i, j]
-    
-    # Bloque 2: Leyes de Kirchhoff de corriente
-    # T[b1+i, j] representa la contribución de la rama j al nodo i
+
     for i in range(b2):
         for j in range(b1):
             T[b1 + i, j] = -A_T[i, j]
         T[b1 + i, b1 + i] = 1  # Diagonal principal para equilibrio
-    
-    # Bloque 3: Ecuaciones de elementos pasivos
-    # M y N representan el comportamiento de los elementos
+
     for i in range(b2):
         for j in range(b2):
             T[b1 + b2 + i, b1 + j] = M[i, j]
             T[b1 + b2 + i, b1 + b2 + j] = N[i, j]
-    
-    # Vector de términos independientes
+
     for i in range(len(Us)):
         u[b1 + b2 + i, 0] = Us[i]
-    
-    # Verificar si el sistema es resoluble
+
     if np.linalg.det(T) == 0:
         raise ValueError("El sistema no tiene solución única: det(T) = 0")
-    
-    # Resolver el sistema usando numpy.linalg.solve
+
     sol = np.linalg.solve(T, u)
-    
     return T, sol
 
 
@@ -495,7 +488,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs_4/all/4_zlel_P.cir"
+        filename = "../cirs/all/1_zlel_adibide_op.cir"
 
     cp = cir_parser(filename)
     for i in cp:
@@ -503,19 +496,18 @@ if __name__ == "__main__":
 
     op = getSimulations(cp[4])
     print(op)
-    
+
     circuit = luzatu_cir(cp)
     MNUs = getMNUs(circuit)
-    
+
     b = getAdarrak(circuit[0])
     n = zl1.getNodesNumber(circuit[1])
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
 
     sol = Tableau(MNUs[0], MNUs[1], MNUs[2], Aa)
     print_solution(sol, b, n)
-    print("-------------------------")
 
-    filename = filename[:-3] + "tr"
-    sims_folder_name = 
+    sims_folder_name = "sims"
+    filename = save_sim_output(filename, sims_folder_name, ".tr")
     save_as_csv(b, n, filename, sims_folder_name)
-    plot_from_cvs(filename, "t", "e1", "Graph")
+    plot_from_cvs(filename, "t", "e1", "Graph1")
