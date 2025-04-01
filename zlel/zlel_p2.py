@@ -316,9 +316,9 @@ def luzatu_cir(circuit):
             cir_nd2.append(cir_nd[i])
             cir_val2.append(cir_val[i])
             cir_ctr2.append(cir_ctr[i])
-        i += 1
 
-    return [cir_el2, cir_nd2, cir_val2, cir_ctr2]
+    return [np.array(cir_el2, dtype=str), np.array(cir_nd2, dtype=int),
+            np.array(cir_val2, dtype=float), np.array(cir_ctr2, dtype=str)]
 
 
 def getElemPosition(elem, cir_el2):
@@ -391,91 +391,119 @@ def getMNUs(circuit2):
     Us = np.zeros((b, 1), dtype=float)
     Bai = True
     for i in range(b):
-        if cir_el2[i][0].lower() == "r":
+        print(cir_el2[i][0])
+        if cir_el2[i, 0][0].lower() == "r":
             M[i][i] = 1
             N[i][i] = -cir_val2[i][0]
-        elif cir_el2[i][0].lower() == "v":
+        elif cir_el2[i, 0][0].lower() == "v":
             M[i][i] = 1
             Us[i] = cir_val2[i][0]
-        elif cir_el2[i][0].lower() == "i":
+        elif cir_el2[i, 0][0].lower() == "i":
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
-        elif cir_el2[i][0].lower() == "a":
+        elif cir_el2[i, 0][0].lower() == "a":
             if Bai:
                 M[i][i] = 1
                 N[i][i] = 1
                 Bai = False
             else:
                 Bai = True
-        elif cir_el2[i][0].lower() == "e":
+        elif cir_el2[i, 0][0].lower() == "e":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
             M[i][j] = cir_val2[i][0]*(-1)
-        elif cir_el2[i][0].lower() == "g":
+        elif cir_el2[i, 0][0].lower() == "g":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
             M[i][j] = cir_val2[i][0]*-1
-        elif cir_el2[i][0].lower() == "h":
+        elif cir_el2[i, 0][0].lower() == "h":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
             N[i][j] = cir_val2[i][0]*-1
-        elif cir_el2[i][0].lower() == "f":
+        elif cir_el2[i, 0][0].lower() == "f":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
             N[i][j] = cir_val2[i][0]*-1
-        elif cir_el2[i][0].lower() == "b":
+        elif cir_el2[i, 0][0].lower() == "b":
             M[i][i] = 1
             Us[i] = cir_val2[i][0]
-        elif cir_el2[i][0].lower() == "y":
+        elif cir_el2[i, 0][0].lower() == "y":
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
+    # print(f"M={M.shape}, N={N.shape}, Us={np.shape(Us)}")
     return [M, N, Us]
 
 
 def Tableau(A, M, N, Us):
     """
-    This function evaluates the Tableau equations,
-    using the M,N and Us matrices and the A reduced incidence matrix.\n
-    Args:
-        | **M**: Voltage matrix.
-        | **N**: Current matrix.
-        | **Us**: Vector of non V controlled elements.
-    Returns:
-        | **T**: Tableau matrix, formed by all Tableau equations,
-            in order e,...,v,...,i.
-        **Sol**: List of all Tableau equation solutions, in order e,...,v,...,i
-    """
-    # Obtener dimensiones de la matriz de incidencia
-    b1, b2 = A.shape
-    T_size = b1 + 2 * b2  # Tamaño total de la matriz tableau
+    Esta función evalúa las ecuaciones del método Tableau,
+    utilizando las matrices M, N y Us, junto con la matriz de incidencia
+    reducida A.
 
+    Args:
+        | **A**: Matriz de incidencia reducida.
+        | **M**: Matriz de voltajes.
+        | **N**: Matriz de corrientes.
+        | **Us**: Vector de elementos no controlados por voltaje.
+
+    Returns:
+        | **T**: Matriz Tableau, con todas las ecuaciones en el orden e, v, i.
+        | **Sol**: Lista de soluciones de todas las ecuaciones en el mismo
+        orden.
+    """
+
+    # 🔹 Verificar dimensiones de entrada
+    b1, b2 = A.shape
+    T_size = b1 + 2 * b2  # Tamaño total de la matriz Tableau
+
+    # 🔹 Inicializar matriz Tableau y vector de soluciones
     T = np.zeros((T_size, T_size), dtype=float)
     u = np.zeros((T_size, 1), dtype=float)
 
+    # 🔹 Transpuesta de A para facilitar cálculos
     A_T = A.T
 
+    # 🔹 Llenar la matriz Tableau con la ecuación de la ley de Kirchhoff
+    # de corriente (KCL)
     for i in range(b1):
         for j in range(b2):
             T[i, b1 + b2 + j] = A[i, j]
 
+    # 🔹 Ecuaciones de la ley de Kirchhoff de voltaje (KVL)
     for i in range(b2):
         for j in range(b1):
             T[b1 + i, j] = -A_T[i, j]
-        T[b1 + i, b1 + i] = 1  # Diagonal principal para equilibrio
+        T[b1 + i, b1 + i] = 1  # Elementos de la diagonal principal
+
+    # 🔹 Manejo de M y N con verificación de dimensiones
+    if N.shape[0] < b2 or N.shape[1] < b2:
+        raise ValueError(f"Dimensiones de N incorrectas: {N.shape}, se esperaba ({b2}, {b2})")
+
+    if M.shape[0] < b2 or M.shape[1] < b2:
+        raise ValueError(f"Dimensiones de M incorrectas: {M.shape}, se esperaba ({b2}, {b2})")
 
     for i in range(b2):
         for j in range(b2):
             T[b1 + b2 + i, b1 + j] = M[i, j]
             T[b1 + b2 + i, b1 + b2 + j] = N[i, j]
 
-    for i in range(len(Us)):
+    # 🔹 Convertir Us a un vector 1D para evitar errores
+    Us = np.ravel(Us)
+
+    if len(Us) != b2:
+        raise ValueError(f"Tamaño de Us incorrecto: {len(Us)}, se esperaba {b2}")
+
+    for i in range(b2):
         u[b1 + b2 + i, 0] = Us[i]
 
+    # 🔹 Verificar si el sistema tiene solución única
     if np.linalg.det(T) == 0:
         raise ValueError("El sistema no tiene solución única: det(T) = 0")
 
+    # 🔹 Resolver el sistema de ecuaciones
     sol = np.linalg.solve(T, u)
-    return T, sol
+
+    return sol
 
 
 """
@@ -488,7 +516,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/1_zlel_adibide_op.cir"
+        filename = "../cirs/all/1_zlel_Rak.cir"
 
     cp = cir_parser(filename)
     for i in cp:
@@ -498,13 +526,17 @@ if __name__ == "__main__":
     print(op)
 
     circuit = luzatu_cir(cp)
+    for i in circuit:
+        print(i)
+
     MNUs = getMNUs(circuit)
 
     b = getAdarrak(circuit[0])
     n = zl1.getNodesNumber(circuit[1])
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
 
-    sol = Tableau(MNUs[0], MNUs[1], MNUs[2], Aa)
+    sol = Tableau(A, MNUs[0], MNUs[1], MNUs[2])
     print_solution(sol, b, n)
 
     sims_folder_name = "sims"
