@@ -20,6 +20,7 @@ else:
     import zlel_p2 as zl2
 
 def non_linear(circuit):
+    
     """
 
         This function takes a circuit and returns whether there are any
@@ -143,6 +144,108 @@ def MNu_D_NR(elements, Diode_NR, k):
     N[k][k] = 1
     u[k] = Ij
     elements = [M, N, u]
+    
+def MNu_Q_NR(elements, Transistor_NR, k):
+    """
+
+        This funcion takes the transistor NR equivalent values and the elements
+        and returns the same elements but with the equivalents replaced
+        starting from the position given.
+
+    Args:
+        elements : Array with M, N and u matrices
+        Transistor_NR : NR equivalent values G, IE and IC
+        k : Starting position of the transistor on the parser
+
+    Returns:
+        [M, N, u] : The same matrices of elements in the arguments but with
+        the NR equivalent replaced starting on the k position
+
+    """
+    M = elements[0]
+    N = elements[1]
+    u = elements[2]
+    G = Transistor_NR[0]
+    Ie = Transistor_NR[1][0]
+    Ic = Transistor_NR[1][1]
+    M[k:k+2, k:k+2] = G
+    N[k][k] = 1
+    N[k+1][k+1] = 1
+    u[k] = Ie
+    u[k+1] = Ic
+    elements = [M, N, u]
+
+def NR(cir_parser2, elements, e=1e-5, it_max=100):
+    """
+
+        This function takes a cir_parser2 and its elements and in case there
+        is a D or Q it returns the Newton Pamphson equivalent.
+
+    Args:
+        cir_parser2 : Updated cir_parser
+        elements : M, N and u matrices
+        e : Error given to solve NR (Default value = 1e-5)
+        it_max : Maximum iteration given to solve NR (Default value = 100)
+
+    """
+
+    is_nl = non_linear(cir_parser2)
+    nl_el = is_nl[1]
+    if is_nl[0]:
+        ft = np.full((len(nl_el)), False)
+        Vd0 = 0.6
+        Vbe0 = 0.6
+        Vbc0 = 0.6
+        Vs = []
+        for el, k in nl_el:
+            if el == "D":
+                Vs.append(Vd0)
+            else:
+                Vs.append([Vbe0, Vbc0])
+        Vd0 = 0.6
+        Vbe0 = 0.6
+        Vbc0 = 0.6
+        out = False
+        v = cir_parser2[2]
+        getInzidentziaMatrix
+        Ai = zl1.inc_matrix(cir_parser2)
+        it = 0
+        while (not out) and (it < it_max):
+            i = 0
+            for el, k in nl_el:
+                if el == "D":
+                    Vd0 = Vs[i]
+                    I0 = v[k][0]
+                    n = v[k][1]
+                    D_NR = diode_NR(I0, n, Vd0)
+                    MNu_D_NR(elements, D_NR, k)
+                else:
+                    Vbe0 = Vs[i][0]
+                    Vbc0 = Vs[i][1]
+                    Ies = v[k][0]
+                    Ics = v[k][1]
+                    BF = v[k][2]
+                    Q_NR = Transistor_NR(Ies, Ics, BF, Vbe0, Vbc0)
+                    MNu_Q_NR(elements, Q_NR, k)
+                i += 1
+            sol = zl2.get_solution(elements, Ai)
+            j = 0
+            for elm, k in nl_el:
+                if elm == "D":
+                    VDj = sol[len(Ai) - 1 + k]
+                    if (abs(VDj-Vs[j]) < e):
+                        ft[j] = True
+                    Vs[j] = VDj
+                else:
+                    VBEj = sol[len(Ai) - 1 + k]
+                    VBCj = sol[len(Ai) + k]
+                    if (abs(VBEj-Vs[j][0]) < e) and (abs(VBCj-Vs[j][1]) < e):
+                        ft[j] = True
+                    Vs[j][0] = VBEj
+                    Vs[j][1] = VBCj
+                j += 1
+            out = np.alltrue(ft)
+            it += 1
 
 """
 https://stackoverflow.com/questions/419163/what-does-if-name-main-do
