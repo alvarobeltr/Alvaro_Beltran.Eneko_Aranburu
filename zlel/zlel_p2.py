@@ -523,25 +523,41 @@ if __name__ == "__main__":
         filename = "../cirs/all/1_zlel_Rak.cir"
 
     cp = cir_parser(filename)
-    for i in cp:
+    circuit = luzatu_cir(cp)
+    for i in circuit:
         print(i)
 
     op = getSimulations(cp[4])
     print(op)
 
-    circuit = luzatu_cir(cp)
-    for i in circuit:
-        print(i)
-
-    MNUs = getMNUs(circuit)
-
     b = getAdarrak(circuit[0])
     n = zl1.getNodesNumber(circuit[1])
-    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
-    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    nodes = zl1.getNodes(circuit[1])
+    el_num = zl1.getEl_num(cp[0])
+    # Verificar qué simulaciones ejecutar
+    if op[".OP"]:
+        print("Realizar análisis de punto de operación (OP)")
+        MNUs = getMNUs(circuit)
 
-    sol = Tableau(A, MNUs[0], MNUs[1], MNUs[2])
-    print_solution(sol, b, n)
+        Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+        A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+
+        sol = Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+        print_solution(sol, b, n)
+    if op[".PR"]:
+        print("Realizar impresión de información (PR)")
+        zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+
+    if op[".DC"][0]:  # El primer valor indica si se debe hacer la simulación
+        start, end, step = op[".DC"][1]
+        source = op[".DC"][2]
+        print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
+              f" fuente: {source}")
+
+    if op[".TR"][0]:
+        start, end, step = op[".TR"][1]
+        print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
+              f"paso {step}s")
 
     sims_folder_name = "sims"
     filename = save_sim_output(filename, sims_folder_name, ".tr")
