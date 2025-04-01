@@ -336,6 +336,23 @@ def getElemPosition(elem, cir_el2):
             return i
 
 
+def getAdarrak(cir_el2):
+    """
+    This function returns the size of the list of elements obtained from
+    cir_el2.
+
+    Parameters
+    ----------
+    cir_el: np array of strings with the elements to parse. size(1,b)
+    
+    Returns
+    -------
+    b : an integer which represents the number of branches in the circuit.
+
+    """
+    return np.size(cir_el2)
+
+
 def getMNUs(circuit2):
     """
     Gives M, N and Us matrixes thath will be used in Tableau equations:
@@ -359,12 +376,11 @@ def getMNUs(circuit2):
     Us : np array that contains the third matrix of Tableau equations.
 
     """
-    
-    b = 
-    cir_el2 = 
-    cir_val2 =
-    cir_ctr2 = 
-    
+    cir_el2 = circuit2[0]
+    cir_val2 = circuit2[2]
+    cir_ctr2 = circuit2[3]
+    b = getAdarrak(cir_el2)
+
     M = np.zeros((b, b), dtype=float)
     N = np.zeros((b, b), dtype=float)
     Us = np.zeros((b, 1), dtype=float)
@@ -383,9 +399,9 @@ def getMNUs(circuit2):
             if Bai:
                 M[i][i] = 1
                 N[i][i] = 1
-                Bai=False
+                Bai = False
             else:
-                Bai=True
+                Bai = True
         elif cir_el2[i][0].lower() == "e":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
@@ -487,17 +503,19 @@ if __name__ == "__main__":
 
     op = getSimulations(cp[4])
     print(op)
+    
+    circuit = luzatu_cir(cp)
+    MNUs = getMNUs(circuit)
+    
+    b = getAdarrak(circuit[0])
+    n = zl1.getNodesNumber(circuit[1])
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
 
-    elements = elements(cp2)
-    inc_matrix = zl1.inc_matrix(cp2)
-    n = len(inc_matrix)
-    b = len(inc_matrix[0])
-    sol = get_solution(elements, inc_matrix)
+    sol = Tableau(MNUs[0], MNUs[1], MNUs[2], Aa)
     print_solution(sol, b, n)
     print("-------------------------")
-    # zl1.print_cir_info(cp[0], cp[1], len(cp[0]), len(zl1.nodes(cp)),\
-    # zl1.nodes(cp), zl1.el_kop(cp))
+
     filename = filename[:-3] + "tr"
-    save_as_csv_tr(b, n, filename, op, elements, cp2)
+    sims_folder_name = 
+    save_as_csv(b, n, filename, sims_folder_name)
     plot_from_cvs(filename, "t", "e1", "Graph")
-    # math.sin(math.pi*v1[2][k1]/180)
