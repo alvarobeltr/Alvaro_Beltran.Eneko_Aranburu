@@ -19,8 +19,8 @@ else:
     import zlel_p1 as zl1
     import zlel_p2 as zl2
 
+
 def non_linear(circuit):
-    
     """
 
         This function takes a circuit and returns whether there are any
@@ -49,6 +49,8 @@ def non_linear(circuit):
             nl_el.append(pos)
         k += 1
     return [nl, nl_el]
+
+
 def diode_NR(I0, nD, Vdj):
     """ https://documentation.help/Sphinx/math.html
         Calculates the g and the I of a diode for a NR discrete equivalent
@@ -81,10 +83,12 @@ def diode_NR(I0, nD, Vdj):
 
     Vt = 8.6173324e-5*300*nD
     gd = -I0/(nD*Vt)*(math.exp(Vdj/(nD*Vt)))
-    I = I0*(math.exp(Vdj/(nD*Vt))-1)
-    Id = I + gd*Vdj
+    Ij = I0*(math.exp(Vdj/(nD*Vt))-1)
+    Id = Ij + gd*Vdj
     return [gd, Id]
- #   return gd, Id
+    #return gd, Id
+
+
 def Transistor_NR(Ies, Ics, Bf, Vbe, Vbc):
     """
 
@@ -119,6 +123,7 @@ def Transistor_NR(Ies, Ics, Bf, Vbe, Vbc):
     G = [[g11, g12], [g21, g22]]
     return [G, [Ie, Ic]]
 
+
 def MNu_D_NR(elements, Diode_NR, k):
     """
 
@@ -144,7 +149,8 @@ def MNu_D_NR(elements, Diode_NR, k):
     N[k][k] = 1
     u[k] = Ij
     elements = [M, N, u]
-    
+
+
 def MNu_Q_NR(elements, Transistor_NR, k):
     """
 
@@ -174,6 +180,7 @@ def MNu_Q_NR(elements, Transistor_NR, k):
     u[k] = Ie
     u[k+1] = Ic
     elements = [M, N, u]
+
 
 def NR(cir_parser2, elements, e=1e-5, it_max=100):
     """
@@ -207,8 +214,8 @@ def NR(cir_parser2, elements, e=1e-5, it_max=100):
         Vbc0 = 0.6
         out = False
         v = cir_parser2[2]
-        getInzidentziaMatrix
-        Ai = zl1.inc_matrix(cir_parser2)
+        #Ai = getInzidentziaMatrix
+        #Ai = zl1.inc_matrix(cir_parser2)
         it = 0
         while (not out) and (it < it_max):
             i = 0
@@ -246,6 +253,7 @@ def NR(cir_parser2, elements, e=1e-5, it_max=100):
                 j += 1
             out = np.alltrue(ft)
             it += 1
+
 
 """
 https://stackoverflow.com/questions/419163/what-does-if-name-main-do
