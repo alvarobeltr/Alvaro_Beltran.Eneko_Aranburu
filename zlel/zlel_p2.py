@@ -520,7 +520,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/1_zlel_Rak.cir"
+        filename = "../cirs/all/1_zlel_opamp.cir"
 
     cp = cir_parser(filename)
     circuit = luzatu_cir(cp)
