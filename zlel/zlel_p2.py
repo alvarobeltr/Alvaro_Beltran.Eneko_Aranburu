@@ -157,7 +157,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
             t = round(t + step, 10)  # 10 decimals to avoid precision errors
 
 
-def save_as_csv_dc(b, n, filename, MNUs, cir_parser, start, step, end, source):
+def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     """ This function gnerates a csv file with the name filename.
         First it will save a header and then, it loops and save a line in
         csv format into the file with the dc solution of the circuit.
@@ -167,7 +167,7 @@ def save_as_csv_dc(b, n, filename, MNUs, cir_parser, start, step, end, source):
         | n: # of nodes
         | filename: string with the filename (incluiding the path)
     """
-    if source[0] == "V":
+    if source[0].lower() == "v":
         header = build_csv_header("V", b, n)
     else:
         header = build_csv_header("I", b, n)
@@ -177,27 +177,29 @@ def save_as_csv_dc(b, n, filename, MNUs, cir_parser, start, step, end, source):
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
     A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
 
-    cir_el = cir_parser[0]
-    cir_val = cir_parser[2]
+    cir_el = circuit[0]
+    cir_val = circuit[2]
 
     ext = "_" + source + ".dc"
     filename = save_sim_output(filename, "sims", ext)
-    for k, i in enumerate(cir_el):
-        if i == source:
-            eli = k
+    
+    eli = next((k for k, i in enumerate(cir_el) if i[0] == source), None)
+    if eli is None:
+        raise ValueError(f"Source '{source}' not found in circuit.")
 
     with open(filename, 'w') as file:
         print(header, file=file)
         v = start
         while v <= end:
             Us[eli] = v
+            print(Us)
             sol = Tableau(A, MNUs[0], MNUs[1], Us)
             # Insert the time
             sol = np.insert(sol, 0, v)
             # sol to csv
             sol_csv = ','.join(['%.9f' % num for num in sol])
             print(sol_csv, file=file)
-            v = round(v + step, 10)  # 10 decimals to avoid precision errors
+            v = v + step
 
 
 def plot_from_cvs(filename, x, y, title):
@@ -338,7 +340,7 @@ def luzatu_cir(circuit):
         - cir_val2: expanded values
         - cir_ctrl2: expanded controls
     """
-    cir_el, cir_nd, cir_val, cir_ctr, sim = circuit
+    cir_el, cir_nd, cir_val, cir_ctr, _ = circuit
 
     cir_el2, cir_nd2, cir_val2, cir_ctr2 = [], [], [], []
 
@@ -347,14 +349,14 @@ def luzatu_cir(circuit):
 
         if element[0].lower() == "q":
             # Expand transistor into two pseudo-branches
-            cir_el2 += [element + "_be", element + "_bc"]
+            cir_el2 += [[element + "_be"], [element + "_bc"]]
             cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0], [cir_nd[i][1], cir_nd[i][0], 0, 0]]
             cir_val2 += [cir_val[i], cir_val[i]]
             cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
 
         elif element[0].lower() == "a":
             # Expand controlled source into input/output components
-            cir_el2 += [element + "_in", element + "_ou"]
+            cir_el2 += [[element + "_in"], [element + "_ou"]]
             cir_nd2 += [[cir_nd[i][0], cir_nd[i][1], 0, 0], [cir_nd[i][2], cir_nd[i][3], 0, 0]]
             cir_val2 += [cir_val[i], cir_val[i]]
             cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
@@ -391,7 +393,7 @@ def getElemPosition(elem, cir_el2):
 
     """
     for i in range(0, np.size(cir_el2)):
-        if cir_el2[i].lower() == elem.lower():
+        if cir_el2[i][0].lower() == elem[0].lower():
             return i
 
 
@@ -454,7 +456,6 @@ def getMNUs(circuit2):
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
         elif cir_el2[i, 0][0].lower() == "a":
-            print(cir_el2[i, 0].lower())
             if "ou" in cir_el2[i, 0].lower():
                 M[i][i-1] = 1
             else:
@@ -570,7 +571,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/1_zlel_opamp.cir"
+        filename = "../cirs/all/1_zlel_ekorketa.cir"
 
     cp = cir_parser(filename)
     circuit = luzatu_cir(cp)
