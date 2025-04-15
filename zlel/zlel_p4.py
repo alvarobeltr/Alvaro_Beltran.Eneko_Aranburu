@@ -68,7 +68,7 @@ def Euler_BackWard(circuit, elements, h, t, pre_sol):
 
     """
     d = dynamic(circuit)
-    if is_d[0]:
+    if d[0]:
         d_el = is_d[1]
         M = elements[0]
         N = elements[1]
