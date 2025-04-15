@@ -39,16 +39,23 @@ def print_solution(sol, b, n):
         for ind in range(np.size(sol)):
             tmp[ind] = np.array(sol[ind])
         sol = tmp
+
+    tolerance = -1e-9  # Adjust as needed
     print("\n========== Nodes voltage to reference ========")
     for i in range(1, n):
-        print("e" + str(i) + " = ", "[{:10.9f}]".format(sol[i-1][0]))
+        value = sol[i-1][0]
+        print("e" + str(i) + " = ", "[{:10.9f}]".format(0.0 if value <= 0 and 
+                                                value >= tolerance else value))
     print("\n========== Branches voltage difference ========")
     for i in range(1, b+1):
-        print("v" + str(i) + " = ", "[{:10.9f}]".format(sol[i+n-2][0]))
+        value = sol[i+n-2][0]
+        print("v" + str(i) + " = ", "[{:10.9f}]".format(0.0 if value <= 0 and 
+                                                value >= tolerance else value))
     print("\n=============== Branches currents ==============")
     for i in range(1, b+1):
-        print("i" + str(i) + " = ", "[{:10.9f}]".format(sol[i+b+n-2][0]))
-
+        value = sol[i+b+n-2][0]
+        print("i" + str(i) + " = ", "[{:10.9f}]".format(0.0 if value <= 0 and 
+                                                value >= tolerance else value))
     print("\n================= End solution =================\n")
 
 

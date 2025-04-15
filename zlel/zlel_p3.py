@@ -184,10 +184,8 @@ def MNu_Q_NR(elements, Transistor_NR, k):
 
 def NR(cir_parser2, elements, e=1e-5, it_max=100):
     """
-
         This function takes a cir_parser2 and its elements and in case there
-        is a D or Q it returns the Newton Pamphson equivalent.
-
+        is a D or Q it returns the Newton Raphson equivalent.
     Args:
         cir_parser2 : Updated cir_parser
         elements : M, N and u matrices
