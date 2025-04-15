@@ -116,28 +116,50 @@ def save_sim_output(filename, sims_folder_name, extension):
     return new_file_path
 
 
-def save_as_csv(b, n, filename, sims_folder_name):
-    """ This function gnerates a csv file with the name filename.
+def save_as_csv_tr(b, n, filename, start, end, step):
+    """ This function generates a csv file with the name filename.
         First it will save a header and then, it loops and save a line in
-        csv format into the file.
+        csv format into the file making the transient analysis.
 
     Args:
         | b: # of branches
         | n: # of nodes
         | filename: string with the filename (incluiding the path)
-        | sims_folder_name: string with the name of the folder to save the sims
-     Returns:
-        new_file_path: the filename with the sims_folder_name inserted.
-
     """
-    # Sup .tr
     header = build_csv_header("t", b, n)
     with open(filename, 'w') as file:
         print(header, file=file)
         # Get the indices of the elements corresponding to the sources.
         # The freq parameter cannot be 0 this is why we choose cir_tr[0].
-        t = 0
-        while t <= 10:
+        t = start
+        while t <= end:
+            # Recalculate the Us for the sinusoidal sources
+            sol = np.full(2*b+(n-1), t+1, dtype=float)
+            # Inserte the time
+            sol = np.insert(sol, 0, t)
+            # sol to csv
+            sol_csv = ','.join(['%.9f' % num for num in sol])
+            print(sol_csv, file=file)
+            t = round(t + step, 10)  # 10 decimals to avoid precision errors
+
+
+def save_as_csv_dc(b, n, filename, start, step, end, source):
+    """ This function gnerates a csv file with the name filename.
+        First it will save a header and then, it loops and save a line in
+        csv format into the file with the dc solution of the circuit.
+
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+    """
+    header = build_csv_header("t", b, n)
+    with open(filename, 'w') as file:
+        print(header, file=file)
+        # Get the indices of the elements corresponding to the sources.
+        # The freq parameter cannot be 0 this is why we choose cir_tr[0].
+        t = start
+        while t <= end:
             # for t in tr["start"],tr["end"],tr["step"]
             # Recalculate the Us for the sinusoidal sources
 
@@ -147,7 +169,7 @@ def save_as_csv(b, n, filename, sims_folder_name):
             # sol to csv
             sol_csv = ','.join(['%.9f' % num for num in sol])
             print(sol_csv, file=file)
-            t = round(t + 1, 10)  # 10 decimals to avoid precision errors
+            t = round(t + step, 10)  # 10 decimals to avoid precision errors
 
 
 def plot_from_cvs(filename, x, y, title):
@@ -568,5 +590,5 @@ if __name__ == "__main__":
 
     sims_folder_name = "sims"
     filename = save_sim_output(filename, sims_folder_name, ".tr")
-    save_as_csv(b, n, filename, sims_folder_name)
+    save_as_csv_tr(b, n, filename)
     plot_from_cvs(filename, "t", "e1", "Graph1")
