@@ -13,6 +13,7 @@ import os
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+import math
 
 if __name__ == "zlel.zlel_p2":
     import zlel.zlel_p1 as zl1
@@ -116,7 +117,7 @@ def save_sim_output(filename, sims_folder_name, extension):
     return new_file_path
 
 
-def save_as_csv_tr(b, n, filename, start, end, step):
+def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
     """ This function generates a csv file with the name filename.
         First it will save a header and then, it loops and save a line in
         csv format into the file making the transient analysis.
@@ -126,15 +127,28 @@ def save_as_csv_tr(b, n, filename, start, end, step):
         | n: # of nodes
         | filename: string with the filename (incluiding the path)
     """
+    
+    Us = MNUs[2]
+    
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    
+    cir_el = circuit[0]
+    cir_val = circuit[2]
     header = build_csv_header("t", b, n)
+    filename = save_sim_output(filename, "sims", ".tr")
     with open(filename, 'w') as file:
         print(header, file=file)
         # Get the indices of the elements corresponding to the sources.
         # The freq parameter cannot be 0 this is why we choose cir_tr[0].
         t = start
         while t <= end:
-            # Recalculate the Us for the sinusoidal sources
-            sol = np.full(2*b+(n-1), t+1, dtype=float)
+            for k,i in enumerate(cir_el):
+                if (i[0][0] == "B") or (i[0][0] == "Y"):
+                    w = 2*math.pi*cir_val[k][1]
+                    Us[k] = cir_val[k][0]*math.sin((w*t) + (math.pi*cir_val[k][2]/180))
+
+            sol = Tableau(A, MNUs[0], MNUs[1], Us)
             # Inserte the time
             sol = np.insert(sol, 0, t)
             # sol to csv
@@ -143,7 +157,7 @@ def save_as_csv_tr(b, n, filename, start, end, step):
             t = round(t + step, 10)  # 10 decimals to avoid precision errors
 
 
-def save_as_csv_dc(b, n, filename, start, step, end, source):
+def save_as_csv_dc(b, n, filename, MNUs, cir_parser, start, step, end, source):
     """ This function gnerates a csv file with the name filename.
         First it will save a header and then, it loops and save a line in
         csv format into the file with the dc solution of the circuit.
@@ -153,23 +167,37 @@ def save_as_csv_dc(b, n, filename, start, step, end, source):
         | n: # of nodes
         | filename: string with the filename (incluiding the path)
     """
-    header = build_csv_header("t", b, n)
+    if source[0] == "V":
+        header = build_csv_header("V", b, n)
+    else:
+        header = build_csv_header("I", b, n)
+
+    Us = MNUs[2]
+
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+
+    cir_el = cir_parser[0]
+    cir_val = cir_parser[2]
+
+    ext = "_" + source + ".dc"
+    filename = save_sim_output(filename, "sims", ext)
+    for k, i in enumerate(cir_el):
+        if i == source:
+            eli = k
+
     with open(filename, 'w') as file:
         print(header, file=file)
-        # Get the indices of the elements corresponding to the sources.
-        # The freq parameter cannot be 0 this is why we choose cir_tr[0].
-        t = start
-        while t <= end:
-            # for t in tr["start"],tr["end"],tr["step"]
-            # Recalculate the Us for the sinusoidal sources
-
-            sol = np.full(2*b+(n-1), t+1, dtype=float)
-            # Inserte the time
-            sol = np.insert(sol, 0, t)
+        v = start
+        while v <= end:
+            Us[eli] = v
+            sol = Tableau(A, MNUs[0], MNUs[1], Us)
+            # Insert the time
+            sol = np.insert(sol, 0, v)
             # sol to csv
             sol_csv = ','.join(['%.9f' % num for num in sol])
             print(sol_csv, file=file)
-            t = round(t + step, 10)  # 10 decimals to avoid precision errors
+            v = round(v + step, 10)  # 10 decimals to avoid precision errors
 
 
 def plot_from_cvs(filename, x, y, title):
@@ -292,63 +320,59 @@ def getSimulations(sim_cmds):
 
 def luzatu_cir(circuit):
     """
-    This function expands the matrixes we obtained in the parser in order to
-    fit with the number of the branches of the elements added.
+    Expands circuit matrices to handle multi-branch elements like transistors and controlled sources.
 
     Parameters
     ----------
-    circuit: Array formed by the next matrices and another matrix including
-    the simulations:
-        cir_el: np array of strings with the elements to parse. size(1,b)
-        cir_nd: np array with the nodes to the circuit. size(b,4)
-        cir_val: np array with the values of the elements. size(b,3)
-        cir_ctrl: np array of strings with the element which branch
-        controls the controlled sources. size(1,b)
+    circuit: list of np.arrays
+        - cir_el: np array of element names. size(1, b)
+        - cir_nd: np array of node connections. size(b, 4)
+        - cir_val: np array of element values. size(b, 3)
+        - cir_ctrl: np array of controlling elements (strings). size(1, b)
 
     Returns
     -------
-    An array including the next matrices:
-        cir_el2: cir_el extended
-        cir_nd2: cir_nd extended
-        cir_val2: cir_val extended.
-        cir_ctrl2: cir_ctrl extended.
+    Tuple of np.arrays:
+        - cir_el2: expanded element names
+        - cir_nd2: expanded node definitions
+        - cir_val2: expanded values
+        - cir_ctrl2: expanded controls
     """
-    cir_el = circuit[0]
-    cir_nd = circuit[1]
-    cir_val = circuit[2]
-    cir_ctr = circuit[3]
-    cir_el2 = []
-    cir_nd2 = []
-    cir_val2 = []
-    cir_ctr2 = []
-    for i in range(0, np.size(cir_el)):
-        if cir_el[i][0].lower() == "q":
-            cir_el2.append(cir_el[i]+"_be")
-            cir_el2.append(cir_el[i]+"_bc")
-            cir_nd2.append([cir_nd[i][1], cir_nd[i][2], 0, 0])
-            cir_nd2.append([cir_nd[i][1], cir_nd[i][0], 0, 0])
-            cir_val2.append(cir_val[i])
-            cir_val2.append(cir_val[i])
-            cir_ctr2.append(cir_ctr[i])
-            cir_ctr2.append(cir_ctr[i])
-        elif cir_el[i][0].lower() == "a":
-            cir_el2.append(cir_el[i]+"_in")
-            cir_el2.append(cir_el[i]+"_ou")
-            cir_nd2.append([cir_nd[i][0], cir_nd[i][1], 0, 0])
-            cir_nd2.append([cir_nd[i][2], cir_nd[i][3], 0, 0])
-            cir_val2.append(cir_val[i])
-            cir_val2.append(cir_val[i])
-            cir_ctr2.append(cir_ctr[i])
-            cir_ctr2.append(cir_ctr[i])
+    cir_el, cir_nd, cir_val, cir_ctr, sim = circuit
+
+    cir_el2, cir_nd2, cir_val2, cir_ctr2 = [], [], [], []
+
+    for i in range(np.size(cir_el)):
+        element = cir_el[i][0]
+
+        if element[0].lower() == "q":
+            # Expand transistor into two pseudo-branches
+            cir_el2 += [element + "_be", element + "_bc"]
+            cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0], [cir_nd[i][1], cir_nd[i][0], 0, 0]]
+            cir_val2 += [cir_val[i], cir_val[i]]
+            cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
+
+        elif element[0].lower() == "a":
+            # Expand controlled source into input/output components
+            cir_el2 += [element + "_in", element + "_ou"]
+            cir_nd2 += [[cir_nd[i][0], cir_nd[i][1], 0, 0], [cir_nd[i][2], cir_nd[i][3], 0, 0]]
+            cir_val2 += [cir_val[i], cir_val[i]]
+            cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
 
         else:
+            # Keep standard elements unchanged
             cir_el2.append(cir_el[i])
             cir_nd2.append(cir_nd[i])
             cir_val2.append(cir_val[i])
             cir_ctr2.append(cir_ctr[i])
 
-    return [np.array(cir_el2, dtype=str), np.array(cir_nd2, dtype=int),
-            np.array(cir_val2, dtype=float), np.array(cir_ctr2, dtype=str)]
+    cir_el2 = np.reshape(np.array(cir_el2), (-1, 1))
+    cir_nd2 = np.reshape(np.array(cir_nd2), (-1, 4))
+    cir_val2 = np.reshape(np.array(cir_val2), (-1, 3))
+    cir_ctr2 = np.reshape(np.array(cir_el2), (-1, 1))
+
+    return [cir_el2, cir_nd2, cir_val2, cir_ctr2]
+
 
 
 def getElemPosition(elem, cir_el2):
@@ -419,9 +443,7 @@ def getMNUs(circuit2):
     M = np.zeros((b, b), dtype=float)
     N = np.zeros((b, b), dtype=float)
     Us = np.zeros((b, 1), dtype=float)
-    Bai = True
     for i in range(b):
-        print(cir_el2[i][0])
         if cir_el2[i, 0][0].lower() == "r":
             M[i][i] = 1
             N[i][i] = -cir_val2[i][0]
@@ -432,12 +454,11 @@ def getMNUs(circuit2):
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
         elif cir_el2[i, 0][0].lower() == "a":
-            if Bai:
-                M[i][i] = 1
-                N[i][i] = 1
-                Bai = False
+            print(cir_el2[i, 0].lower())
+            if "ou" in cir_el2[i, 0].lower():
+                M[i][i-1] = 1
             else:
-                Bai = True
+                N[i][i] = 1
         elif cir_el2[i, 0][0].lower() == "e":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
@@ -563,11 +584,10 @@ if __name__ == "__main__":
     n = zl1.getNodesNumber(circuit[1])
     nodes = zl1.getNodes(circuit[1])
     el_num = zl1.getEl_num(cp[0])
+    MNUs = getMNUs(circuit)
     # Verificar qué simulaciones ejecutar
     if op[".OP"]:
         print("Realizar análisis de punto de operación (OP)")
-        MNUs = getMNUs(circuit)
-
         Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
         A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
 
@@ -582,13 +602,12 @@ if __name__ == "__main__":
         source = op[".DC"][2]
         print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
               f" fuente: {source}")
+        save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
               f"paso {step}s")
+        save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
 
-    sims_folder_name = "sims"
-    filename = save_sim_output(filename, sims_folder_name, ".tr")
-    save_as_csv_tr(b, n, filename)
-    plot_from_cvs(filename, "t", "e1", "Graph1")
+
