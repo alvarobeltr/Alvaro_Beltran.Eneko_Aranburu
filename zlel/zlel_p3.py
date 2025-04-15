@@ -182,7 +182,7 @@ def MNu_Q_NR(elements, Transistor_NR, k):
     elements = [M, N, u]
 
 
-def NR(cir_parser2, elements, e=1e-5, it_max=100):
+def NR(circuit, elements, e=1e-5, it_max=100):
     """
         This function takes a cir_parser2 and its elements and in case there
         is a D or Q it returns the Newton Raphson equivalent.
@@ -194,7 +194,7 @@ def NR(cir_parser2, elements, e=1e-5, it_max=100):
 
     """
 
-    is_nl = non_linear(cir_parser2)
+    is_nl = non_linear(circuit)
     nl_el = is_nl[1]
     if is_nl[0]:
         ft = np.full((len(nl_el)), False)
@@ -211,9 +211,9 @@ def NR(cir_parser2, elements, e=1e-5, it_max=100):
         Vbe0 = 0.6
         Vbc0 = 0.6
         out = False
-        v = cir_parser2[2]
+        v = circuit[2]
         #Ai = getInzidentziaMatrix
-        #Ai = zl1.inc_matrix(cir_parser2)
+        Ai = zl1.getInzidentziaMatrix(n, b, circuit[1])
         it = 0
         while (not out) and (it < it_max):
             i = 0
