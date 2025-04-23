@@ -127,14 +127,14 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
         | n: # of nodes
         | filename: string with the filename (incluiding the path)
     """
-    
+
     Us = MNUs[2]
-    
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
     A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
-    
+
     cir_el = circuit[0]
     cir_val = circuit[2]
+
     header = build_csv_header("t", b, n)
     filename = save_sim_output(filename, "sims", ".tr")
     with open(filename, 'w') as file:
@@ -143,7 +143,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
         # The freq parameter cannot be 0 this is why we choose cir_tr[0].
         t = start
         while t <= end:
-            for k,i in enumerate(cir_el):
+            for k, i in enumerate(cir_el):
                 if (i[0][0] == "B") or (i[0][0] == "Y"):
                     w = 2*math.pi*cir_val[k][1]
                     Us[k] = cir_val[k][0]*math.sin((w*t) + (math.pi*cir_val[k][2]/180))
@@ -178,11 +178,9 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
 
     cir_el = circuit[0]
-    cir_val = circuit[2]
-
     ext = "_" + source + ".dc"
     filename = save_sim_output(filename, "sims", ext)
-    
+
     eli = next((k for k, i in enumerate(cir_el) if i[0] == source), None)
     if eli is None:
         raise ValueError(f"Source '{source}' not found in circuit.")
