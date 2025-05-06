@@ -45,18 +45,18 @@ def print_solution(sol, b, n):
     print("\n========== Nodes voltage to reference ========")
     for i in range(1, n):
         value = sol[i-1][0]
-        print("e" + str(i) + " = ", "[{:10.9f}]".format(0.0 if value <= 0 and 
-                                                value >= tolerance else value))
+        print("e" + str(i) + " = ", "[{:10.9f}]".format(
+            0.0 if value <= 0 and value >= tolerance else value))
     print("\n========== Branches voltage difference ========")
     for i in range(1, b+1):
         value = sol[i+n-2][0]
-        print("v" + str(i) + " = ", "[{:10.9f}]".format(0.0 if value <= 0 and 
-                                                value >= tolerance else value))
+        print("v" + str(i) + " = ", "[{:10.9f}]".format(
+            0.0 if value <= 0 and value >= tolerance else value))
     print("\n=============== Branches currents ==============")
     for i in range(1, b+1):
         value = sol[i+b+n-2][0]
-        print("i" + str(i) + " = ", "[{:10.9f}]".format(0.0 if value <= 0 and 
-                                                value >= tolerance else value))
+        print("i" + str(i) + " = ", "[{:10.9f}]".format(
+            0.0 if value <= 0 and value >= tolerance else value))
     print("\n================= End solution =================\n")
 
 
@@ -146,7 +146,8 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
             for k, i in enumerate(cir_el):
                 if (i[0][0] == "B") or (i[0][0] == "Y"):
                     w = 2*math.pi*cir_val[k][1]
-                    Us[k] = cir_val[k][0]*math.sin((w*t) + (math.pi*cir_val[k][2]/180))
+                    Us[k] = cir_val[k][0]*math.sin((w*t) +
+                                                   (math.pi*cir_val[k][2]/180))
 
             sol = Tableau(A, MNUs[0], MNUs[1], Us)
             # Inserte the time
@@ -199,63 +200,7 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
             print(sol_csv, file=file)
             v = v + step
 
-def save_as_csv_dc2(b, n, filename, MNUs, circuit, start, step, end, source, operation):
-    """ This function gnerates a csv file with the name filename.
-        First it will save a header and then, it loops and save a line in
-        csv format into the file with the dc solution of the circuit.
 
-    Args:
-        | b: # of branches
-        | n: # of nodes
-        | filename: string with the filename (incluiding the path)
-    """
-    dc = operation[".DC"]
-    if not dc[0]:
-        sys.exit("No DC sweep available")
-    if source[0].lower() == "v":
-        header = build_csv_header("V", b, n)
-    else:
-        header = build_csv_header("I", b, n)
-    M = MNUs[0]
-    N = MNUs[1]
-    u = MNUs[2]
-    cir_el = circuit[0]
-    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
-    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
-    ext = "_" + source + ".dc"
-    filename = save_sim_output(filename, "sims", ext)
-    k = 0
-    """eli = next((k for k, i in enumerate(cir_el) if i[0] == source), None)
-    if eli is None:
-        raise ValueError(f"Source '{source}' not found in circuit.")"""
-    for k, i in enumerate(cir_el):
-        if i[0] == source:  # Solo comparas el nombre del elemento
-            eli = k
-    print(eli)
-    """for i in el:
-       if i == dc[1]:
-            eli = k
-        k += 1"""
-    with open(filename, 'w') as file:
-        print(header, file=file)
-        # Get the indices of the elements corresponding to the sources.
-        # The freq parameter cannot be 0 this is why we choose cir_tr[0].
-        u1 = np.copy(u)
-        v=start
-        while v <= end:
-            # for t in tr["start"],tr["end"],tr["step"]
-            # Recalculate the Us for the sinusoidal sources
-            u1[eli] = v
-            sol = Tableau(A, M, N, u)
-            #zl3.NR(cir_parser2, elem)
-            #sol = get_solution(elem, inc_matrix)
-            # Inserte the time
-            sol = np.insert(sol, 0, v)
-            # sol to csv
-            sol_csv = ','.join(['%.9f' % num for num in sol])
-            print(sol_csv, file=file)
-            v = v + step
-    
 def plot_from_cvs(filename, x, y, title):
     """ This function plots the values corresponding to the x string of the
         file filename in the x-axis and the ones corresponding to the y
@@ -376,7 +321,8 @@ def getSimulations(sim_cmds):
 
 def luzatu_cir(circuit):
     """
-    Expands circuit matrices to handle multi-branch elements like transistors and controlled sources.
+    Expands circuit matrices to handle multi-branch elements like transistors
+    and controlled sources.
 
     Parameters
     ----------
@@ -404,14 +350,16 @@ def luzatu_cir(circuit):
         if element[0].lower() == "q":
             # Expand transistor into two pseudo-branches
             cir_el2 += [[element + "_be"], [element + "_bc"]]
-            cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0], [cir_nd[i][1], cir_nd[i][0], 0, 0]]
+            cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0],
+                        [cir_nd[i][1], cir_nd[i][0], 0, 0]]
             cir_val2 += [cir_val[i], cir_val[i]]
             cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
 
         elif element[0].lower() == "a":
             # Expand controlled source into input/output components
             cir_el2 += [[element + "_in"], [element + "_ou"]]
-            cir_nd2 += [[cir_nd[i][0], cir_nd[i][1], 0, 0], [cir_nd[i][2], cir_nd[i][3], 0, 0]]
+            cir_nd2 += [[cir_nd[i][0], cir_nd[i][1], 0, 0],
+                        [cir_nd[i][2], cir_nd[i][3], 0, 0]]
             cir_val2 += [cir_val[i], cir_val[i]]
             cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
 
@@ -425,10 +373,9 @@ def luzatu_cir(circuit):
     cir_el2 = np.reshape(np.array(cir_el2), (-1, 1))
     cir_nd2 = np.reshape(np.array(cir_nd2), (-1, 4))
     cir_val2 = np.reshape(np.array(cir_val2), (-1, 3))
-    cir_ctr2 = np.reshape(np.array(cir_el2), (-1, 1))
+    cir_ctr2 = np.reshape(np.array(cir_ctr2), (-1, 1))
 
     return [cir_el2, cir_nd2, cir_val2, cir_ctr2]
-
 
 
 def getElemPosition(elem, cir_el2):
@@ -522,11 +469,11 @@ def getMNUs(circuit2):
             j = getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
             M[i][j] = cir_val2[i][0]*-1
-        elif cir_el2[i, 0][0].lower() == "h":
+        elif cir_el2[i, 0][0].lower() == "f":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
             N[i][j] = cir_val2[i][0]*-1
-        elif cir_el2[i, 0][0].lower() == "f":
+        elif cir_el2[i, 0][0].lower() == "h":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
             N[i][j] = cir_val2[i][0]*-1
@@ -625,7 +572,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/1_zlel_opamp.cir"
+        filename = "../cirs/all/1_zlel_V_R_op_dc.cir"
 
     cp = cir_parser(filename)
     circuit = luzatu_cir(cp)
@@ -640,6 +587,7 @@ if __name__ == "__main__":
     nodes = zl1.getNodes(circuit[1])
     el_num = zl1.getEl_num(cp[0])
     MNUs = getMNUs(circuit)
+    print(MNUs)
     # Verificar qué simulaciones ejecutar
     if op[".OP"]:
         print("Realizar análisis de punto de operación (OP)")
@@ -657,13 +605,10 @@ if __name__ == "__main__":
         source = op[".DC"][2]
         print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
               f" fuente: {source}")
-        #save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
-        save_as_csv_dc2(b, n, filename, MNUs, circuit, start, step, end, source, op)
+        save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
               f"paso {step}s")
         save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
-
-

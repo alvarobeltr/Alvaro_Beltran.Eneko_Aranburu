@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Unibertsitatea\5.Urtea\2.Kuatri\Zirkuitu Linealak eta Ez-linealak\Praktikak\Alvaro_Beltran.Eneko_Aranburu\zlel_main.py", line 12, in <module>
+    import zlel.zlel_p1 as zl1
+  File "C:\Unibertsitatea\5.Urtea\2.Kuatri\Zirkuitu Linealak eta Ez-linealak\Praktikak\Alvaro_Beltran.Eneko_Aranburu\zlel\zlel_p1.py", line 13, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
