@@ -625,7 +625,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/1_zlel_opamp.cir"
+        filename = "../cirs/all/1_zlel_ekorketa.cir"
 
     cp = cir_parser(filename)
     circuit = luzatu_cir(cp)
@@ -657,8 +657,8 @@ if __name__ == "__main__":
         source = op[".DC"][2]
         print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
               f" fuente: {source}")
-        #save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
-        save_as_csv_dc2(b, n, filename, MNUs, circuit, start, step, end, source, op)
+        save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+        #save_as_csv_dc2(b, n, filename, MNUs, circuit, start, step, end, source, op)
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
