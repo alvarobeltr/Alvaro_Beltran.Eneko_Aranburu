@@ -262,7 +262,44 @@ if __name__ == "__main__":
         filename = sys.argv[1]
     else:
         filename = "../cirs/all/2_zlel_Q.cir"
-        filename = "../cirs/all/2_zlel_1D.cir"
+        cp = zl2.cir_parser(filename)
+        circuit = zl2.luzatu_cir(cp)
+        for i in circuit:
+            print(i)
+
+        op = zl2.getSimulations(cp[4])
+        print(op)
+
+        b = zl2.getAdarrak(circuit[0])
+        n = zl1.getNodesNumber(circuit[1])
+        nodes = zl1.getNodes(circuit[1])
+        el_num = zl1.getEl_num(cp[0])
+        MNUs = zl2.getMNUs(circuit)
+        print(MNUs)
+        # Verificar qué simulaciones ejecutar
+        if op[".OP"]:
+            print("Realizar análisis de punto de operación (OP)")
+            Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+            A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+
+            sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+            zl2.print_solution(sol, b, n)
+        if op[".PR"]:
+            print("Realizar impresión de información (PR)")
+            zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+
+        if op[".DC"][0]:  # El primer valor indica si se debe hacer la simulación
+            start, end, step = op[".DC"][1]
+            source = op[".DC"][2]
+            print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
+                  f" fuente: {source}")
+            zl2.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+
+        if op[".TR"][0]:
+            start, end, step = op[".TR"][1]
+            print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
+                  f"paso {step}s")
+            zl2.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
 
 
 #    end = time.perf_counter()
