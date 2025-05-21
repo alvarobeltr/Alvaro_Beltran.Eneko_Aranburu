@@ -86,7 +86,7 @@ def diode_NR(I0, nD, Vdj):
     Ij = I0*(math.exp(Vdj/(nD*Vt))-1)
     Id = Ij + gd*Vdj
     return [gd, Id]
-    #return gd, Id
+    # return gd, Id
 
 
 def Transistor_NR(Ies, Ics, Bf, Vbe, Vbc):
@@ -148,7 +148,7 @@ def MNu_D_NR(elements, Diode_NR, k):
     M[k][k] = g
     N[k][k] = 1
     u[k] = Ij
-    elements = [M, N, u]
+    return [M, N, u]
 
 
 def MNu_Q_NR(elements, Transistor_NR, k):
@@ -179,15 +179,15 @@ def MNu_Q_NR(elements, Transistor_NR, k):
     N[k+1][k+1] = 1
     u[k] = Ie
     u[k+1] = Ic
-    elements = [M, N, u]
+    return [M, N, u]
 
 
-def NR(circuit, elements, e=1e-5, it_max=100):
+def NR(A, circuit, elements, e=1e-5, it_max=100):
     """
         This function takes a cir_parser2 and its elements and in case there
         is a D or Q it returns the Newton Raphson equivalent.
     Args:
-        cir_parser2 : Updated cir_parser
+        circuit : Updated cir_parser
         elements : M, N and u matrices
         e : Error given to solve NR (Default value = 1e-5)
         it_max : Maximum iteration given to solve NR (Default value = 100)
@@ -212,8 +212,6 @@ def NR(circuit, elements, e=1e-5, it_max=100):
         Vbc0 = 0.6
         out = False
         v = circuit[2]
-        #Ai = getInzidentziaMatrix
-        Ai = zl1.getInzidentziaMatrix(n, b, circuit[1])
         it = 0
         while (not out) and (it < it_max):
             i = 0
@@ -223,7 +221,7 @@ def NR(circuit, elements, e=1e-5, it_max=100):
                     I0 = v[k][0]
                     n = v[k][1]
                     D_NR = diode_NR(I0, n, Vd0)
-                    MNu_D_NR(elements, D_NR, k)
+                    elements = MNu_D_NR(elements, D_NR, k)
                 else:
                     Vbe0 = Vs[i][0]
                     Vbc0 = Vs[i][1]
@@ -231,19 +229,19 @@ def NR(circuit, elements, e=1e-5, it_max=100):
                     Ics = v[k][1]
                     BF = v[k][2]
                     Q_NR = Transistor_NR(Ies, Ics, BF, Vbe0, Vbc0)
-                    MNu_Q_NR(elements, Q_NR, k)
+                    elements = MNu_Q_NR(elements, Q_NR, k)
                 i += 1
-            sol = zl2.get_solution(elements, Ai)
+            sol = zl2.Tableau(A, elements[0], elements[1], elements[2])
             j = 0
             for elm, k in nl_el:
                 if elm == "D":
-                    VDj = sol[len(Ai) - 1 + k]
+                    VDj = sol[len(A) - 1 + k]
                     if (abs(VDj-Vs[j]) < e):
                         ft[j] = True
                     Vs[j] = VDj
                 else:
-                    VBEj = sol[len(Ai) - 1 + k]
-                    VBCj = sol[len(Ai) + k]
+                    VBEj = sol[len(A) - 1 + k]
+                    VBCj = sol[len(A) + k]
                     if (abs(VBEj-Vs[j][0]) < e) and (abs(VBCj-Vs[j][1]) < e):
                         ft[j] = True
                     Vs[j][0] = VBEj
@@ -261,7 +259,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/2_zlel_Q.cir"
+        filename = "../cirs/all/2_zlel_1D.cir"
         cp = zl2.cir_parser(filename)
         circuit = zl2.luzatu_cir(cp)
         for i in circuit:
@@ -275,27 +273,29 @@ if __name__ == "__main__":
         nodes = zl1.getNodes(circuit[1])
         el_num = zl1.getEl_num(cp[0])
         MNUs = zl2.getMNUs(circuit)
+        Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+        A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+        NR(A, circuit, MNUs)
         print(MNUs)
         # Verificar qué simulaciones ejecutar
         if op[".OP"]:
             print("Realizar análisis de punto de operación (OP)")
-            Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
-            A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
-
             sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
             zl2.print_solution(sol, b, n)
         if op[".PR"]:
             print("Realizar impresión de información (PR)")
             zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
 
-        if op[".DC"][0]:  # El primer valor indica si se debe hacer la simulación
+        if op[".DC"][0]:  # Indica si se debe hacer la simulación
+            #NR(n, circuit, MNUs)
             start, end, step = op[".DC"][1]
             source = op[".DC"][2]
-            print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
-                  f" fuente: {source}")
+            # print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
+                  # f" fuente: {source}")
             zl2.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
 
         if op[".TR"][0]:
+            #NR(n, circuit, MNUs)
             start, end, step = op[".TR"][1]
             print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
                   f"paso {step}s")

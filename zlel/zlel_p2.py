@@ -476,7 +476,7 @@ def getMNUs(circuit2):
         elif cir_el2[i, 0][0].lower() == "h":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
-            N[i][j] = cir_val2[i][0]*-1
+            N[i][j] = -cir_val2[i][0]
         elif cir_el2[i, 0][0].lower() == "b":
             M[i][i] = 1
             Us[i] = cir_val2[i][0]
@@ -573,7 +573,6 @@ if __name__ == "__main__":
         filename = sys.argv[1]
     else:
         filename = "../cirs/all/1_zlel_ekorketa.cir"
-
 
     cp = cir_parser(filename)
     circuit = luzatu_cir(cp)
