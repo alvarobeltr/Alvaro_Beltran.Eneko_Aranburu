@@ -37,7 +37,7 @@ def non_linear(circuit):
     """
     nl = False
     nl_el = []
-    for k,el in enumerate(circuit[0]):
+    for k, el in enumerate(circuit[0]):
         if el[0][0] == "D":
             nl = True
             pos = ("D", k)
@@ -279,6 +279,50 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
             t = round(t + step, 10)  # 10 decimals to avoid precision errors
 
 
+def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
+    """ This function gnerates a csv file with the name filename.
+        First it will save a header and then, it loops and save a line in
+        csv format into the file with the dc solution of the circuit.
+
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+    """
+    if source[0].lower() == "v":
+        header = zl2.build_csv_header("V", b, n)
+    else:
+        header = zl2.build_csv_header("I", b, n)
+
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+
+    cir_el = circuit[0]
+    ext = "_" + source + ".dc"
+    filename = zl2.save_sim_output(filename, "sims", ext)
+
+    eli = next((k for k, i in enumerate(cir_el) if i[0].lower() == source), None)
+    if eli is None:
+        raise ValueError(f"Source '{source}' not found in circuit.")
+
+    with open(filename, 'w') as file:
+        print(header, file=file)
+        v = start
+        values = np.round(np.arange(start, end + step / 10, step), 10)
+        for v in values:
+            # while v <= end:
+            MNUs[2][eli] = v
+            # print(Us)
+            NR(A, circuit, MNUs)
+            sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+            # Insert the time
+            sol = np.insert(sol, 0, v)
+            # sol to csv
+            sol_csv = ','.join(['%.9f' % num for num in sol])
+            print(sol_csv, file=file)
+            v = v + step
+
+
 """
 https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 """
@@ -287,7 +331,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/2_zlel_arteztailea.cir"
+        filename = "../cirs/all/2_zlel_Q_ezaugarri.cir"
         cp = zl2.cir_parser(filename)
         circuit = zl2.luzatu_cir(cp)
         for i in circuit:
@@ -318,7 +362,7 @@ if __name__ == "__main__":
             source = op[".DC"][2]
             print(f"Realizar barrido DC desde {start} hasta {end} "
                   f"con paso {step}, fuente: {source}")
-            zl2.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+            save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
 
         if op[".TR"][0]:
             start, end, step = op[".TR"][1]

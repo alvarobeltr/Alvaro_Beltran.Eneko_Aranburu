@@ -8,7 +8,7 @@
 .. moduleauthor:: Put yours
 
 """
-
+import math
 import time
 import numpy as np
 import sys
@@ -39,18 +39,18 @@ def dynamic(circuit):
     d_el = []
     k = 0
     for el in circuit[0]:
-        if el[0] == "C":
+        if el[0][0] == "C": ###
             d = True
             pos = ("C", k)
             d_el.append(pos)
-        elif el[0] == "L":
+        elif el[0][0] == "L": ##
             d = True
             pos = ("L", k)
             d_el.append(pos)
         k += 1
     return [d, d_el]
 
-def Euler_BackWard(circuit, elements, h, t, pre_sol):
+def Euler_BackWard(A, circuit, elements, h, t, pre_sol):
     """
 
         This function takes a cir_parser2 and elements, and in case there is a
@@ -69,14 +69,14 @@ def Euler_BackWard(circuit, elements, h, t, pre_sol):
     """
     d = dynamic(circuit)
     if d[0]:
-        d_el = is_d[1]
+        d_el = d[1]
         M = elements[0]
         N = elements[1]
         u = elements[2]
         v = circuit[2]
-        Ai = zl1.inc_matrix(cir_parser2)
-        n = len(Ai)
-        b = len(Ai[0])
+        # Ai = zl1.inc_matrix(cir_parser2)
+        n = len(A)
+        b = len(A[0])
         if t == 0:
             for el, k in d_el:
                 if el == "C":
@@ -97,19 +97,92 @@ def Euler_BackWard(circuit, elements, h, t, pre_sol):
                     u[k] = ic
         elements = [M, N, u]
 
+def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
+    """ This function generates a csv file with the name filename.
+        First it will save a header and then, it loops and save a line in
+        csv format into the file making the transient analysis.
+
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+    """
+
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    cir_el = circuit[0]
+    cir_val = circuit[2]
+    tr = operation[".TR"]
+    if not tr[0]:
+        sys.exit("No trancient available")
+    tr = tr[1]
+    header = zl2.build_csv_header("t", b, n)
+    filename = zl2.save_sim_output(filename, "sims", ".tr")
+    pre_sol = []
+    with open(filename, 'w') as file:
+        print(header, file=file)
+        # Get the indices of the elements corresponding to the sources.
+        # The freq parameter cannot be 0 this is why we choose cir_tr[0].
+        t = start
+        t1=0
+        while t <= end:
+            for k, i in enumerate(cir_el):
+                if (i[0][0] == "B") or (i[0][0] == "Y"):
+                    w = 2*math.pi*cir_val[k][1]
+                    MNUs[2][k] = cir_val[k][0]*math.sin((w*t) +
+                                                   (math.pi*cir_val[k][2]/180))
+            Euler_BackWard(circuit, MNUs, tr[2], t1, pre_sol)
+            zl3.NR(A, circuit, MNUs)
+            sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+            pre_sol = sol
+            # Inserte the time
+            sol = np.insert(sol, 0, t)
+            # sol to csv
+            sol_csv = ','.join(['%.9f' % num for num in sol])
+            print(sol_csv, file=file)
+            t = round(t + step, 10)  # 10 decimals to avoid precision errors
+            t1+=1
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs_4/all/3_zlel_RC_iragazki.cir"
-    cp = zl1.cir_parser(filename)
-    op = zl2.operation(cp)
-    cp = zl2.cir_parser2(cp)
-    Ai = zl1.inc_matrix(cp)
-    elements = zl2.elements(cp)
-    b = len(cp[0])
-    n = len(Ai)
-    outf = filename[:-3] + "tr"
-    print(dynamic(cp))
-    zl2.save_as_csv_tr(b, n, outf, op, elements, cp)
+        filename = "../cirs/all/3_zlel_arteztailea.cir"
+    
+    cp = zl2.cir_parser(filename)
+    circuit = zl2.luzatu_cir(cp)
+    for i in circuit:
+        print(i)
+
+    op = zl2.getSimulations(cp[4])
+    print(op)
+
+    b = zl2.getAdarrak(circuit[0])
+    n = zl1.getNodesNumber(circuit[1])
+    nodes = zl1.getNodes(circuit[1])
+    el_num = zl1.getEl_num(cp[0])
+    MNUs = zl2.getMNUs(circuit)
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    zl3.NR(A, circuit, MNUs)
+    # Verificar qué simulaciones ejecutar
+    if op[".OP"]:
+        print("Realizar análisis de punto de operación (OP)")
+        sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+        zl2.print_solution(sol, b, n)
+    if op[".PR"]:
+        print("Realizar impresión de información (PR)")
+        zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+
+    if op[".DC"][0]:  # Indica si se debe hacer la simulación
+        start, end, step = op[".DC"][1]
+        source = op[".DC"][2]
+        print(f"Realizar barrido DC desde {start} hasta {end} "
+              f"con paso {step}, fuente: {source}")
+        zl3.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+
+    if op[".TR"][0]:
+        start, end, step = op[".TR"][1]
+        print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
+              f"paso {step}s")
+        save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
