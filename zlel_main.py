@@ -10,6 +10,8 @@
 """
 
 import zlel.zlel_p1 as zl1
+import zlel.zlel_p2 as zl2
+import zlel.zlel_p3 as zl3
 import sys
 
 """
@@ -18,12 +20,39 @@ https://stackoverflow.com/questions/19747371/
 python-exit-commands-why-so-many-and-when-should-each-be-used
 """
 if __name__ == "__main__":
+    #  start = time.perf_counter()
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/examples/0_zlel_V_R_Q.cir"
-    # Parse the circuit
-    # [cir_el, cir_nd, cir_val, cir_ctr] = zl1.cir_parser(filename)
-    zl1.cir_parser(filename)
+        filename = "./cirs/all/2_zlel_2D.cir"
+        cp = zl2.cir_parser(filename)
+        circuit = zl2.luzatu_cir(cp)
+        for i in circuit:
+            print(i)
 
-    # THIS FUNCTION IS NOT COMPLETE
+        op = zl2.getSimulations(cp[4])
+        print(op)
+
+        b = zl2.getAdarrak(circuit[0])
+        n = zl1.getNodesNumber(circuit[1])
+        nodes = zl1.getNodes(circuit[1])
+        el_num = zl1.getEl_num(cp[0])
+        MNUs = zl2.getMNUs(circuit)
+        Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+        A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+        zl3.NR(A, circuit, MNUs)
+        # Verificar qué simulaciones ejecutar
+        if op[".OP"]:
+            sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+            zl2.print_solution(sol, b, n)
+        if op[".PR"]:
+            zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+
+        if op[".DC"][0]:  # Indica si se debe hacer la simulación
+            start, end, step = op[".DC"][1]
+            source = op[".DC"][2]
+            zl2.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+
+        if op[".TR"][0]:
+            start, end, step = op[".TR"][1]
+            zl2.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)

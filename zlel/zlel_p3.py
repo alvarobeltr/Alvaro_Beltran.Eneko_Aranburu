@@ -37,17 +37,15 @@ def non_linear(circuit):
     """
     nl = False
     nl_el = []
-    k = 0
-    for el in circuit[0]:
-        if el[0] == "D":
+    for k,el in enumerate(circuit[0]):
+        if el[0][0] == "D":
             nl = True
             pos = ("D", k)
             nl_el.append(pos)
-        elif (el[0] == "Q") and ("be" in el):
+        elif (el[0][0] == "Q") and ("be" in el):
             nl = True
             pos = ("Q", k)
             nl_el.append(pos)
-        k += 1
     return [nl, nl_el]
 
 
@@ -86,7 +84,6 @@ def diode_NR(I0, nD, Vdj):
     Ij = I0*(math.exp(Vdj/(nD*Vt))-1)
     Id = Ij + gd*Vdj
     return [gd, Id]
-    # return gd, Id
 
 
 def Transistor_NR(Ies, Ics, Bf, Vbe, Vbc):
@@ -207,38 +204,33 @@ def NR(A, circuit, elements, e=1e-5, it_max=100):
                 Vs.append(Vd0)
             else:
                 Vs.append([Vbe0, Vbc0])
-        Vd0 = 0.6
-        Vbe0 = 0.6
-        Vbc0 = 0.6
         out = False
-        v = circuit[2]
+        cir_val = circuit[2]
         it = 0
         while (not out) and (it < it_max):
-            i = 0
-            for el, k in nl_el:
+            for i, (el, k) in enumerate(nl_el):
                 if el == "D":
                     Vd0 = Vs[i]
-                    I0 = v[k][0]
-                    n = v[k][1]
+                    I0 = cir_val[k][0]
+                    n = cir_val[k][1]
                     D_NR = diode_NR(I0, n, Vd0)
                     elements = MNu_D_NR(elements, D_NR, k)
                 else:
                     Vbe0 = Vs[i][0]
                     Vbc0 = Vs[i][1]
-                    Ies = v[k][0]
-                    Ics = v[k][1]
-                    BF = v[k][2]
+                    Ies = cir_val[k][0]
+                    Ics = cir_val[k][1]
+                    BF = cir_val[k][2]
                     Q_NR = Transistor_NR(Ies, Ics, BF, Vbe0, Vbc0)
                     elements = MNu_Q_NR(elements, Q_NR, k)
-                i += 1
             sol = zl2.Tableau(A, elements[0], elements[1], elements[2])
-            j = 0
-            for elm, k in nl_el:
+            for j, (elm, k) in enumerate(nl_el):
                 if elm == "D":
-                    VDj = sol[len(A) - 1 + k]
+                    VDj = sol[len(A) + k]
                     if (abs(VDj-Vs[j]) < e):
                         ft[j] = True
-                    Vs[j] = VDj
+                        print(ft)
+                    Vs[j] = VDj[0]
                 else:
                     VBEj = sol[len(A) - 1 + k]
                     VBCj = sol[len(A) + k]
@@ -246,8 +238,7 @@ def NR(A, circuit, elements, e=1e-5, it_max=100):
                         ft[j] = True
                     Vs[j][0] = VBEj
                     Vs[j][1] = VBCj
-                j += 1
-            out = np.alltrue(ft)
+            out = np.all(ft)
             it += 1
 
 
@@ -259,7 +250,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/2_zlel_1D.cir"
+        filename = "../cirs/all/2_zlel_2D.cir"
         cp = zl2.cir_parser(filename)
         circuit = zl2.luzatu_cir(cp)
         for i in circuit:
@@ -276,7 +267,6 @@ if __name__ == "__main__":
         Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
         A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
         NR(A, circuit, MNUs)
-        print(MNUs)
         # Verificar qué simulaciones ejecutar
         if op[".OP"]:
             print("Realizar análisis de punto de operación (OP)")
@@ -287,21 +277,14 @@ if __name__ == "__main__":
             zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
 
         if op[".DC"][0]:  # Indica si se debe hacer la simulación
-            #NR(n, circuit, MNUs)
             start, end, step = op[".DC"][1]
             source = op[".DC"][2]
-            # print(f"Realizar barrido DC desde {start} hasta {end} con paso {step},"
-                  # f" fuente: {source}")
+            print(f"Realizar barrido DC desde {start} hasta {end} "
+                  f"con paso {step}, fuente: {source}")
             zl2.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
 
         if op[".TR"][0]:
-            #NR(n, circuit, MNUs)
             start, end, step = op[".TR"][1]
             print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
                   f"paso {step}s")
             zl2.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
-
-
-#    end = time.perf_counter()
-#    print ("Elapsed time: ")
-#    print(end - start) # Time in seconds
