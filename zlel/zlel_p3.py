@@ -42,7 +42,7 @@ def non_linear(circuit):
             nl = True
             pos = ("D", k)
             nl_el.append(pos)
-        elif (el[0][0] == "Q") and ("be" in el):
+        elif (el[0][0] == "Q") and ("be" in el[0]):
             nl = True
             pos = ("Q", k)
             nl_el.append(pos)
@@ -80,8 +80,8 @@ def diode_NR(I0, nD, Vdj):
     """
 
     Vt = 8.6173324e-5*300*nD
-    gd = -I0/(nD*Vt)*(math.exp(Vdj/(nD*Vt)))
-    Ij = I0*(math.exp(Vdj/(nD*Vt))-1)
+    gd = -I0/(Vt)*(math.exp(Vdj/(Vt)))
+    Ij = I0*(math.exp(Vdj/(Vt))-1)
     Id = Ij + gd*Vdj
     return [gd, Id]
 
@@ -229,17 +229,54 @@ def NR(A, circuit, elements, e=1e-5, it_max=100):
                     VDj = sol[len(A) + k]
                     if (abs(VDj-Vs[j]) < e):
                         ft[j] = True
-                        print(ft)
                     Vs[j] = VDj[0]
                 else:
-                    VBEj = sol[len(A) - 1 + k]
-                    VBCj = sol[len(A) + k]
+                    VBEj = sol[len(A) + k]
+                    VBCj = sol[len(A) + k+1]
                     if (abs(VBEj-Vs[j][0]) < e) and (abs(VBCj-Vs[j][1]) < e):
                         ft[j] = True
-                    Vs[j][0] = VBEj
-                    Vs[j][1] = VBCj
+                    Vs[j][0] = VBEj[0]
+                    Vs[j][1] = VBCj[0]
             out = np.all(ft)
             it += 1
+
+def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
+    """ This function generates a csv file with the name filename.
+        First it will save a header and then, it loops and save a line in
+        csv format into the file making the transient analysis.
+
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+    """
+
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    cir_el = circuit[0]
+    cir_val = circuit[2]
+
+    header = zl2.build_csv_header("t", b, n)
+    filename = zl2.save_sim_output(filename, "sims", ".tr")
+    with open(filename, 'w') as file:
+        print(header, file=file)
+        # Get the indices of the elements corresponding to the sources.
+        # The freq parameter cannot be 0 this is why we choose cir_tr[0].
+        t = start
+        while t <= end:
+            for k, i in enumerate(cir_el):
+                if (i[0][0] == "B") or (i[0][0] == "Y"):
+                    w = 2*math.pi*cir_val[k][1]
+                    MNUs[2][k] = cir_val[k][0]*math.sin((w*t) +
+                                                   (math.pi*cir_val[k][2]/180))
+            NR(A, circuit, MNUs)
+            sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
+            # Inserte the time
+            sol = np.insert(sol, 0, t)
+            # sol to csv
+            sol_csv = ','.join(['%.9f' % num for num in sol])
+            print(sol_csv, file=file)
+            t = round(t + step, 10)  # 10 decimals to avoid precision errors
 
 
 """
@@ -250,7 +287,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/2_zlel_2D.cir"
+        filename = "../cirs/all/2_zlel_arteztailea.cir"
         cp = zl2.cir_parser(filename)
         circuit = zl2.luzatu_cir(cp)
         for i in circuit:
@@ -287,4 +324,4 @@ if __name__ == "__main__":
             start, end, step = op[".TR"][1]
             print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
                   f"paso {step}s")
-            zl2.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
+            save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
