@@ -90,10 +90,10 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
         else:
             for el, k in d_el:
                 if el == "C":
-                    vc = pre_sol[n-1+k]
+                    vc = pre_sol[n+k]
                     Us[k] = vc
                 else:
-                    ic = pre_sol[n-1+b+k]
+                    ic = pre_sol[n+b+k]
                     Us[k] = ic
         return [M, N, Us]
 
@@ -181,12 +181,11 @@ if __name__ == "__main__":
     MNUs = zl2.getMNUs(circuit)
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
     A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
-    zl3.NR(A, circuit, MNUs)
     # Verificar qué simulaciones ejecutar
+    MNUs = prepare_dynamic_OP(circuit, MNUs)
+    zl3.NR(A, circuit, MNUs)
     if op[".OP"]:
         print("Realizar análisis de punto de operación (OP)")
-        MNUs = prepare_dynamic_OP(circuit, MNUs)
-        zl3.NR(A, circuit, MNUs)
         sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
         zl2.print_solution(sol, b, n)
     if op[".PR"]:
