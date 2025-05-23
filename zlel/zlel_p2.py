@@ -198,7 +198,6 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
         v = start
         while v <= end:
             Us[eli] = v
-            print(Us)
             sol = Tableau(A, MNUs[0], MNUs[1], Us)
             # Insert the time
             sol = np.insert(sol, 0, v)
@@ -496,7 +495,6 @@ def getMNUs(circuit2):
         elif cir_el2[i, 0][0].lower() == "y":
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
-    # print(f"M={M.shape}, N={N.shape}, Us={np.shape(Us)}")
     return [M, N, Us]
 
 
@@ -518,31 +516,23 @@ def Tableau(A, M, N, Us):
     **T**: Tableau matrix, containing all equations in the order e, v, i.
     **Sol**: List of solutions for all equations in the same order.
 """
-
-    # 🔹 Verificar dimensiones de entrada
     b1, b2 = A.shape
-    T_size = b1 + 2 * b2  # Tamaño total de la matriz Tableau
+    T_size = b1 + 2 * b2
 
-    # 🔹 Inicializar matriz Tableau y vector de soluciones
     T = np.zeros((T_size, T_size), dtype=float)
     u = np.zeros((T_size, 1), dtype=float)
 
-    # 🔹 Transpuesta de A para facilitar cálculos
     A_T = A.T
 
-    # 🔹 Llenar la matriz Tableau con la ecuación de la ley de Kirchhoff
-    # de corriente (KCL)
     for i in range(b1):
         for j in range(b2):
             T[i, b1 + b2 + j] = A[i, j]
 
-    # 🔹 Ecuaciones de la ley de Kirchhoff de voltaje (KVL)
     for i in range(b2):
         for j in range(b1):
             T[b1 + i, j] = -A_T[i, j]
-        T[b1 + i, b1 + i] = 1  # Elementos de la diagonal principal
+        T[b1 + i, b1 + i] = 1
 
-    # 🔹 Manejo de M y N con verificación de dimensiones
     if N.shape[0] < b2 or N.shape[1] < b2:
         raise ValueError(f"Dimensiones de N incorrectas: {N.shape}, "
                          f"se esperaba ({b2}, {b2})")
@@ -556,7 +546,6 @@ def Tableau(A, M, N, Us):
             T[b1 + b2 + i, b1 + j] = M[i, j]
             T[b1 + b2 + i, b1 + b2 + j] = N[i, j]
 
-    # 🔹 Convertir Us a un vector 1D para evitar errores
     Us = np.ravel(Us)
 
     if len(Us) != b2:
@@ -565,12 +554,8 @@ def Tableau(A, M, N, Us):
 
     for i in range(b2):
         u[b1 + b2 + i, 0] = Us[i]
-
-    # 🔹 Verificar si el sistema tiene solución única
     if np.linalg.det(T) == 0:
         raise ValueError("El sistema no tiene solución única: det(T) = 0")
-
-    # 🔹 Resolver el sistema de ecuaciones
     sol = np.linalg.solve(T, u)
 
     return sol
@@ -601,7 +586,6 @@ if __name__ == "__main__":
     nodes = zl1.getNodes(circuit[1])
     el_num = zl1.getEl_num(cp[0])
     MNUs = getMNUs(circuit)
-    print(MNUs)
     # Verificar qué simulaciones ejecutar
     if op[".OP"]:
         print("Realizar análisis de punto de operación (OP)")
