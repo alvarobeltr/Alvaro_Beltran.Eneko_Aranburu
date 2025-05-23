@@ -181,12 +181,11 @@ if __name__ == "__main__":
     MNUs = zl2.getMNUs(circuit)
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
     A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    MNUs = prepare_dynamic_OP(circuit, MNUs)
     zl3.NR(A, circuit, MNUs)
     # Verificar qué simulaciones ejecutar
     if op[".OP"]:
         print("Realizar análisis de punto de operación (OP)")
-        MNUs = prepare_dynamic_OP(circuit, MNUs)
-        zl3.NR(A, circuit, MNUs)
         sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
         zl2.print_solution(sol, b, n)
     if op[".PR"]:

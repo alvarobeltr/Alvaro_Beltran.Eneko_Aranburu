@@ -45,16 +45,22 @@ if __name__ == "__main__":
     zl3.NR(A, circuit, MNUs)
     # Verificar qué simulaciones ejecutar
     if op[".OP"]:
+        print("Realizar análisis de punto de operación (OP)")
         sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
         zl2.print_solution(sol, b, n)
     if op[".PR"]:
+        print("Realizar impresión de información (PR)")
         zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
 
     if op[".DC"][0]:  # Indica si se debe hacer la simulación
         start, end, step = op[".DC"][1]
         source = op[".DC"][2]
+        print(f"Realizar barrido DC desde {start} hasta {end} "
+              f"con paso {step}, fuente: {source}")
         zl3.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
+        print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
+              f"paso {step}s")
         zl4.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
