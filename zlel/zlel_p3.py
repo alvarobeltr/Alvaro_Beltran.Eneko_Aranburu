@@ -279,7 +279,6 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
                     MNUs[2][k] = cir_val[k][0] * math.sin(
                         (w * t) + (math.pi * cir_val[k][2] / 180)
                         )
-
             NR(A, circuit, MNUs)
             sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
             # Inserte the time

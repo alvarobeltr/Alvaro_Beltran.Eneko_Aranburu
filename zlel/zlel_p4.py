@@ -9,7 +9,6 @@
 
 """
 import math
-import time
 import numpy as np
 import sys
 
@@ -29,12 +28,14 @@ def dynamic(circuit):
         any dynamic elements. If there are, it also returns a list with the
         position of each one and the type of element.
 
-    Args:
+    Args
+    ----
         cir_parser2 : The circuit parser updated
 
-    Returns:
-        is_d : True if there is at least one dynamic element, if not False
-        nl_el : List with tuples of each dynamic element and its position
+    Returns
+    -------
+    is_d : True if there is at least one dynamic element, if not False
+    nl_el : List with tuples of each dynamic element and its position
 
     """
     d = False
@@ -54,18 +55,24 @@ def dynamic(circuit):
 def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
     """
 
-        This function takes a cir_parser2 and elements, and in case there is a
+        This function takes a circuit and elements, and in case there is a
         L or C it changes the elements matrices to calculate Euler Backward.
         If it is on the first iteration of the transient loop it will use the
         starting values and else it uses the values from the previous iteration
         as starting values.
 
-    Args:
-        cir_parser2 : The circuit parser updated
-        elements : M, N and u matrices
-        h : Diference between a time stamp and the next
-        t : Iteration number in the transient loop
-        pre_sol : Solution of the previous iteration
+    Args
+    ----
+    cir_parser2 : The circuit parser updated
+    elements : M, N and u matrices
+    h : Diference between a time stamp and the next
+    t : Iteration number in the transient loop
+    pre_sol : Solution of the previous iteration
+
+    Returns
+    -------
+    [M, N, u] : The same matrices of elements in the arguments but after
+    applying the Euler Backward method
 
     """
     d = dynamic(circuit)
@@ -97,15 +104,17 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
                     Us[k] = ic
         return [M, N, Us]
 
+
 def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
     """ This function generates a csv file with the name filename.
         First it will save a header and then, it loops and save a line in
         csv format into the file making the transient analysis.
 
-    Args:
-        | b: # of branches
-        | n: # of nodes
-        | filename: string with the filename (incluiding the path)
+    Args
+    ----
+    b: # of branches
+    n: # of nodes
+    filename: string with the filename (incluiding the path)
     """
 
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
@@ -122,13 +131,14 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
     with open(filename, 'w') as file:
         print(header, file=file)
         t = start
-        t1=0
+        t1 = 0
         while t <= end:
             for k, i in enumerate(cir_el):
                 if (i[0][0] == "B") or (i[0][0] == "Y"):
-                    w = 2*math.pi*cir_val[k][1]
-                    MNUs[2][k] = cir_val[k][0]*math.sin((w*t) +
-                                                   (math.pi*cir_val[k][2]/180))
+                    w = 2 * math.pi * cir_val[k][1]
+                    MNUs[2][k] = cir_val[k][0] * math.sin(
+                        (w * t) + (math.pi * cir_val[k][2] / 180)
+                        )
             MNUs = Euler_BackWard(A, circuit, MNUs, tr[2], t1, pre_sol)
             zl3.NR(A, circuit, MNUs)
             sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
@@ -165,7 +175,7 @@ if __name__ == "__main__":
         filename = sys.argv[1]
     else:
         filename = "../cirs/all/3_zlel_RLC.cir"
-    
+
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
     for i in circuit:
@@ -197,10 +207,12 @@ if __name__ == "__main__":
         source = op[".DC"][2]
         print(f"Realizar barrido DC desde {start} hasta {end} "
               f"con paso {step}, fuente: {source}")
-        zl3.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+        zl3.save_as_csv_dc(b, n, filename, MNUs, circuit,
+                           start, step, end, source)
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
               f"paso {step}s")
-        save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
+        save_as_csv_tr(b, n, filename, MNUs, circuit,
+                       start, end, step, op)
