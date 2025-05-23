@@ -22,17 +22,18 @@ else:
 
 def non_linear(circuit):
     """
-
         This function takes a circuit and returns whether there are any
         non-linear elements. If there are, it also returns a list with the
         position of each one and the type of element.
 
-    Args:
-        circuit : The circuit parser updated
+    Args
+    ----
+    circuit : The circuit parser updated
 
-    Returns:
-        nl : True if there is at least one non-linear element, if not False
-        nl_el : List with tuples of each non-lineal element and its position
+    Returns
+    -------
+    nl : True if there is at least one non-linear element, if not False
+    nl_el : List with tuples of each non-lineal element and its position
 
     """
     nl = False
@@ -68,14 +69,16 @@ def diode_NR(I0, nD, Vdj):
 
         :math:`I = I_0(e^{(\\frac{V_{dj}}{nV_T})}-1) + gV_{dj}`
 
-    Args:
-        | I0: Value of I0.
-        | nD: Value of nD.
-        | Vdj: Value of Vd.
+    Args
+    ----
+    I0: Value of I0.
+    nD: Value of nD.
+    Vdj: Value of Vd.
 
-    Return:
-        | gd: Conductance of the NR discrete equivalent for the diode.
-        | Id: Current independent source of the NR discrete equivalent.
+    Returns
+    -------
+    gd: Conductance of the NR discrete equivalent for the diode.
+    Id: Current independent source of the NR discrete equivalent.
 
     """
 
@@ -88,21 +91,22 @@ def diode_NR(I0, nD, Vdj):
 
 def Transistor_NR(Ies, Ics, Bf, Vbe, Vbc):
     """
-
         This function takes the transistors branches voltages, and transistor
         constants and returns Newton Raphson equivalent of the transistor.
 
-    Args:
-        Ies : Emitter saturation current
-        Ics : Colector saturation current
-        Bf : Common emitter current gain
-        Vbe : Previous voltage value for BE connection
-        Vbc : Previous voltage value for BC connection
+    Args
+    ----
+    Ies : Emitter saturation current
+    Ics : Colector saturation current
+    Bf : Common emitter current gain
+    Vbe : Previous voltage value for BE connection
+    Vbc : Previous voltage value for BC connection
 
-    Returns:
-        G : Equivalent conductance of the transistor
-        Ie : Equivalent current of the transistor on the emitter
-        Ic : Equivalent current of the transistor on the collector
+    Returns
+    -------
+    G : Equivalent conductance of the transistor
+    Ie : Equivalent current of the transistor on the emitter
+    Ic : Equivalent current of the transistor on the collector
 
     """
     T = 300
@@ -123,17 +127,18 @@ def Transistor_NR(Ies, Ics, Bf, Vbe, Vbc):
 
 def MNu_D_NR(elements, Diode_NR, k):
     """
-
         This funcion takes the diode NR values and the elements and returns the
         same elements but with the equivalents replaced in the position given.
 
-    Args:
+    Args
+    ----
         elements : Array with M, N and u matrices
         Diode_NR : NR equivalent values g and I
         k : Position of the diode on the parser
 
-    Returns:
-        [M, N, u] : The same matrices of elements in the arguments but with
+    Returns
+    -------
+    [M, N, u] : The same matrices of elements in the arguments but with
         the NR equivalent replaced in the k position
 
     """
@@ -150,18 +155,19 @@ def MNu_D_NR(elements, Diode_NR, k):
 
 def MNu_Q_NR(elements, Transistor_NR, k):
     """
-
         This funcion takes the transistor NR equivalent values and the elements
         and returns the same elements but with the equivalents replaced
         starting from the position given.
 
-    Args:
-        elements : Array with M, N and u matrices
-        Transistor_NR : NR equivalent values G, IE and IC
-        k : Starting position of the transistor on the parser
+    Args
+    ----
+    elements : Array with M, N and u matrices
+    Transistor_NR : NR equivalent values G, IE and IC
+    k : Starting position of the transistor on the parser
 
-    Returns:
-        [M, N, u] : The same matrices of elements in the arguments but with
+    Returns
+    -------
+    [M, N, u] : The same matrices of elements in the arguments but with
         the NR equivalent replaced starting on the k position
 
     """
@@ -181,13 +187,14 @@ def MNu_Q_NR(elements, Transistor_NR, k):
 
 def NR(A, circuit, elements, e=1e-5, it_max=100):
     """
-        This function takes a cir_parser2 and its elements and in case there
+        This function takes a circuit and its elements and in case there
         is a D or Q it returns the Newton Raphson equivalent.
-    Args:
-        circuit : Updated cir_parser
-        elements : M, N and u matrices
-        e : Error given to solve NR (Default value = 1e-5)
-        it_max : Maximum iteration given to solve NR (Default value = 100)
+    Args
+    ----
+    circuit : Updated cir_parser
+    elements : M, N and u matrices
+    e : Error given to solve NR (Default value = 1e-5)
+    it_max : Maximum iteration given to solve NR (Default value = 100)
 
     """
 
@@ -240,15 +247,17 @@ def NR(A, circuit, elements, e=1e-5, it_max=100):
             out = np.all(ft)
             it += 1
 
+
 def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
     """ This function generates a csv file with the name filename.
         First it will save a header and then, it loops and save a line in
         csv format into the file making the transient analysis.
 
-    Args:
-        | b: # of branches
-        | n: # of nodes
-        | filename: string with the filename (incluiding the path)
+    Args
+    ----
+    b: # of branches
+    n: # of nodes
+    filename: string with the filename (incluiding the path)
     """
 
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
@@ -266,9 +275,11 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
         while t <= end:
             for k, i in enumerate(cir_el):
                 if (i[0][0] == "B") or (i[0][0] == "Y"):
-                    w = 2*math.pi*cir_val[k][1]
-                    MNUs[2][k] = cir_val[k][0]*math.sin((w*t) +
-                                                   (math.pi*cir_val[k][2]/180))
+                    w = 2 * math.pi * cir_val[k][1]
+                    MNUs[2][k] = cir_val[k][0] * math.sin(
+                        (w * t) + (math.pi * cir_val[k][2] / 180)
+                        )
+
             NR(A, circuit, MNUs)
             sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
             # Inserte the time
@@ -284,10 +295,11 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
         First it will save a header and then, it loops and save a line in
         csv format into the file with the dc solution of the circuit.
 
-    Args:
-        | b: # of branches
-        | n: # of nodes
-        | filename: string with the filename (incluiding the path)
+    Args
+    ----
+    b: # of branches
+    n: # of nodes
+    filename: string with the filename (incluiding the path)
     """
     if source[0].lower() == "v":
         header = zl2.build_csv_header("V", b, n)
@@ -301,7 +313,8 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     ext = "_" + source + ".dc"
     filename = zl2.save_sim_output(filename, "sims", ext)
 
-    eli = next((k for k, i in enumerate(cir_el) if i[0].lower() == source), None)
+    eli = next((k for k, i in enumerate(cir_el) if i[0].lower() == source),
+               None)
     if eli is None:
         raise ValueError(f"Source '{source}' not found in circuit.")
 
@@ -362,10 +375,12 @@ if __name__ == "__main__":
             source = op[".DC"][2]
             print(f"Realizar barrido DC desde {start} hasta {end} "
                   f"con paso {step}, fuente: {source}")
-            save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+            save_as_csv_dc(b, n, filename, MNUs, circuit,
+                           start, step, end, source)
 
         if op[".TR"][0]:
             start, end, step = op[".TR"][1]
-            print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
-                  f"paso {step}s")
-            save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
+            print(f"Realizar análisis transitorio desde {start}s hasta "
+                  f"{end}s con paso {step}s")
+            save_as_csv_tr(b, n, filename, MNUs, circuit,
+                           start, end, step)
