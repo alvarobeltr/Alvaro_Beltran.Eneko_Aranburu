@@ -4,7 +4,8 @@
 .. module:: zlel_main.py
     :synopsis:
 
-.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com)
+    eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
 
 
 """
@@ -24,15 +25,15 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/3_zlel_RLC.cir"
-    
+        filename = "cirs/all/3_zlel_RC.cir"
+
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
-    for i in circuit:
-        print(i)
+    # for i in circuit:
+    # print(i)
 
     op = zl2.getSimulations(cp[4])
-    print(op)
+    # print(op)
 
     b = zl2.getAdarrak(circuit[0])
     n = zl1.getNodesNumber(circuit[1])
@@ -49,11 +50,14 @@ if __name__ == "__main__":
         zl2.print_solution(sol, b, n)
     if op[".PR"]:
         zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+        print("\nIncidence Matrix:")
+        print(Aa)
 
     if op[".DC"][0]:  # Indica si se debe hacer la simulación
         start, end, step = op[".DC"][1]
         source = op[".DC"][2]
-        zl3.save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source)
+        zl3.save_as_csv_dc(b, n, filename, MNUs, circuit,
+                           start, step, end, source)
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
