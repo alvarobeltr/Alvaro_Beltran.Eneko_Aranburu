@@ -136,9 +136,9 @@ def getAdarrak(cir_el):
     return b
 
 
-def getNodes(cir_nd):
+def getNodes(cir_nd2):
     """
-    This funcion takes the cir_nd matrix and returns a list made
+    This funcion takes the cir_nd2 matrix and returns a list made
     up by the nodes of the circuit.
 
     Args
@@ -150,7 +150,11 @@ def getNodes(cir_nd):
     nodes : a sorted-in-ascending-order np array of the nodes
 
     """
-    nodes = np.unique(cir_nd)
+    lista = list()
+    for a in cir_nd2:
+        lista.append(a[0])
+        lista.append(a[1])
+    nodes = np.unique(lista)
     return np.sort(nodes)
 
 
@@ -307,7 +311,7 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
     adar_tentsioak = {}
 
     for adar, x in enumerate(cir_el2):
-        if x[0].lower() in {"v", "e", "b"} and x[1] == "_":
+        if x[0][0].lower() in {"v", "e", "b"} and x[0][1] == "_":
             adarrak.append(adar)
             adar_tentsioak[adar] = cir_val2[adar][0]
 
@@ -316,51 +320,13 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
             adar1, adar2 = adarrak[i], adarrak[j]
             if np.array_equal(abs(Aa[:, adar1]), abs(Aa[:, adar2])):
                 if adar_tentsioak[adar1] != adar_tentsioak[adar2]:
-                    sys.exit(f"Errorea: {cir_el2[adar1]} "
-                             "({adar_tentsioak[adar1]}V) eta {cir_el2[adar2]} "
-                             "({adar_tentsioak[adar2]}V) tentsio ezberdinekin "
-                             "paraleloan daude.")
+                    sys.exit(f"Parallel V sources at branches {adar1} and "
+                             f"{adar2}.")
                 if not np.array_equal(Aa[:, adar1], Aa[:, adar2]):
-                    sys.exit(f"Errorea: {cir_el2[adar1]} eta {cir_el2[adar2]}"
-                             " tentsioberdinekin paraleloan baina norantza "
-                             "kontrakoan daude.")
+                    sys.exit(f"Parallel V sources at branches {adar1} and "
+                             f"{adar2}.")
 
-def v_parallel_error(cir_parser, A):
-    """
 
-        Exits the program if two paralel branches found with different voltage
-        from voltage sources (KVL would be broken).
-
-    Args:
-        cir_parser : Array with the 4 matrices of the circuit.
-
-    Rises:
-        SystemExit
-
-    """
-    k = 0
-    lis = []
-    v = cir_parser[2][:, 0]
-    for el in cir_parser[0]:
-        if (el[0] == "V") or (el[0] == "B"):
-            lis.append(k)
-        k += 1
-    if len(lis) > 1:
-        for j in lis:
-            for h in lis:
-                if j != h:
-                    m1 = A[:, j]
-                    m2 = A[:, h]
-                    if (np.all(m1 == m2)):
-                        if (v[j] != v[h]):
-                            sys.exit("Parallel V sources at branches "
-                                     + str(j) + " and " + str(h) + ".")
-                    if (np.all((-1)*m1 == m2)):
-                        if ((-1)*v[j] != v[h]):
-                            sys.exit("Parallel V sources at branches "
-                                     + str(j) + " and " + str(h) + ".")
-                            
-                            
 def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
     """
     This function is used to detect if Current sources are
@@ -390,10 +356,10 @@ def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
     elementos = {}
     nodos_problema = set()
     for indice, elemento in enumerate(cir_el2):
-        if elemento[0].lower() in ("i", "g", "y"):
+        if elemento[0][0].lower() in ("i", "g", "y"):
             elementos[indice] = {
                 "nodos": cir_nd2[indice],
-                "tipo": elemento[0].lower(),
+                "tipo": elemento[0][0].lower(),
                 "valor": cir_val2[indice][0]
                 }
     for indice_x, datos_x in elementos.items():
@@ -406,17 +372,18 @@ def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
                 elif (nodos_x[0] == nodos_y[1] and nodos_x[1] != nodos_y[0]):
                     nodos_problema.add(nodos_x[0])
                 elif (nodos_x[1] == nodos_y[0] and nodos_x[0] != nodos_y[1]):
-                    nodos_problema.add(nodos_x[0])
+                    nodos_problema.add(nodos_x[1])
                 elif (nodos_x[1] == nodos_y[1] and nodos_x[0] != nodos_y[0]):
                     nodos_problema.add(nodos_x[1])
     suma_corriente = 0
     for nodo in nodos_problema:
-        rama_lista = obtener_ramas(nodo[0], cir_el2, cir_nd2)
-        if all(elemento[0].lower() in ("i", "g") for elemento in rama_lista):
+        rama_lista = obtener_ramas(nodo, cir_el2, cir_nd2)
+        if all(elemento[0][0].lower() in ("i", "g")
+               for elemento in rama_lista):
             for i in range(b):
                 suma_corriente += cir_val2[i][0] * Aa[nodo][i]
             if suma_corriente != 0:
-                sys.exit(f"Korrote tentsioak seriean ondorengo nodoan: {nodo}.")
+                sys.exit(f"I sources in series at node {nodo}.")
 
 
 def obtener_ramas(nodo, cir_el2, cir_nd2):
