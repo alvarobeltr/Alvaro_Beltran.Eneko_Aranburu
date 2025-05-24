@@ -254,8 +254,8 @@ def ErreferentziNodoa(nodes):
     SystemExit.
 
     """
-    if nodes[0] != 0:
-        sys.exit("Erreferentzia nodoa falta da.")
+    if 0 not in nodes:
+        sys.exit("Reference node \"0\" is not defined in the circuit.")
 
 
 def KonexioBakarrekoNodoak(Aa, nodes):
@@ -272,14 +272,14 @@ def KonexioBakarrekoNodoak(Aa, nodes):
     None.
 
     Rises
-    -------
+    -----
     SystemExit.
 
     """
     for n, x in enumerate(Aa):
         if np.size(np.flatnonzero(x != 0)) < 2:
             node = nodes[n]
-            sys.exit(f"{node}. nodoa adar bakarrera konektatuta dago.")
+            sys.exit(f"Node {node} is floating")
 
 
 def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
@@ -381,7 +381,7 @@ def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
             for i in range(b):
                 suma_corriente += cir_val2[i][0] * Aa[nodo][i]
             if suma_corriente != 0:
-                sys.exit(f"Fuentes de corriente en serie en el nodo {nodo}.")
+                sys.exit(f"Korrote tentsioak seriean ondorengo nodoan: {nodo}.")
 
 
 def obtener_ramas(nodo, cir_el2, cir_nd2):

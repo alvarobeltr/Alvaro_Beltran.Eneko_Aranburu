@@ -381,7 +381,7 @@ def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
             for i in range(b):
                 suma_corriente += cir_val2[i][0] * Aa[nodo][i]
             if suma_corriente != 0:
-                sys.exit(f"Fuentes de corriente en serie en el nodo {nodo}.")
+                sys.exit(f"Korrote tentsioak seriean ondorengo nodoan: {nodo}.")
 
 
 def obtener_ramas(nodo, cir_el2, cir_nd2):
