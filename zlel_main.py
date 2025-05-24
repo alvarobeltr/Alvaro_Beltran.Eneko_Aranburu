@@ -25,23 +25,27 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/all/3_zlel_RC.cir"
+        filename = "cirs/all/0_zlel_node.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
+    nodes = zl1.getNodes(circuit[1])
+    zl1.ErreferentziNodoa(nodes)
+    b = zl2.getAdarrak(circuit[0])
+    n = zl1.getNodesNumber(circuit[1])
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    zl1.TentsioIturriakParaleloan(circuit[0], circuit[2], Aa)
+    zl1.KorronteIturriakSeriean(circuit[0], circuit[1], circuit[2], Aa, b)
+    zl1.KonexioBakarrekoNodoak(Aa, nodes)
     # for i in circuit:
     # print(i)
 
     op = zl2.getSimulations(cp[4])
     # print(op)
 
-    b = zl2.getAdarrak(circuit[0])
-    n = zl1.getNodesNumber(circuit[1])
-    nodes = zl1.getNodes(circuit[1])
     el_num = zl1.getEl_num(cp[0])
     MNUs = zl2.getMNUs(circuit)
-    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
-    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
     MNUs = zl4.prepare_dynamic_OP(circuit, MNUs)
     zl3.NR(A, circuit, MNUs)
     # Verificar qué simulaciones ejecutar
