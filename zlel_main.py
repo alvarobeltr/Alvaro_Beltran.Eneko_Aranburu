@@ -25,16 +25,19 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/all/0_zlel_node.cir"
+        filename = "cirs/all/0_zlel_parallel_V_I.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
-    nodes = zl1.getNodes(circuit[1])
-    zl1.ErreferentziNodoa(nodes)
+    pp = zl1.cir_parser(filename)
+    nodes = zl1.getNodes(cp[1])
+    # print(nodes)
+    zl1.ErreferentziNodoa(nodes)  # falla!!!
     b = zl2.getAdarrak(circuit[0])
     n = zl1.getNodesNumber(circuit[1])
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
     A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
+    # zl1.v_parallel_error(pp, A)
     zl1.TentsioIturriakParaleloan(circuit[0], circuit[2], Aa)
     zl1.KorronteIturriakSeriean(circuit[0], circuit[1], circuit[2], Aa, b)
     zl1.KonexioBakarrekoNodoak(Aa, nodes)

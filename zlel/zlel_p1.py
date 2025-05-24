@@ -325,7 +325,42 @@ def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
                              " tentsioberdinekin paraleloan baina norantza "
                              "kontrakoan daude.")
 
+def v_parallel_error(cir_parser, A):
+    """
 
+        Exits the program if two paralel branches found with different voltage
+        from voltage sources (KVL would be broken).
+
+    Args:
+        cir_parser : Array with the 4 matrices of the circuit.
+
+    Rises:
+        SystemExit
+
+    """
+    k = 0
+    lis = []
+    v = cir_parser[2][:, 0]
+    for el in cir_parser[0]:
+        if (el[0] == "V") or (el[0] == "B"):
+            lis.append(k)
+        k += 1
+    if len(lis) > 1:
+        for j in lis:
+            for h in lis:
+                if j != h:
+                    m1 = A[:, j]
+                    m2 = A[:, h]
+                    if (np.all(m1 == m2)):
+                        if (v[j] != v[h]):
+                            sys.exit("Parallel V sources at branches "
+                                     + str(j) + " and " + str(h) + ".")
+                    if (np.all((-1)*m1 == m2)):
+                        if ((-1)*v[j] != v[h]):
+                            sys.exit("Parallel V sources at branches "
+                                     + str(j) + " and " + str(h) + ".")
+                            
+                            
 def KorronteIturriakSeriean(cir_el2, cir_nd2, cir_val2, Aa, b):
     """
     This function is used to detect if Current sources are
