@@ -1,13 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-
 .. module:: zlel_p3.py
-    :synopsis: Put yours
 
-.. moduleauthor:: Put yours
+    :synopsis: Non-linear element handling and Newton-Raphson implementation
+        for electric circuit simulation
+
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com),
+    Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
+
+This module extends the circuit analysis capabilities of the ZLEL simulator
+by introducing support for non-linear components such as diodes and bipolar
+transistors (BJTs). It includes:
+
+- Detection of non-linear elements in parsed circuits
+- Calculation of diode and transistor models using the Newton-Raphson (NR)
+    iterative method
+- Replacement of original non-linear elements with linear equivalents in the
+    MNA system at each NR iteration
+- Integration of the NR solver into DC and transient simulation workflows
+- Support functions for calculating diode and transistor equivalent conductance
+    and independent current sources
+- Enhanced `.tr` and `.dc` simulations that accommodate non-linearities
+
+This module is critical for enabling convergence to the operating point of
+circuits containing exponential components and ensuring accurate simulations
+for real-world non-linear behavior.
 
 """
+
 import math
 import numpy as np
 import sys
@@ -189,6 +210,7 @@ def NR(A, circuit, elements, e=1e-5, it_max=100):
     """
         This function takes a circuit and its elements and in case there
         is a D or Q it returns the Newton Raphson equivalent.
+
     Args
     ----
     circuit : Updated cir_parser

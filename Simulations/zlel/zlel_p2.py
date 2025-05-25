@@ -2,13 +2,35 @@
 # -*- coding: utf-8 -*-
 """
 .. module:: zlel_p2.py
-    :synopsis:
 
-.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) eta Alvaro Beltran
-(abeltrandenanc002@ikasle.ehu.eus)
+    :synopsis: Utility functions for electric circuit simulation
+        (netlist parsing, MNA matrices, CSV export, and visualization)
 
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com) and
+     Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
+
+This module provides a set of support functions for simulating electric
+circuits defined in .cir (netlist) files. It offers tools for:
+
+- Parsing .cir files and converting them into structured matrix formats.
+- Extracting simulation commands (.OP, .PR, .DC, .TR) and interpreting
+    their parameters.
+- Building the M, N, and Us matrices used in the Modified Nodal Analysis
+    (Tableau method).
+- Generating and saving simulation results (DC sweep and transient analysis)
+    to CSV files.
+- Printing formatted simulation results to the console.
+- Plotting variables from simulation outputs.
+- Expanding composite circuit elements such as transistors and
+    controlled sources.
+- Solving the complete MNA system and verifying uniqueness of the solution.
+
+This module enables a user to simulate the operating point, DC sweeps,
+and time-domain behavior of circuits, and to inspect results
+numerically or graphically.
 
 """
+
 import os
 import numpy as np
 import sys
@@ -92,6 +114,7 @@ def save_sim_output(filename, sims_folder_name, extension):
     """ This function creates an absolute path to a filename inserting
         a folder given by "sims_folder_name" and changing its extension
         by another given by "extensión" (. needs to be included).
+
     Args
     ----
     filename: string with the filename (incluiding the path)
@@ -101,6 +124,7 @@ def save_sim_output(filename, sims_folder_name, extension):
     Returns
     -------
     new_file_path: the filename with the sims_folder_name inserted.
+
     """
 
     if not os.path.exists(filename):
@@ -249,9 +273,10 @@ def cir_parser(filename):
             - cir_nd: np array with the nodes to the circuit. size(b,4)
             - cir_val: np array with the values of the elements. size(b,3)
             - cir_ctrl: np array of strings with the element which branch
-            controls the controlled sources. size(1,b)
+                controls the controlled sources. size(1,b)
             - sim_cmds: np array of strings with the information of the
-            simulations.
+                simulations.
+
     Rises
     -----
         SystemExit
@@ -293,16 +318,20 @@ def getSimulations(sim_cmds):
     the different operations. If a operation is shown in the parser, it will
     appear as True in the dictionary and for DC and Transient analysis also
     some related values.
+
             PR : Prints information about the circuit
             OP : Prints the operating point of the circuit
             DC : Writes the DC sweep analysis in a cvs file
             TR : Writes the Transient analysis
+
     Args
     ----
         circuit : Array of 4 elements that describe the circuit
+
     Returns
     -------
         d : Dictionary with .PR, .OP, .DC and .TR words.
+
     """
 
     d = {".PR": False, ".OP": False, ".DC": [False, 0], ".TR": [False, 0]}

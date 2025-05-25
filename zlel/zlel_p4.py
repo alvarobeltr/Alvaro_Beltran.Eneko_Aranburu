@@ -1,13 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+.. module:: zlel_p4.py
 
-.. module:: zlel_p3.py
-    :synopsis: Put yours
+    :synopsis: Support for dynamic elements and time-domain simulation using
+        Euler Backward method
 
-.. moduleauthor:: Put yours
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com),
+    Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
+
+This module extends the ZLEL circuit simulator by handling
+**dynamic components** (capacitors and inductors) for transient and operating
+point analysis. It implements time-domain integration through the
+**Euler Backward method**, and modifies the MNA system accordingly.
+
+Main features:
+
+- Detection of dynamic elements (C, L) in the circuit
+- Modification of M, N, U matrices to include discrete-time equivalents
+    (Euler Backward)
+- Transient simulation loop that updates the system at each time step
+- Static treatment of capacitors and inductors for operating
+    point (OP) analysis
+- Integration with Newton-Raphson method to support nonlinear + dynamic systems
+- Export of simulation results to CSV
+
+This module is typically used in conjunction with `zlel_p1.py`, `zlel_p2.py`,
+and `zlel_p4.py` to perform complete circuit simulations including static,
+dynamic, and nonlinear behavior.
 
 """
+
 import math
 import numpy as np
 import sys

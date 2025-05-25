@@ -3,7 +3,7 @@
 """
 .. module:: zlel_p1.py
     :synopsis: This module contains functions that are used in the main program
-    in order to parse the matrixes that will be used to solve the circuit.
+        in order to parse the matrixes that will be used to solve the circuit.
 
 .. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com)
     eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
@@ -143,7 +143,7 @@ def getNodes(cir_nd2):
 
     Args
     ----
-    cir_nd: np array with the nodes of the circuit. size(b,4)
+    cir_nd2: np array with the nodes of the circuit. size(b,4)
 
     Returns
     -------
@@ -158,21 +158,21 @@ def getNodes(cir_nd2):
     return np.sort(nodes)
 
 
-def getNodesNumber(cir_nd):
+def getNodesNumber(cir_nd2):
     """
-    This funcion returns the size of the list of nodes from cir_nd using
+    This funcion returns the size of the list of nodes from cir_nd2 using
     the getNodes function.
 
     Args
     ----
-    cir_nd: np array with the nodes of the circuit. size(b,4)
+    cir_nd2: np array with the nodes of the circuit. size(b,4)
 
     Returns
     -------
     n : an integer which represents the number of nodes in the "nodes" list.
 
     """
-    return np.size(getNodes(cir_nd))
+    return np.size(getNodes(cir_nd2))
 
 
 def getEl_num(cir_el):
@@ -418,6 +418,7 @@ def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
         |     2.- Node info
         |     3.- Branch info
         |     4.- Variable info
+
     Args
     ----
     cir_el: reshaped cir_el

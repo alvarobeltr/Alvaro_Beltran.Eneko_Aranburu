@@ -29,6 +29,7 @@ if __name__ == "__main__":
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
+    pp = zl1.cir_parser(filename)
     nodes = zl1.getNodes(circuit[1])
     zl1.ErreferentziNodoa(nodes)
     b = zl2.getAdarrak(circuit[0])
