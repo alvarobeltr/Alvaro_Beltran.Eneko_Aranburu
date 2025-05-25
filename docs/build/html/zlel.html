@@ -592,7 +592,14 @@ csv format into the file with the dc solution of the circuit.</p>
 <h3>Args<a class="headerlink" href="#id49" title="Link to this heading">¶</a></h3>
 <p>b: # of branches
 n: # of nodes
-filename: string with the filename (incluiding the path)</p>
+filename: string with the filename (incluiding the path)
+MNUs : M, N and u matrices
+circuit : The circuit parser updated
+start : Start of DC analysis
+end : End of DC analysis
+step : Step of DC analysis
+source : Name or identifier of the independent source
+to be swept during the DC analysis.</p>
 </section>
 </dd></dl>
 
@@ -608,7 +615,12 @@ csv format into the file making the transient analysis.</p>
 <h3>Args<a class="headerlink" href="#id50" title="Link to this heading">¶</a></h3>
 <p>b: # of branches
 n: # of nodes
-filename: string with the filename (incluiding the path)</p>
+filename: string with the filename (incluiding the path)
+MNUs : M, N and u matrices
+circuit : The circuit parser updated
+start : Start of transient analysis
+end : End of transient analysis
+step : Step of transient analysis</p>
 </section>
 </dd></dl>
 
@@ -723,7 +735,8 @@ is a D or Q it returns the Newton Raphson equivalent.</p>
 </div></blockquote>
 <section id="id57">
 <h3>Args<a class="headerlink" href="#id57" title="Link to this heading">¶</a></h3>
-<p>circuit : Updated cir_parser
+<p>A : Reduced incidence matrix
+circuit : Updated cir_parser
 elements : M, N and u matrices
 e : Error given to solve NR (Default value = 1e-5)
 it_max : Maximum iteration given to solve NR (Default value = 100)</p>
@@ -812,7 +825,14 @@ csv format into the file with the dc solution of the circuit.</p>
 <h3>Args<a class="headerlink" href="#id64" title="Link to this heading">¶</a></h3>
 <p>b: # of branches
 n: # of nodes
-filename: string with the filename (incluiding the path)</p>
+filename: string with the filename (incluiding the path)
+MNUs : M, N and u matrices
+circuit : The circuit parser updated
+start : Start of DC analysis
+end : End of DC analysis
+step : Step of DC analysis
+source : Name or identifier of the independent source
+to be swept during the DC analysis.</p>
 </section>
 </dd></dl>
 
@@ -828,7 +848,12 @@ csv format into the file making the transient analysis.</p>
 <h3>Args<a class="headerlink" href="#id65" title="Link to this heading">¶</a></h3>
 <p>b: # of branches
 n: # of nodes
-filename: string with the filename (incluiding the path)</p>
+filename: string with the filename (incluiding the path)
+MNUs : M, N and u matrices
+circuit : The circuit parser updated
+start : Start of transient analysis
+end : End of transient analysis
+step : Step of transient analysis</p>
 </section>
 </dd></dl>
 
@@ -877,8 +902,9 @@ as starting values.</p>
 </div></blockquote>
 <section id="id66">
 <h3>Args<a class="headerlink" href="#id66" title="Link to this heading">¶</a></h3>
-<p>cir_parser2 : The circuit parser updated
-elements : M, N and u matrices
+<p>A : Reduced incidence matrix
+circuit : The circuit parser updated
+MNUs : M, N and u matrices
 h : Diference between a time stamp and the next
 t : Iteration number in the transient loop
 pre_sol : Solution of the previous iteration</p>
@@ -900,21 +926,28 @@ position of each one and the type of element.</p>
 </div></blockquote>
 <section id="id68">
 <h3>Args<a class="headerlink" href="#id68" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><p>cir_parser2 : The circuit parser updated</p>
-</div></blockquote>
+<p>circuit : The circuit parser updated</p>
 </section>
 <section id="id69">
 <h3>Returns<a class="headerlink" href="#id69" title="Link to this heading">¶</a></h3>
-<p>is_d : True if there is at least one dynamic element, if not False
-nl_el : List with tuples of each dynamic element and its position</p>
+<p>d : True if there is at least one dynamic element, if not False
+d_el : List with tuples of each dynamic element and its position</p>
 </section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p4.prepare_dynamic_OP">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p4.</span></span><span class="sig-name descname"><span class="pre">prepare_dynamic_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p4.html#prepare_dynamic_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p4.prepare_dynamic_OP" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="simple">
+<dt>This function calculates the operation</dt><dd><p>point with capacitors and inductors.</p>
+</dd>
+</dl>
+<section id="id70">
+<h3>Args<a class="headerlink" href="#id70" title="Link to this heading">¶</a></h3>
+<p>MNUs : M, N and u matrices
+circuit : The circuit parser updated</p>
+</section>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p4.save_as_csv_tr">
@@ -924,11 +957,16 @@ nl_el : List with tuples of each dynamic element and its position</p>
 csv format into the file making the transient analysis.</p>
 </dd>
 </dl>
-<section id="id70">
-<h3>Args<a class="headerlink" href="#id70" title="Link to this heading">¶</a></h3>
+<section id="id71">
+<h3>Args<a class="headerlink" href="#id71" title="Link to this heading">¶</a></h3>
 <p>b: # of branches
 n: # of nodes
-filename: string with the filename (incluiding the path)</p>
+filename: string with the filename (incluiding the path)
+MNUs : M, N and u matrices
+circuit : The circuit parser updated
+start : Start of transient analysis
+end : End of transient analysis
+step : Step of transient analysis</p>
 </section>
 </dd></dl>
 

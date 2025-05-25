@@ -199,6 +199,11 @@
 <span class="sd">    b: # of branches</span>
 <span class="sd">    n: # of nodes</span>
 <span class="sd">    filename: string with the filename (incluiding the path)</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    start : Start of transient analysis</span>
+<span class="sd">    end : End of transient analysis</span>
+<span class="sd">    step : Step of transient analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Us</span> <span class="o">=</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -244,6 +249,14 @@
 <span class="sd">    b: # of branches</span>
 <span class="sd">    n: # of nodes</span>
 <span class="sd">    filename: string with the filename (incluiding the path)</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    start : Start of DC analysis</span>
+<span class="sd">    end : End of DC analysis</span>
+<span class="sd">    step : Step of DC analysis</span>
+<span class="sd">    source : Name or identifier of the independent source</span>
+<span class="sd">    to be swept during the DC analysis.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">build_csv_header</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>

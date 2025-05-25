@@ -209,7 +209,8 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     end : End of DC analysis
     step : Step of DC analysis
     source : Name or identifier of the independent source
-        to be swept during the DC analysis.
+    to be swept during the DC analysis.
+
     """
     if source[0].lower() == "v":
         header = build_csv_header("V", b, n)

@@ -87,12 +87,12 @@
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
-<span class="sd">        cir_parser2 : The circuit parser updated</span>
+<span class="sd">    circuit : The circuit parser updated</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    is_d : True if there is at least one dynamic element, if not False</span>
-<span class="sd">    nl_el : List with tuples of each dynamic element and its position</span>
+<span class="sd">    d : True if there is at least one dynamic element, if not False</span>
+<span class="sd">    d_el : List with tuples of each dynamic element and its position</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="kc">False</span>
@@ -123,8 +123,9 @@
 
 <span class="sd">    Args</span>
 <span class="sd">    ----</span>
-<span class="sd">    cir_parser2 : The circuit parser updated</span>
-<span class="sd">    elements : M, N and u matrices</span>
+<span class="sd">    A : Reduced incidence matrix</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
 <span class="sd">    h : Diference between a time stamp and the next</span>
 <span class="sd">    t : Iteration number in the transient loop</span>
 <span class="sd">    pre_sol : Solution of the previous iteration</span>
@@ -178,6 +179,11 @@
 <span class="sd">    b: # of branches</span>
 <span class="sd">    n: # of nodes</span>
 <span class="sd">    filename: string with the filename (incluiding the path)</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    start : Start of transient analysis</span>
+<span class="sd">    end : End of transient analysis</span>
+<span class="sd">    step : Step of transient analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Aa</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getInzidentziaMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -217,6 +223,14 @@
 <div class="viewcode-block" id="prepare_dynamic_OP">
 <a class="viewcode-back" href="../../zlel.html#zlel.zlel_p4.prepare_dynamic_OP">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">prepare_dynamic_OP</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This function calculates the operation</span>
+<span class="sd">        point with capacitors and inductors.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cir_el</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">MNUs</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cir_el</span><span class="p">):</span>
