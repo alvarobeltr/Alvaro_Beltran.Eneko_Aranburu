@@ -25,11 +25,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/all/0_zlel_node_float.cir"
+        filename = "cirs/all/1_zlel_ekorketa.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
-    pp = zl1.cir_parser(filename)
     nodes = zl1.getNodes(circuit[1])
     zl1.ErreferentziNodoa(nodes)
     b = zl2.getAdarrak(circuit[0])

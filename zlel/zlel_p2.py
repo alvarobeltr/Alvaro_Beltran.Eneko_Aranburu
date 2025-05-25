@@ -132,6 +132,11 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    start : Start of transient analysis
+    end : End of transient analysis
+    step : Step of transient analysis
     """
 
     Us = MNUs[2]
@@ -174,6 +179,13 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    start : Start of DC analysis
+    end : End of DC analysis
+    step : Step of DC analysis
+    source : Name or identifier of the independent source
+        to be swept during the DC analysis.
     """
     if source[0].lower() == "v":
         header = build_csv_header("V", b, n)

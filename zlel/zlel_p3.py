@@ -191,6 +191,7 @@ def NR(A, circuit, elements, e=1e-5, it_max=100):
         is a D or Q it returns the Newton Raphson equivalent.
     Args
     ----
+    A : Reduced incidence matrix
     circuit : Updated cir_parser
     elements : M, N and u matrices
     e : Error given to solve NR (Default value = 1e-5)
@@ -258,6 +259,11 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    start : Start of transient analysis
+    end : End of transient analysis
+    step : Step of transient analysis
     """
 
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
@@ -299,6 +305,13 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    start : Start of DC analysis
+    end : End of DC analysis
+    step : Step of DC analysis
+    source : Name or identifier of the independent source
+        to be swept during the DC analysis.
     """
     if source[0].lower() == "v":
         header = zl2.build_csv_header("V", b, n)
