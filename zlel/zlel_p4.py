@@ -53,12 +53,12 @@ def dynamic(circuit):
 
     Args
     ----
-        cir_parser2 : The circuit parser updated
+        circuit : The circuit parser updated
 
     Returns
     -------
-    is_d : True if there is at least one dynamic element, if not False
-    nl_el : List with tuples of each dynamic element and its position
+    d : True if there is at least one dynamic element, if not False
+    d_el : List with tuples of each dynamic element and its position
 
     """
     d = False
@@ -86,8 +86,9 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
 
     Args
     ----
-    cir_parser2 : The circuit parser updated
-    elements : M, N and u matrices
+    A : Reduced incidence matrix
+    circuit : The circuit parser updated
+    MNUs : M, N and u matrices
     h : Diference between a time stamp and the next
     t : Iteration number in the transient loop
     pre_sol : Solution of the previous iteration
@@ -138,6 +139,11 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    start : Start of transient analysis
+    end : End of transient analysis
+    step : Step of transient analysis
     """
 
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
@@ -174,6 +180,15 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
 
 
 def prepare_dynamic_OP(circuit, MNUs):
+    """ This function generates a csv file with the name filename.
+        First it will save a header and then, it loops and save a line in
+        csv format into the file making the transient analysis.
+
+    Args
+    ----
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    """
     cir_el = circuit[0]
     M, N, U = MNUs
     for k, el in enumerate(cir_el):
