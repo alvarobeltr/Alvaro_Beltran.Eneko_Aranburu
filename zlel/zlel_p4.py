@@ -30,7 +30,7 @@ def dynamic(circuit):
 
     Args
     ----
-        circuit : The circuit parser updated
+    circuit : The circuit parser updated
 
     Returns
     -------
