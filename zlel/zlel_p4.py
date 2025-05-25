@@ -180,9 +180,8 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
 
 
 def prepare_dynamic_OP(circuit, MNUs):
-    """ This function generates a csv file with the name filename.
-        First it will save a header and then, it loops and save a line in
-        csv format into the file making the transient analysis.
+    """ This function calculates the operation
+        point with capacitors and inductors.
 
     Args
     ----
