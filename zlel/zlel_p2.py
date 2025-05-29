@@ -548,15 +548,15 @@ def Tableau(A, M, N, Us):
 
     Args
     ----
-    **A**: Reduced incidence matrix.
-    **M**: Voltage matrix.
-    **N**: Current matrix.
-    **Us**: Vector of elements not controlled by voltage.
+    A: Reduced incidence matrix.
+    M: Voltage matrix.
+    N: Current matrix.
+    Us: Vector of elements not controlled by voltage.
 
     Returns
     -------
-    **T**: Tableau matrix, containing all equations in the order e, v, i.
-    **Sol**: List of solutions for all equations in the same order.
+    T: Tableau matrix, containing all equations in the order e, v, i.
+    Sol: List of solutions for all equations in the same order.
 """
     b1, b2 = A.shape
     T_size = b1 + 2 * b2
