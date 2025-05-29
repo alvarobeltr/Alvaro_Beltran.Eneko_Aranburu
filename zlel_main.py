@@ -16,6 +16,7 @@ import zlel.zlel_p3 as zl3
 import zlel.zlel_p4 as zl4
 import sys
 
+
 """
 https://stackoverflow.com/questions/419163/what-does-if-name-main-do
 https://stackoverflow.com/questions/19747371/
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     zl1.KonexioBakarrekoNodoak(Aa, nodes)
     # for i in circuit:
     # print(i)
-
+    print(circuit)
     op = zl2.getSimulations(cp[4])
     # print(op)
 
