@@ -88,14 +88,14 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
     ----
     A : Reduced incidence matrix
     circuit : The circuit parser updated
-    MNUs : M, N and u matrices
+    MNUs : M, N and u matrixes
     h : Diference between a time stamp and the next
     t : Iteration number in the transient loop
     pre_sol : Solution of the previous iteration
 
     Returns
     -------
-    [M, N, u] : The same matrices of elements in the arguments but after
+    [M, N, u] : The same matrixes of elements in the arguments but after
     applying the Euler Backward method
 
     """
@@ -139,7 +139,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
-    MNUs : M, N and u matrices
+    MNUs : M, N and u matrixes
     circuit : The circuit parser updated
     start : Start of transient analysis
     end : End of transient analysis
@@ -163,7 +163,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
         t1 = 0
         while t <= end:
             for k, i in enumerate(cir_el):
-                if (i[0][0] == "B") or (i[0][0] == "Y"):
+                if (i[0][0].lower() == "b") or (i[0][0].lower() == "y"):
                     w = 2 * math.pi * cir_val[k][1]
                     MNUs[2][k] = cir_val[k][0] * math.sin(
                         (w * t) + (math.pi * cir_val[k][2] / 180))
@@ -184,8 +184,11 @@ def prepare_dynamic_OP(circuit, MNUs):
 
     Args
     ----
-    MNUs : M, N and u matrices
+    MNUs : M, N and u matrixes
     circuit : The circuit parser updated
+    Returns
+    -------
+    [M, N, u] : Updated MNU matrixes
     """
     cir_el = circuit[0]
     M, N, U = MNUs
@@ -210,7 +213,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/3_zlel_RLC.cir"
+        filename = "../cirs/all/1_zlel_anpli.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)

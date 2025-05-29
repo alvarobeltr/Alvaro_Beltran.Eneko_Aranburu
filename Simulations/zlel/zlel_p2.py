@@ -490,13 +490,12 @@ def getMNUs(circuit2):
     N : np array that contains the second matrix of Tableau equations.
     size(b,b)
     Us : np array that contains the third matrix of Tableau equations.
+"""
 
-    """
     cir_el2 = circuit2[0]
     cir_val2 = circuit2[2]
     cir_ctr2 = circuit2[3]
     b = getAdarrak(cir_el2)
-
     M = np.zeros((b, b), dtype=float)
     N = np.zeros((b, b), dtype=float)
     Us = np.zeros((b, 1), dtype=float)
@@ -522,7 +521,7 @@ def getMNUs(circuit2):
         elif cir_el2[i, 0][0].lower() == "g":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
-            M[i][j] = cir_val2[i][0]*-1
+            M[i][j] = -cir_val2[i][0]
         elif cir_el2[i, 0][0].lower() == "f":
             j = getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
@@ -537,6 +536,7 @@ def getMNUs(circuit2):
         elif cir_el2[i, 0][0].lower() == "y":
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
+
     return [M, N, Us]
 
 
@@ -548,15 +548,15 @@ def Tableau(A, M, N, Us):
 
     Args
     ----
-    **A**: Reduced incidence matrix.
-    **M**: Voltage matrix.
-    **N**: Current matrix.
-    **Us**: Vector of elements not controlled by voltage.
+    A: Reduced incidence matrix.
+    M: Voltage matrix.
+    N: Current matrix.
+    Us: Vector of elements not controlled by voltage.
 
     Returns
     -------
-    **T**: Tableau matrix, containing all equations in the order e, v, i.
-    **Sol**: List of solutions for all equations in the same order.
+    T: Tableau matrix, containing all equations in the order e, v, i.
+    Sol: List of solutions for all equations in the same order.
 """
     b1, b2 = A.shape
     T_size = b1 + 2 * b2
@@ -614,7 +614,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/1_zlel_ekorketa.cir"
+        filename = "../cirs/all/1_zlel_anpli.cir"
 
     cp = cir_parser(filename)
     circuit = luzatu_cir(cp)
