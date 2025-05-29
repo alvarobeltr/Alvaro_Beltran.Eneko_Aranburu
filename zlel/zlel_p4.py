@@ -163,7 +163,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
         t1 = 0
         while t <= end:
             for k, i in enumerate(cir_el):
-                if (i[0][0] == "B") or (i[0][0] == "Y"):
+                if (i[0][0].lower() == "b") or (i[0][0].lower() == "y"):
                     w = 2 * math.pi * cir_val[k][1]
                     MNUs[2][k] = cir_val[k][0] * math.sin(
                         (w * t) + (math.pi * cir_val[k][2] / 180))
@@ -213,7 +213,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "../cirs/all/3_zlel_RLC.cir"
+        filename = "../cirs/all/1_zlel_anpli.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)

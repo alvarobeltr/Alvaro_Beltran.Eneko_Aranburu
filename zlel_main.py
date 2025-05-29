@@ -40,17 +40,11 @@ if __name__ == "__main__":
     zl1.TentsioIturriakParaleloan(circuit[0], circuit[2], Aa)
     zl1.KorronteIturriakSeriean(circuit[0], circuit[1], circuit[2], Aa, b)
     zl1.KonexioBakarrekoNodoak(Aa, nodes)
-    # for i in circuit:
-    # print(i)
-    print(circuit)
     op = zl2.getSimulations(cp[4])
-    # print(op)
-
     el_num = zl1.getEl_num(cp[0])
     MNUs = zl2.getMNUs(circuit)
     MNUs = zl4.prepare_dynamic_OP(circuit, MNUs)
     zl3.NR(A, circuit, MNUs)
-    # Verificar qué simulaciones ejecutar
     if op[".PR"]:
         zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
         print("\nIncidence Matrix: ")
@@ -60,7 +54,7 @@ if __name__ == "__main__":
         sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
         zl2.print_solution(sol, b, n)
 
-    if op[".DC"][0]:  # Indica si se debe hacer la simulación
+    if op[".DC"][0]:
         start, end, step = op[".DC"][1]
         source = op[".DC"][2]
         zl3.save_as_csv_dc(b, n, filename, MNUs, circuit,
