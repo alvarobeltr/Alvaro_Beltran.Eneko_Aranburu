@@ -100,14 +100,15 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
 
     """
     d = dynamic(circuit)
+    M = MNUs[0]
+    N = MNUs[1]
+    Us = MNUs[2]
     if d[0]:
         d_el = d[1]
-        M = MNUs[0]
-        N = MNUs[1]
-        Us = MNUs[2]
         cir_val = circuit[2]
         n = len(A)
         b = len(A[0])
+        print(d_el)
         if t == 0:
             for el, k in d_el:
                 if el == "C":
@@ -126,7 +127,7 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
                 else:
                     ic = pre_sol[n+b+k]
                     Us[k] = ic
-        return [M, N, Us]
+    return [M, N, Us]
 
 
 def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
@@ -166,8 +167,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
                 if (i[0][0] == "B") or (i[0][0] == "Y"):
                     w = 2 * math.pi * cir_val[k][1]
                     MNUs[2][k] = cir_val[k][0] * math.sin(
-                        (w * t) + (math.pi * cir_val[k][2] / 180)
-                        )
+                        (w * t) + (math.pi * cir_val[k][2] / 180))
             MNUs = Euler_BackWard(A, circuit, MNUs, tr[2], t1, pre_sol)
             zl3.NR(A, circuit, MNUs)
             sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])

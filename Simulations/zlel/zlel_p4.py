@@ -53,12 +53,12 @@ def dynamic(circuit):
 
     Args
     ----
-        cir_parser2 : The circuit parser updated
+    circuit : The circuit parser updated
 
     Returns
     -------
-    is_d : True if there is at least one dynamic element, if not False
-    nl_el : List with tuples of each dynamic element and its position
+    d : True if there is at least one dynamic element, if not False
+    d_el : List with tuples of each dynamic element and its position
 
     """
     d = False
@@ -86,8 +86,9 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
 
     Args
     ----
-    cir_parser2 : The circuit parser updated
-    elements : M, N and u matrices
+    A : Reduced incidence matrix
+    circuit : The circuit parser updated
+    MNUs : M, N and u matrices
     h : Diference between a time stamp and the next
     t : Iteration number in the transient loop
     pre_sol : Solution of the previous iteration
@@ -99,14 +100,15 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
 
     """
     d = dynamic(circuit)
+    M = MNUs[0]
+    N = MNUs[1]
+    Us = MNUs[2]
     if d[0]:
         d_el = d[1]
-        M = MNUs[0]
-        N = MNUs[1]
-        Us = MNUs[2]
         cir_val = circuit[2]
         n = len(A)
         b = len(A[0])
+        print(d_el)
         if t == 0:
             for el, k in d_el:
                 if el == "C":
@@ -125,7 +127,7 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
                 else:
                     ic = pre_sol[n+b+k]
                     Us[k] = ic
-        return [M, N, Us]
+    return [M, N, Us]
 
 
 def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
@@ -138,6 +140,11 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    start : Start of transient analysis
+    end : End of transient analysis
+    step : Step of transient analysis
     """
 
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
@@ -160,8 +167,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
                 if (i[0][0] == "B") or (i[0][0] == "Y"):
                     w = 2 * math.pi * cir_val[k][1]
                     MNUs[2][k] = cir_val[k][0] * math.sin(
-                        (w * t) + (math.pi * cir_val[k][2] / 180)
-                        )
+                        (w * t) + (math.pi * cir_val[k][2] / 180))
             MNUs = Euler_BackWard(A, circuit, MNUs, tr[2], t1, pre_sol)
             zl3.NR(A, circuit, MNUs)
             sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
@@ -174,6 +180,14 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
 
 
 def prepare_dynamic_OP(circuit, MNUs):
+    """ This function calculates the operation
+        point with capacitors and inductors.
+
+    Args
+    ----
+    MNUs : M, N and u matrices
+    circuit : The circuit parser updated
+    """
     cir_el = circuit[0]
     M, N, U = MNUs
     for k, el in enumerate(cir_el):
