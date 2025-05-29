@@ -108,7 +108,6 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
         cir_val = circuit[2]
         n = len(A)
         b = len(A[0])
-        print(d_el)
         if t == 0:
             for el, k in d_el:
                 if el == "C":

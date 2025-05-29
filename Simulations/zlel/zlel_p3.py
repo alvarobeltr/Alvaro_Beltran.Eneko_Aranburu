@@ -348,7 +348,7 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
     ext = "_" + source + ".dc"
     filename = zl2.save_sim_output(filename, "sims", ext)
 
-    eli = next((k for k, i in enumerate(cir_el) if i[0].lower() == source),
+    eli = next((k for k, i in enumerate(cir_el) if i[0].lower() == source.lower()),
                None)
     if eli is None:
         raise ValueError(f"Source '{source}' not found in circuit.")

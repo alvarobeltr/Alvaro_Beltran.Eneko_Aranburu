@@ -283,7 +283,7 @@ def KonexioBakarrekoNodoak(Aa, nodes):
     for n, x in enumerate(Aa):
         if np.size(np.flatnonzero(x != 0)) < 2:
             node = nodes[n]
-            sys.exit(f"Node {node} is floating")
+            sys.exit(f"Node {node} is floating.")
 
 
 def TentsioIturriakParaleloan(cir_el2, cir_val2, Aa):
@@ -440,8 +440,8 @@ def print_cir_info(cir_el, cir_nd, b, n, nodes, el_num):
     for i in range(1, b+1):
         indent = 12  # Number of blanks for indent
         string = ("\t" + str(i) + ". branch:\t" +
-                  str(cir_el[i-1][0]) + "i".rjust(indent - len(cir_el[i-1])) +
-                  str(i) + "v".rjust(indent - len(str(i))) + str(i) +
+                  str(cir_el[i-1][0]) + "i".rjust(indent - len(cir_el[i-1][0]))
+                  + str(i) + "v".rjust(indent - len(str(i))) + str(i) +
                   " = e" + str(cir_nd[i-1, 0]) +
                   " - e" + str(cir_nd[i-1, 1]))
         print(string)

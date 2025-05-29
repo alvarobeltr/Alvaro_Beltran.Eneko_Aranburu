@@ -597,7 +597,8 @@ def Tableau(A, M, N, Us):
     for i in range(b2):
         u[b1 + b2 + i, 0] = Us[i]
     if np.linalg.det(T) == 0:
-        raise ValueError("El sistema no tiene solución única: det(T) = 0")
+        sys.exit("Error solving Tableau equations, check if det(T) != 0.")
+        # raise ValueError("El sistema no tiene solución única: det(T) = 0")
     sol = np.linalg.solve(T, u)
 
     return sol

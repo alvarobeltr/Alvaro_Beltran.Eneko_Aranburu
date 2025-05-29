@@ -25,7 +25,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/all/1_zlel_B_op_tr.cir"
+        filename = "cirs/all/2_zlel_1D.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl2.luzatu_cir(cp)
@@ -50,13 +50,14 @@ if __name__ == "__main__":
     MNUs = zl4.prepare_dynamic_OP(circuit, MNUs)
     zl3.NR(A, circuit, MNUs)
     # Verificar qué simulaciones ejecutar
+    if op[".PR"]:
+        zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+        print("\nIncidence Matrix: ")
+        print(Aa)
+
     if op[".OP"]:
         sol = zl2.Tableau(A, MNUs[0], MNUs[1], MNUs[2])
         zl2.print_solution(sol, b, n)
-    if op[".PR"]:
-        zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
-        print("\nIncidence Matrix:")
-        print(Aa)
 
     if op[".DC"][0]:  # Indica si se debe hacer la simulación
         start, end, step = op[".DC"][1]
