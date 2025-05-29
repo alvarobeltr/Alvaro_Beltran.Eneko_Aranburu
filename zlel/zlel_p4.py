@@ -88,14 +88,14 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
     ----
     A : Reduced incidence matrix
     circuit : The circuit parser updated
-    MNUs : M, N and u matrices
+    MNUs : M, N and u matrixes
     h : Diference between a time stamp and the next
     t : Iteration number in the transient loop
     pre_sol : Solution of the previous iteration
 
     Returns
     -------
-    [M, N, u] : The same matrices of elements in the arguments but after
+    [M, N, u] : The same matrixes of elements in the arguments but after
     applying the Euler Backward method
 
     """
@@ -139,7 +139,7 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
     b: # of branches
     n: # of nodes
     filename: string with the filename (incluiding the path)
-    MNUs : M, N and u matrices
+    MNUs : M, N and u matrixes
     circuit : The circuit parser updated
     start : Start of transient analysis
     end : End of transient analysis
@@ -184,8 +184,11 @@ def prepare_dynamic_OP(circuit, MNUs):
 
     Args
     ----
-    MNUs : M, N and u matrices
+    MNUs : M, N and u matrixes
     circuit : The circuit parser updated
+    Returns
+    -------
+    [M, N, u] : Updated MNU matrixes
     """
     cir_el = circuit[0]
     M, N, U = MNUs
