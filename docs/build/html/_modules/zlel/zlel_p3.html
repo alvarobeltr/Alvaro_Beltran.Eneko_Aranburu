@@ -81,14 +81,12 @@
 <span class="sd">        non-linear elements. If there are, it also returns a list with the</span>
 <span class="sd">        position of each one and the type of element.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    nl : True if there is at least one non-linear element, if not False</span>
-<span class="sd">    nl_el : List with tuples of each non-lineal element and its position</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | nl : True if there is at least one non-linear element, if not False</span>
+<span class="sd">        | nl_el : List with tuples of each non-lineal element and its position</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nl</span> <span class="o">=</span> <span class="kc">False</span>
@@ -127,16 +125,14 @@
 
 <span class="sd">        :math:`I = I_0(e^{(\\frac{V_{dj}}{nV_T})}-1) + gV_{dj}`</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    I0: Value of I0.</span>
-<span class="sd">    nD: Value of nD.</span>
-<span class="sd">    Vdj: Value of Vd.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | I0: Value of I0.</span>
+<span class="sd">        | nD: Value of nD.</span>
+<span class="sd">        | Vdj: Value of Vd.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    gd: Conductance of the NR discrete equivalent for the diode.</span>
-<span class="sd">    Id: Current independent source of the NR discrete equivalent.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | gd: Conductance of the NR discrete equivalent for the diode.</span>
+<span class="sd">        | Id: Current independent source of the NR discrete equivalent.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -155,19 +151,17 @@
 <span class="sd">        This function takes the transistors branches voltages, and transistor</span>
 <span class="sd">        constants and returns Newton Raphson equivalent of the transistor.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    Ies : Emitter saturation current</span>
-<span class="sd">    Ics : Colector saturation current</span>
-<span class="sd">    Bf : Common emitter current gain</span>
-<span class="sd">    Vbe : Previous voltage value for BE connection</span>
-<span class="sd">    Vbc : Previous voltage value for BC connection</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | Ies : Emitter saturation current</span>
+<span class="sd">        | Ics : Colector saturation current</span>
+<span class="sd">        | Bf : Common emitter current gain</span>
+<span class="sd">        | Vbe : Previous voltage value for BE connection</span>
+<span class="sd">        | Vbc : Previous voltage value for BC connection</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    G : Equivalent conductance of the transistor</span>
-<span class="sd">    Ie : Equivalent current of the transistor on the emitter</span>
-<span class="sd">    Ic : Equivalent current of the transistor on the collector</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | G : Equivalent conductance of the transistor</span>
+<span class="sd">        | Ie : Equivalent current of the transistor on the emitter</span>
+<span class="sd">        | Ic : Equivalent current of the transistor on the collector</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">T</span> <span class="o">=</span> <span class="mi">300</span>
@@ -194,16 +188,14 @@
 <span class="sd">        This funcion takes the diode NR values and the elements and returns the</span>
 <span class="sd">        same elements but with the equivalents replaced in the position given.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">        elements : Array with M, N and u matrices</span>
-<span class="sd">        Diode_NR : NR equivalent values g and I</span>
-<span class="sd">        k : Position of the diode on the parser</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | elements : Array with M, N and u matrices</span>
+<span class="sd">        | Diode_NR : NR equivalent values g and I</span>
+<span class="sd">        | k : Position of the diode on the parser</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    [M, N, u] : The same matrices of elements in the arguments but with</span>
-<span class="sd">        the NR equivalent replaced in the k position</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | [M, N, u] : The same matrices of elements in the arguments but with</span>
+<span class="sd">        | the NR equivalent replaced in the k position</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">M</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -226,16 +218,14 @@
 <span class="sd">        and returns the same elements but with the equivalents replaced</span>
 <span class="sd">        starting from the position given.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    elements : Array with M, N and u matrices</span>
-<span class="sd">    Transistor_NR : NR equivalent values G, IE and IC</span>
-<span class="sd">    k : Starting position of the transistor on the parser</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | elements : Array with M, N and u matrices</span>
+<span class="sd">        | Transistor_NR : NR equivalent values G, IE and IC</span>
+<span class="sd">        | k : Starting position of the transistor on the parser</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    [M, N, u] : The same matrices of elements in the arguments but with</span>
-<span class="sd">        the NR equivalent replaced starting on the k position</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | [M, N, u] : The same matrices of elements in the arguments but with</span>
+<span class="sd">        | the NR equivalent replaced starting on the k position</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">M</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -260,13 +250,12 @@
 <span class="sd">        This function takes a circuit and its elements and in case there</span>
 <span class="sd">        is a D or Q it returns the Newton Raphson equivalent.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    A : Reduced incidence matrix</span>
-<span class="sd">    circuit : Updated cir_parser</span>
-<span class="sd">    elements : M, N and u matrices</span>
-<span class="sd">    e : Error given to solve NR (Default value = 1e-5)</span>
-<span class="sd">    it_max : Maximum iteration given to solve NR (Default value = 100)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | A : Reduced incidence matrix</span>
+<span class="sd">        | circuit : Updated cir_parser</span>
+<span class="sd">        | elements : M, N and u matrices</span>
+<span class="sd">        | e : Error given to solve NR (Default value = 1e-5)</span>
+<span class="sd">        | it_max : Maximum iteration given to solve NR (Default value = 100)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -328,16 +317,15 @@
 <span class="sd">        First it will save a header and then, it loops and save a line in</span>
 <span class="sd">        csv format into the file making the transient analysis.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # of nodes</span>
-<span class="sd">    filename: string with the filename (incluiding the path)</span>
-<span class="sd">    MNUs : M, N and u matrices</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    start : Start of transient analysis</span>
-<span class="sd">    end : End of transient analysis</span>
-<span class="sd">    step : Step of transient analysis</span>
+<span class="sd">    Args;</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # of nodes</span>
+<span class="sd">        | filename: string with the filename (incluiding the path)</span>
+<span class="sd">        | MNUs : M, N and u matrices</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">        | start : Start of transient analysis</span>
+<span class="sd">        | end : End of transient analysis</span>
+<span class="sd">        | step : Step of transient analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Aa</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getInzidentziaMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -377,18 +365,17 @@
 <span class="sd">        First it will save a header and then, it loops and save a line in</span>
 <span class="sd">        csv format into the file with the dc solution of the circuit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # of nodes</span>
-<span class="sd">    filename: string with the filename (incluiding the path)</span>
-<span class="sd">    MNUs : M, N and u matrices</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    start : Start of DC analysis</span>
-<span class="sd">    end : End of DC analysis</span>
-<span class="sd">    step : Step of DC analysis</span>
-<span class="sd">    source : Name or identifier of the independent source</span>
-<span class="sd">    to be swept during the DC analysis.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # of nodes</span>
+<span class="sd">        | filename: string with the filename (incluiding the path)</span>
+<span class="sd">        | MNUs : M, N and u matrices</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">        | start : Start of DC analysis</span>
+<span class="sd">        | end : End of DC analysis</span>
+<span class="sd">        | step : Step of DC analysis</span>
+<span class="sd">        | source : Name or identifier of the independent source</span>
+<span class="sd">        | to be swept during the DC analysis.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
@@ -403,8 +390,10 @@
     <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">source</span> <span class="o">+</span> <span class="s2">&quot;.dc&quot;</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">save_sim_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;sims&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span>
 
-    <span class="n">eli</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cir_el</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">source</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
-               <span class="kc">None</span><span class="p">)</span>
+    <span class="n">eli</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cir_el</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">source</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+        <span class="kc">None</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">eli</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source &#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39; not found in circuit.&quot;</span><span class="p">)</span>
 
@@ -526,7 +515,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      &#169;2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>

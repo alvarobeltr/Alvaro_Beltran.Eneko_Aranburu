@@ -2,24 +2,22 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append ('..')
-
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'ZLEL'
-copyright = '2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com)'
-author = 'Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com)'
+copyright = '2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com)'
+author = 'Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com)'
 release = '0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = [ 'sphinx.ext.autodoc',
+extensions = ['sphinx.ext.autodoc',
  'sphinx.ext.doctest',
  'sphinx.ext.intersphinx',
  'sphinx.ext.todo',
@@ -27,7 +25,7 @@ extensions = [ 'sphinx.ext.autodoc',
  'sphinx.ext.mathjax',
  'sphinx.ext.ifconfig',
  'sphinx.ext.viewcode',
- 'sphinx.ext.githubpages',]
+ 'sphinx.ext.githubpages', ]
 
 templates_path = ['_templates']
 exclude_patterns = []

@@ -80,12 +80,11 @@
 <span class="k">def</span> <span class="nf">print_solution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function prints the solution with format.</span>
 
-<span class="sd">        Args</span>
-<span class="sd">        ----</span>
-<span class="sd">        sol: np array with the solution of the Tableau equations</span>
-<span class="sd">        (e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b)</span>
-<span class="sd">        b: # of branches</span>
-<span class="sd">        n: # of nodes</span>
+<span class="sd">        Args:</span>
+<span class="sd">            | sol: np array with the solution of the Tableau equations</span>
+<span class="sd">            | (e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b)</span>
+<span class="sd">            | b: # of branches</span>
+<span class="sd">            | n: # of nodes</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -127,15 +126,13 @@
 <span class="sd">        The header will be this form,</span>
 <span class="sd">        t/v/i,e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    tvi: &quot;v&quot; or &quot;i&quot; if .dc analysis or &quot;t&quot; if .tran</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # of nodes</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | tvi: &quot;v&quot; or &quot;i&quot; if .dc analysis or &quot;t&quot; if .tran</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # of nodes</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    header: The header in csv format as string</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | header: The header in csv format as string</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">header</span> <span class="o">=</span> <span class="n">tvi</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
@@ -155,15 +152,13 @@
 <span class="sd">        a folder given by &quot;sims_folder_name&quot; and changing its extension</span>
 <span class="sd">        by another given by &quot;extensión&quot; (. needs to be included).</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    filename: string with the filename (incluiding the path)</span>
-<span class="sd">    sims_folder_name: string with the name of the folder to save the sims</span>
-<span class="sd">    extension: new extensión for the file.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | filename: string with the filename (incluiding the path)</span>
+<span class="sd">        | sims_folder_name: string with the name of the folder to save the sims</span>
+<span class="sd">        | extension: new extensión for the file.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    new_file_path: the filename with the sims_folder_name inserted.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | new_file_path: the filename with the sims_folder_name inserted.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -194,16 +189,15 @@
 <span class="sd">        First it will save a header and then, it loops and save a line in</span>
 <span class="sd">        csv format into the file making the transient analysis.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # of nodes</span>
-<span class="sd">    filename: string with the filename (incluiding the path)</span>
-<span class="sd">    MNUs : M, N and u matrices</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    start : Start of transient analysis</span>
-<span class="sd">    end : End of transient analysis</span>
-<span class="sd">    step : Step of transient analysis</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # of nodes</span>
+<span class="sd">        | filename: string with the filename (incluiding the path)</span>
+<span class="sd">        | MNUs : M, N and u matrices</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">        | start : Start of transient analysis</span>
+<span class="sd">        | end : End of transient analysis</span>
+<span class="sd">        | step : Step of transient analysis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Us</span> <span class="o">=</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -244,18 +238,17 @@
 <span class="sd">        First it will save a header and then, it loops and save a line in</span>
 <span class="sd">        csv format into the file with the dc solution of the circuit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # of nodes</span>
-<span class="sd">    filename: string with the filename (incluiding the path)</span>
-<span class="sd">    MNUs : M, N and u matrices</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    start : Start of DC analysis</span>
-<span class="sd">    end : End of DC analysis</span>
-<span class="sd">    step : Step of DC analysis</span>
-<span class="sd">    source : Name or identifier of the independent source</span>
-<span class="sd">    to be swept during the DC analysis.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # of nodes</span>
+<span class="sd">        | filename: string with the filename (incluiding the path)</span>
+<span class="sd">        | MNUs : M, N and u matrices</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">        | start : Start of DC analysis</span>
+<span class="sd">        | end : End of DC analysis</span>
+<span class="sd">        | step : Step of DC analysis</span>
+<span class="sd">        | source : Name or identifier of the independent source</span>
+<span class="sd">        | to be swept during the DC analysis.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
@@ -300,11 +293,10 @@
 <span class="sd">        The x and y strings must mach with some value of the header in the</span>
 <span class="sd">        csv file filename.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    filename: string with the name of the file (including the path).</span>
-<span class="sd">    x: string with some value of the header of the file.</span>
-<span class="sd">    y: string with some value of the header of the file.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | filename: string with the name of the file (including the path).</span>
+<span class="sd">        | x: string with some value of the header of the file.</span>
+<span class="sd">        | y: string with some value of the header of the file.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -327,24 +319,22 @@
 <span class="sd">        5 matrices.</span>
 <span class="sd">        If the file has not the proper dimensions it warns and exit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    filename: string with the name of the file</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | filename: string with the name of the file</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        An array with:</span>
-<span class="sd">            - cir_el: np array of strings with the elements to parse. size(1,b)</span>
-<span class="sd">            - cir_nd: np array with the nodes to the circuit. size(b,4)</span>
-<span class="sd">            - cir_val: np array with the values of the elements. size(b,3)</span>
-<span class="sd">            - cir_ctrl: np array of strings with the element which branch</span>
-<span class="sd">                controls the controlled sources. size(1,b)</span>
-<span class="sd">            - sim_cmds: np array of strings with the information of the</span>
-<span class="sd">                simulations.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | An array with:</span>
+<span class="sd">            | - cir_el: np array of strings with the elements to parse.</span>
+<span class="sd">            | size(1,b)</span>
+<span class="sd">            | - cir_nd: np array with the nodes to the circuit. size(b,4)</span>
+<span class="sd">            | - cir_val: np array with the values of the elements. size(b,3)</span>
+<span class="sd">            | - cir_ctrl: np array of strings with the element which branch</span>
+<span class="sd">            | controls the controlled sources. size(1,b)</span>
+<span class="sd">            | - sim_cmds: np array of strings with the information of the</span>
+<span class="sd">            | simulations.</span>
 
-<span class="sd">    Rises</span>
-<span class="sd">    -----</span>
-<span class="sd">        SystemExit</span>
+<span class="sd">    Rises:</span>
+<span class="sd">        | SystemExit</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -386,19 +376,16 @@
 <span class="sd">    the different operations. If a operation is shown in the parser, it will</span>
 <span class="sd">    appear as True in the dictionary and for DC and Transient analysis also</span>
 <span class="sd">    some related values.</span>
+<span class="sd">            | PR : Prints information about the circuit</span>
+<span class="sd">            | OP : Prints the operating point of the circuit</span>
+<span class="sd">            | DC : Writes the DC sweep analysis in a cvs file</span>
+<span class="sd">            | TR : Writes the Transient analysis</span>
 
-<span class="sd">            PR : Prints information about the circuit</span>
-<span class="sd">            OP : Prints the operating point of the circuit</span>
-<span class="sd">            DC : Writes the DC sweep analysis in a cvs file</span>
-<span class="sd">            TR : Writes the Transient analysis</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | circuit : Array of 4 elements that describe the circuit</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">        circuit : Array of 4 elements that describe the circuit</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">        d : Dictionary with .PR, .OP, .DC and .TR words.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | d : Dictionary with .PR, .OP, .DC and .TR words.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -436,21 +423,21 @@
 <span class="sd">    Expands circuit matrices to handle multi-branch elements like transistors</span>
 <span class="sd">    and controlled sources.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    circuit: list of np.arrays</span>
-<span class="sd">        - cir_el: np array of element names. size(1, b)</span>
-<span class="sd">        - cir_nd: np array of node connections. size(b, 4)</span>
-<span class="sd">        - cir_val: np array of element values. size(b, 3)</span>
-<span class="sd">        - cir_ctrl: np array of controlling elements (strings). size(1, b)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | circuit: list of np.arrays</span>
+<span class="sd">            | - cir_el: np array of strings with the elements to parse.</span>
+<span class="sd">            | size(1,b)</span>
+<span class="sd">            | - cir_nd: np array with the nodes to the circuit. size(b,4)</span>
+<span class="sd">            | - cir_val: np array with the values of the elements. size(b,3)</span>
+<span class="sd">            | - cir_ctrl: np array of strings with the element which branch</span>
+<span class="sd">            | controls the controlled sources. size(1,b)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Tuple of np.arrays:</span>
-<span class="sd">        - cir_el2: expanded element names</span>
-<span class="sd">        - cir_nd2: expanded node definitions</span>
-<span class="sd">        - cir_val2: expanded values</span>
-<span class="sd">        - cir_ctrl2: expanded controls</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | Tuple of np.arrays:</span>
+<span class="sd">            | - cir_el2: expanded element names</span>
+<span class="sd">            | - cir_nd2: expanded node definitions</span>
+<span class="sd">            | - cir_val2: expanded values</span>
+<span class="sd">            | - cir_ctrl2: expanded controls</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cir_el</span><span class="p">,</span> <span class="n">cir_nd</span><span class="p">,</span> <span class="n">cir_val</span><span class="p">,</span> <span class="n">cir_ctr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">circuit</span>
 
@@ -497,15 +484,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gives the position of an element in cir_el_luz</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    elem : String with the name of the element</span>
-<span class="sd">    cir_el_luz : extended np array of strings with the elements to parse.</span>
-<span class="sd">    size(b,1)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | elem : String with the name of the element</span>
+<span class="sd">        | cir_el_luz : extended np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,1)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    i : Integer with the position of the element</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | i : Integer with the position of the element</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">cir_el2</span><span class="p">)):</span>
@@ -521,13 +506,11 @@
 <span class="sd">    This function returns the size of the list of elements obtained from</span>
 <span class="sd">    cir_el2.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_el: np array of strings with the elements to parse. size(1,b)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_el: np array of strings with the elements to parse. size(1,b)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    b : an integer which represents the number of branches in the circuit.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | b : an integer which contains the number of branches in the circuit.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">cir_el2</span><span class="p">)</span></div>
@@ -541,22 +524,20 @@
 <span class="sd">    Gives M, N and Us matrixes thath will be used in Tableau equations:</span>
 <span class="sd">        M*v + N*i = Us</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    b : Integer with the number of branches in the circuit</span>
-<span class="sd">    cir_el_luz : extended np array of strings with the elements to parse.</span>
-<span class="sd">    size(b,1)</span>
-<span class="sd">    cir_val_luz : extended np array with the values of the elements.</span>
-<span class="sd">    size(b,3)</span>
-<span class="sd">    cir_ctr_luz : extended np array of strings with the element which branch</span>
-<span class="sd">    controls the controlled sources. size(b,1)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | b : Integer with the number of branches in the circuit</span>
+<span class="sd">        | cir_el_luz : extended np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,1)</span>
+<span class="sd">        | cir_val_luz : extended np array with the values of the elements.</span>
+<span class="sd">        | size(b,3)</span>
+<span class="sd">        | cir_ctr_luz : extended np array of strings with the element which</span>
+<span class="sd">        | branch controls the controlled sources. size(b,1)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    M : np array that contains the first matrix of Tableau equations. size(b,b)</span>
-<span class="sd">    N : np array that contains the second matrix of Tableau equations.</span>
-<span class="sd">    size(b,b)</span>
-<span class="sd">    Us : np array that contains the third matrix of Tableau equations.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | M : np array that contains the first matrix of Tableau equations.</span>
+<span class="sd">        | N : np array that contains the second matrix of Tableau equations.</span>
+<span class="sd">        | size(b,b)</span>
+<span class="sd">        | Us : np array that contains the third matrix of Tableau equations.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
     <span class="n">cir_el2</span> <span class="o">=</span> <span class="n">circuit2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -616,17 +597,15 @@
 <span class="sd">    using the M, N, and Us matrices, along with the reduced</span>
 <span class="sd">    incidence matrix A.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    A: Reduced incidence matrix.</span>
-<span class="sd">    M: Voltage matrix.</span>
-<span class="sd">    N: Current matrix.</span>
-<span class="sd">    Us: Vector of elements not controlled by voltage.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | A: Reduced incidence matrix.</span>
+<span class="sd">        | M: Voltage matrix.</span>
+<span class="sd">        | N: Current matrix.</span>
+<span class="sd">        | Us: Vector of elements not controlled by voltage.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    T: Tableau matrix, containing all equations in the order e, v, i.</span>
-<span class="sd">    Sol: List of solutions for all equations in the same order.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | T: Tableau matrix, containing all equations in the order e, v, i.</span>
+<span class="sd">        | Sol: List of solutions for all equations in the same order.</span>
 <span class="sd">&quot;&quot;&quot;</span>
     <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">T_size</span> <span class="o">=</span> <span class="n">b1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b2</span>
@@ -775,7 +754,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      &#169;2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>

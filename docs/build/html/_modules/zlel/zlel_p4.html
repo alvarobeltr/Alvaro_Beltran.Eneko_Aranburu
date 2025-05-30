@@ -85,14 +85,12 @@
 <span class="sd">        any dynamic elements. If there are, it also returns a list with the</span>
 <span class="sd">        position of each one and the type of element.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    d : True if there is at least one dynamic element, if not False</span>
-<span class="sd">    d_el : List with tuples of each dynamic element and its position</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | d : True if there is at least one dynamic element, if not False</span>
+<span class="sd">        | d_el : List with tuples of each dynamic element and its position</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="kc">False</span>
@@ -121,19 +119,17 @@
 <span class="sd">        starting values and else it uses the values from the previous iteration</span>
 <span class="sd">        as starting values.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    A : Reduced incidence matrix</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    MNUs : M, N and u matrixes</span>
-<span class="sd">    h : Diference between a time stamp and the next</span>
-<span class="sd">    t : Iteration number in the transient loop</span>
-<span class="sd">    pre_sol : Solution of the previous iteration</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | A : Reduced incidence matrix</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">        | MNUs : M, N and u matrixes</span>
+<span class="sd">        | h : Diference between a time stamp and the next</span>
+<span class="sd">        | t : Iteration number in the transient loop</span>
+<span class="sd">        | pre_sol : Solution of the previous iteration</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    [M, N, u] : The same matrixes of elements in the arguments but after</span>
-<span class="sd">    applying the Euler Backward method</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | [M, N, u] : The same matrixes of elements in the arguments but after</span>
+<span class="sd">        | applying the Euler Backward method</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">dynamic</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
@@ -174,16 +170,16 @@
 <span class="sd">        First it will save a header and then, it loops and save a line in</span>
 <span class="sd">        csv format into the file making the transient analysis.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # of nodes</span>
-<span class="sd">    filename: string with the filename (incluiding the path)</span>
-<span class="sd">    MNUs : M, N and u matrixes</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    start : Start of transient analysis</span>
-<span class="sd">    end : End of transient analysis</span>
-<span class="sd">    step : Step of transient analysis</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # of nodes</span>
+<span class="sd">        | filename: string with the filename (incluiding the path)</span>
+<span class="sd">        | MNUs : M, N and u matrixes</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">        | start : Start of transient analysis</span>
+<span class="sd">        | end : End of transient analysis</span>
+<span class="sd">        | step : Step of transient analysis</span>
+<span class="sd">        | operation: Dictionary with .PR, .OP, .DC and .TR words.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Aa</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getInzidentziaMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -225,13 +221,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; This function calculates the operation</span>
 <span class="sd">        point with capacitors and inductors.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    MNUs : M, N and u matrixes</span>
-<span class="sd">    circuit : The circuit parser updated</span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    [M, N, u] : Updated MNU matrixes</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | MNUs : M, N and u matrixes</span>
+<span class="sd">        | circuit : The circuit parser updated</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | [M, N, u] : Updated MNU matrixes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cir_el</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">U</span> <span class="o">=</span> <span class="n">MNUs</span>
@@ -350,7 +344,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      &#169;2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>

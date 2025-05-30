@@ -52,24 +52,21 @@
 <span class="k">def</span> <span class="nf">cir_parser</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function takes a .cir test circuit and parse it into</span>
-<span class="sd">        4 matrices.</span>
+<span class="sd">        4 matices.</span>
 <span class="sd">        If the file has not the proper dimensions it warns and exit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    filename: string with the name of the file</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | filename: string with the name of the file</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    cir_el: np array of strings with the elements to parse. size(1,b)</span>
-<span class="sd">    cir_nd: np array with the nodes to the circuit. size(b,4)</span>
-<span class="sd">    cir_val: np array with the values of the elements. size(b,3)</span>
-<span class="sd">    cir_ctrl: np array of strings with the element which branch</span>
-<span class="sd">    controls the controlled sources. size(1,b)</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | cir_el: np array of strings with the elements to parse. size(1,b)</span>
+<span class="sd">        | cir_nd: np array with the nodes to the circuit. size(b,4)</span>
+<span class="sd">        | cir_val: np array with the values of the elements. size(b,3)</span>
+<span class="sd">        | cir_ctrl: np array of strings with the element which branch</span>
+<span class="sd">        | controls the controlled sources. size(1,b)</span>
 
-<span class="sd">    Rises</span>
-<span class="sd">    -----</span>
-<span class="sd">    SystemExit</span>
+<span class="sd">    Rises:</span>
+<span class="sd">        | SystemExit</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -96,24 +93,22 @@
 <span class="sd">    This function expands the matrixes we obtained in the function before</span>
 <span class="sd">    in order to fit with the number of the branches of the elements added.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_el: np array of strings with the elements to parse. size(1,b)</span>
-<span class="sd">    cir_nd: np array with the nodes to the circuit. size(b,4)</span>
-<span class="sd">    cir_val: np array with the values of the elements. size(b,3)</span>
-<span class="sd">    cir_ctrl: np array of strings with the element which branch</span>
-<span class="sd">    controls the controlled sources. size(1,b)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_el: np array of strings with the elements to parse. size(1,b)</span>
+<span class="sd">        | cir_nd: np array with the nodes to the circuit. size(b,4)</span>
+<span class="sd">        | cir_val: np array with the values of the elements. size(b,3)</span>
+<span class="sd">        | cir_ctrl: np array of strings with the element which branch</span>
+<span class="sd">        | controls the controlled sources. size(1,b)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    cir_el2: np array of strings with the elements to parse.</span>
-<span class="sd">    size(b,n-1). cir_el extended</span>
-<span class="sd">    cir_nd2: np array with the nodes to the circuit. size(b,4).</span>
-<span class="sd">    cir_nd extended</span>
-<span class="sd">    cir_val2: np array with the values of the elements. size(b,3)</span>
-<span class="sd">    cir_val extended.</span>
-<span class="sd">    cir_ctrl2: np array of strings with the element which branch</span>
-<span class="sd">    controls the controlled sources. size(b,1). cir_ctrl extended.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | cir_el2: np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,n-1). cir_el extended</span>
+<span class="sd">        | cir_nd2: np array with the nodes to the circuit. size(b,4).</span>
+<span class="sd">        | cir_nd extended</span>
+<span class="sd">        | cir_val2: np array with the values of the elements. size(b,3)</span>
+<span class="sd">        | cir_val extended.</span>
+<span class="sd">        | cir_ctrl2: np array of strings with the element which branch</span>
+<span class="sd">        | controls the controlled sources. size(b,1). cir_ctrl extended.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cir_el2</span> <span class="o">=</span> <span class="p">[]</span>
@@ -158,13 +153,11 @@
 <span class="sd">    This function returns the size of the list of elements obtained from</span>
 <span class="sd">    cir_el.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_el: np array of strings with the elements to parse. size(1,b)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_el: np array of strings with the elements to parse. size(1,b)</span>
 
 <span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    b : an integer which represents the number of branches in the circuit.</span>
+<span class="sd">        | b : an integer which contains the number of branches in the circuit.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
@@ -184,13 +177,11 @@
 <span class="sd">    This funcion takes the cir_nd2 matrix and returns a list made</span>
 <span class="sd">    up by the nodes of the circuit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_nd2: np array with the nodes of the circuit. size(b,4)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_nd2: np array with the nodes of the circuit. size(b,4)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    nodes : a sorted-in-ascending-order np array of the nodes</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | nodes : a sorted-in-ascending-order np array of the nodes</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lista</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -209,13 +200,12 @@
 <span class="sd">    This funcion returns the size of the list of nodes from cir_nd2 using</span>
 <span class="sd">    the getNodes function.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_nd2: np array with the nodes of the circuit. size(b,4)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_nd2: np array with the nodes of the circuit. size(b,4)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    n : an integer which represents the number of nodes in the &quot;nodes&quot; list.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | n : an integer which represents the number of nodes</span>
+<span class="sd">        | in the &quot;nodes&quot; list.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">getNodes</span><span class="p">(</span><span class="n">cir_nd2</span><span class="p">))</span></div>
@@ -229,14 +219,13 @@
 <span class="sd">    This function returns the size of the list of elements obtained from</span>
 <span class="sd">    cir_el.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_el: np array of strings with the elements to parse.</span>
-<span class="sd">    size(el_num,n-1)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_el: np array of strings with the elements to parse.</span>
+<span class="sd">        | size(el_num,n-1)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    el_num : an integer which represents the number of elements in the circuit.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | el_num : an integer which represents the number of</span>
+<span class="sd">        | elements in the circuit.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">cir_el</span><span class="p">)</span></div>
@@ -250,16 +239,15 @@
 <span class="sd">    This function return np array which represents the incident matrix</span>
 <span class="sd">    of the circuit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    n : an integer which represents the number of nodes in the &quot;nodes&quot; list.</span>
-<span class="sd">    cir_nd2 : np array with the nodes to the circuit. size(b,4).</span>
-<span class="sd">    cir_nd extended</span>
-<span class="sd">    b : an integer which represents the number of branches in the circuit.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | n : an integer which represents the number of nodes</span>
+<span class="sd">        | in the &quot;nodes&quot; list.</span>
+<span class="sd">        | cir_nd2 : np array with the nodes to the circuit. size(b,4).</span>
+<span class="sd">        | cir_nd extended</span>
+<span class="sd">        | b : an integer which contains the number of branches in the circuit.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Aa : a np array which represents the incident matrix of the circuit.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | Aa : a np array which represents the incident matrix of the circuit.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Aa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># Crear matriz de ceros de tamaño n x b</span>
@@ -283,14 +271,13 @@
 <span class="sd">    This function return the matrix which will be used to solve the Tableau</span>
 <span class="sd">    equations.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    Aa : a np array which represents the incident matrix of the circuit.</span>
-<span class="sd">    n : an integer which represents the number of nodes in the &quot;nodes&quot; list.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | Aa : a np array which represents the incident matrix of the circuit.</span>
+<span class="sd">        | n : an integer which represents the number of nodes</span>
+<span class="sd">        | in the &quot;nodes&quot; list.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    A : a np array wich represents the reduced matrix o i_mat.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | A : a np array wich represents the reduced matrix o i_mat.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Aa</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">,</span> <span class="p">:])</span></div>
@@ -303,17 +290,14 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function is used to detect if the reference-node is missing.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    nodes : a sorted-in-ascending-order np array of the nodes.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | nodes : a sorted-in-ascending-order np array of the nodes.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | None</span>
 
-<span class="sd">    Rises</span>
-<span class="sd">    -------</span>
-<span class="sd">    SystemExit.</span>
+<span class="sd">    Rises:</span>
+<span class="sd">        | SystemExit.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="mi">0</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
@@ -327,14 +311,12 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function is used to detect if any node is floating.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    Aa : a np array which represents the incident matrix of the circuit.</span>
-<span class="sd">    nodes : a sorted-in-ascending-order np array of the nodes.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | Aa : a np array which represents the incident matrix of the circuit.</span>
+<span class="sd">        | nodes : a sorted-in-ascending-order np array of the nodes.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | None.</span>
 
 <span class="sd">    Rises</span>
 <span class="sd">    -----</span>
@@ -354,21 +336,18 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function detects if Voltage sources are connected in parallel.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    Aa : a np array which represents the incident matrix of the circuit.</span>
-<span class="sd">    cir_el2: np array of strings with the elements to parse.</span>
-<span class="sd">    size(b,n-1). cir_el extended</span>
-<span class="sd">    cir_val2: np array with the values of the elements. size(b,3)</span>
-<span class="sd">    cir_val extended.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | Aa : a np array which represents the incident matrix of the circuit.</span>
+<span class="sd">        | cir_el2: np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,n-1). cir_el extended</span>
+<span class="sd">        | cir_val2: np array with the values of the elements. size(b,3)</span>
+<span class="sd">        | cir_val extended.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | None</span>
 
-<span class="sd">    Rises</span>
-<span class="sd">    -------</span>
-<span class="sd">    SystemExit.</span>
+<span class="sd">    Rises:</span>
+<span class="sd">        | SystemExit</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">adarrak</span> <span class="o">=</span> <span class="p">[]</span>
@@ -399,24 +378,21 @@
 <span class="sd">    This function is used to detect if Current sources are</span>
 <span class="sd">    connected in serial and they break KCL.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    Aa : a np array which represents the incident matrix of the circuit.</span>
-<span class="sd">    cir_el2: np array of strings with the elements to parse.</span>
-<span class="sd">    size(b,n-1). cir_el extended</span>
-<span class="sd">    cir_val2: np array with the values of the elements. size(b,3)</span>
-<span class="sd">    cir_val extended.</span>
-<span class="sd">    cir_nd2 : np array with the nodes to the circuit. size(b,4).</span>
-<span class="sd">    cir_nd extended</span>
-<span class="sd">    b : an integer which represents the number of branches in the circuit.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | Aa : a np array which represents the incident matrix of the circuit.</span>
+<span class="sd">        | cir_el2: np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,n-1). cir_el extended</span>
+<span class="sd">        | cir_val2: np array with the values of the elements. size(b,3)</span>
+<span class="sd">        | cir_val extended.</span>
+<span class="sd">        | cir_nd2 : np array with the nodes to the circuit. size(b,4).</span>
+<span class="sd">        | cir_nd extended</span>
+<span class="sd">        | b : an integer which contains the number of branches in the circuit.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | None</span>
 
-<span class="sd">    Rises</span>
-<span class="sd">    -------</span>
-<span class="sd">    SystemExit.</span>
+<span class="sd">    Rises:</span>
+<span class="sd">        | SystemExit</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -461,17 +437,15 @@
 <span class="sd">    This function returns a list of the branches connected to a node</span>
 <span class="sd">    in the circuit.</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    nodo : an integer which represents a node in the circuit</span>
-<span class="sd">    cir_el2: np array of strings with the elements to parse.</span>
-<span class="sd">    size(b,n-1). cir_el extended</span>
-<span class="sd">    cir_nd2: np array with the nodes to the circuit. size(b,4).</span>
-<span class="sd">    cir_nd extended</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | nodo : an integer which represents a node in the circuit</span>
+<span class="sd">        | cir_el2: np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,n-1). cir_el extended</span>
+<span class="sd">        | cir_nd2: np array with the nodes to the circuit. size(b,4).</span>
+<span class="sd">        | cir_nd extended</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    lista : a list of the branches connected to a node in the circuit.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        | lista : a list of the branches connected to a node in the circuit.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lista</span> <span class="o">=</span> <span class="p">[]</span>
@@ -492,14 +466,13 @@
 <span class="sd">        |     3.- Branch info</span>
 <span class="sd">        |     4.- Variable info</span>
 
-<span class="sd">    Args</span>
-<span class="sd">    ----</span>
-<span class="sd">    cir_el: reshaped cir_el</span>
-<span class="sd">    cir_nd: reshaped cir_nd. Now it will be a(b,2) matrix</span>
-<span class="sd">    b: # of branches</span>
-<span class="sd">    n: # number of nodes</span>
-<span class="sd">    nodes: an array with the circuit nodes sorted</span>
-<span class="sd">    el_num:  the # of elements</span>
+<span class="sd">    Args:</span>
+<span class="sd">        | cir_el: reshaped cir_el</span>
+<span class="sd">        | cir_nd: reshaped cir_nd. Now it will be a(b,2) matrix</span>
+<span class="sd">        | b: # of branches</span>
+<span class="sd">        | n: # number of nodes</span>
+<span class="sd">        | nodes: an array with the circuit nodes sorted</span>
+<span class="sd">        | el_num:  the # of elements</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Element info</span>
@@ -603,7 +576,7 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      &#169;2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>

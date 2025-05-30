@@ -42,35 +42,39 @@
 <dt class="sig sig-object py" id="zlel.zlel_p1.ErreferentziNodoa">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">ErreferentziNodoa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#ErreferentziNodoa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.ErreferentziNodoa" title="Link to this definition">¶</a></dt>
 <dd><p>This function is used to detect if the reference-node is missing.</p>
-<section id="args">
-<h3>Args<a class="headerlink" href="#args" title="Link to this heading">¶</a></h3>
-<p>nodes : a sorted-in-ascending-order np array of the nodes.</p>
-</section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h3>
-<p>None.</p>
-</section>
-<section id="rises">
-<h3>Rises<a class="headerlink" href="#rises" title="Link to this heading">¶</a></h3>
-<p>SystemExit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">nodes : a sorted-in-ascending-order np array of the nodes.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">None</div>
+</div>
+</dd>
+<dt>Rises:</dt><dd><div class="line-block">
+<div class="line">SystemExit.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p1.KonexioBakarrekoNodoak">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">KonexioBakarrekoNodoak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Aa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#KonexioBakarrekoNodoak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.KonexioBakarrekoNodoak" title="Link to this definition">¶</a></dt>
 <dd><p>This function is used to detect if any node is floating.</p>
-<section id="id1">
-<h3>Args<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
-<p>Aa : a np array which represents the incident matrix of the circuit.
-nodes : a sorted-in-ascending-order np array of the nodes.</p>
-</section>
-<section id="id2">
-<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
-<p>None.</p>
-</section>
-<section id="id3">
-<h3>Rises<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">Aa : a np array which represents the incident matrix of the circuit.</div>
+<div class="line">nodes : a sorted-in-ascending-order np array of the nodes.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">None.</div>
+</div>
+</dd>
+</dl>
+<section id="rises">
+<h3>Rises<a class="headerlink" href="#rises" title="Link to this heading">¶</a></h3>
 <p>SystemExit.</p>
 </section>
 </dd></dl>
@@ -80,47 +84,51 @@ nodes : a sorted-in-ascending-order np array of the nodes.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">KorronteIturriakSeriean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_el2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_nd2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_val2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#KorronteIturriakSeriean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.KorronteIturriakSeriean" title="Link to this definition">¶</a></dt>
 <dd><p>This function is used to detect if Current sources are
 connected in serial and they break KCL.</p>
-<section id="id4">
-<h3>Args<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
-<p>Aa : a np array which represents the incident matrix of the circuit.
-cir_el2: np array of strings with the elements to parse.
-size(b,n-1). cir_el extended
-cir_val2: np array with the values of the elements. size(b,3)
-cir_val extended.
-cir_nd2 : np array with the nodes to the circuit. size(b,4).
-cir_nd extended
-b : an integer which represents the number of branches in the circuit.</p>
-</section>
-<section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
-<p>None.</p>
-</section>
-<section id="id6">
-<h3>Rises<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
-<p>SystemExit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">Aa : a np array which represents the incident matrix of the circuit.</div>
+<div class="line">cir_el2: np array of strings with the elements to parse.</div>
+<div class="line">size(b,n-1). cir_el extended</div>
+<div class="line">cir_val2: np array with the values of the elements. size(b,3)</div>
+<div class="line">cir_val extended.</div>
+<div class="line">cir_nd2 : np array with the nodes to the circuit. size(b,4).</div>
+<div class="line">cir_nd extended</div>
+<div class="line">b : an integer which contains the number of branches in the circuit.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">None</div>
+</div>
+</dd>
+<dt>Rises:</dt><dd><div class="line-block">
+<div class="line">SystemExit</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p1.TentsioIturriakParaleloan">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">TentsioIturriakParaleloan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_el2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_val2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aa</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#TentsioIturriakParaleloan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.TentsioIturriakParaleloan" title="Link to this definition">¶</a></dt>
 <dd><p>This function detects if Voltage sources are connected in parallel.</p>
-<section id="id7">
-<h3>Args<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
-<p>Aa : a np array which represents the incident matrix of the circuit.
-cir_el2: np array of strings with the elements to parse.
-size(b,n-1). cir_el extended
-cir_val2: np array with the values of the elements. size(b,3)
-cir_val extended.</p>
-</section>
-<section id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
-<p>None.</p>
-</section>
-<section id="id9">
-<h3>Rises<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
-<p>SystemExit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">Aa : a np array which represents the incident matrix of the circuit.</div>
+<div class="line">cir_el2: np array of strings with the elements to parse.</div>
+<div class="line">size(b,n-1). cir_el extended</div>
+<div class="line">cir_val2: np array with the values of the elements. size(b,3)</div>
+<div class="line">cir_val extended.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">None</div>
+</div>
+</dd>
+<dt>Rises:</dt><dd><div class="line-block">
+<div class="line">SystemExit</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -128,25 +136,27 @@ cir_val extended.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">cir_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#cir_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.cir_parser" title="Link to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>This function takes a .cir test circuit and parse it into
-4 matrices.
+4 matices.
 If the file has not the proper dimensions it warns and exit.</p>
 </div></blockquote>
-<section id="id10">
-<h3>Args<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
-<p>filename: string with the name of the file</p>
-</section>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
-<p>cir_el: np array of strings with the elements to parse. size(1,b)
-cir_nd: np array with the nodes to the circuit. size(b,4)
-cir_val: np array with the values of the elements. size(b,3)
-cir_ctrl: np array of strings with the element which branch
-controls the controlled sources. size(1,b)</p>
-</section>
-<section id="id12">
-<h3>Rises<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
-<p>SystemExit</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">filename: string with the name of the file</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">cir_el: np array of strings with the elements to parse. size(1,b)</div>
+<div class="line">cir_nd: np array with the nodes to the circuit. size(b,4)</div>
+<div class="line">cir_val: np array with the values of the elements. size(b,3)</div>
+<div class="line">cir_ctrl: np array of strings with the element which branch</div>
+<div class="line">controls the controlled sources. size(1,b)</div>
+</div>
+</dd>
+<dt>Rises:</dt><dd><div class="line-block">
+<div class="line">SystemExit</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -154,14 +164,16 @@ controls the controlled sources. size(1,b)</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">getAdarrak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_el</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#getAdarrak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.getAdarrak" title="Link to this definition">¶</a></dt>
 <dd><p>This function returns the size of the list of elements obtained from
 cir_el.</p>
-<section id="id13">
-<h3>Args<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
-<p>cir_el: np array of strings with the elements to parse. size(1,b)</p>
-</section>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
-<p>b : an integer which represents the number of branches in the circuit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_el: np array of strings with the elements to parse. size(1,b)</div>
+</div>
+</dd>
+<dt>Returns</dt><dd><div class="line-block">
+<div class="line">b : an integer which contains the number of branches in the circuit.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -169,15 +181,18 @@ cir_el.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">getEl_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_el</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#getEl_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.getEl_num" title="Link to this definition">¶</a></dt>
 <dd><p>This function returns the size of the list of elements obtained from
 cir_el.</p>
-<section id="id15">
-<h3>Args<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
-<p>cir_el: np array of strings with the elements to parse.
-size(el_num,n-1)</p>
-</section>
-<section id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
-<p>el_num : an integer which represents the number of elements in the circuit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_el: np array of strings with the elements to parse.</div>
+<div class="line">size(el_num,n-1)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">el_num : an integer which represents the number of</div>
+<div class="line">elements in the circuit.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -185,17 +200,20 @@ size(el_num,n-1)</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">getInzidentziaMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_nd2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#getInzidentziaMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.getInzidentziaMatrix" title="Link to this definition">¶</a></dt>
 <dd><p>This function return np array which represents the incident matrix
 of the circuit.</p>
-<section id="id17">
-<h3>Args<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
-<p>n : an integer which represents the number of nodes in the “nodes” list.
-cir_nd2 : np array with the nodes to the circuit. size(b,4).
-cir_nd extended
-b : an integer which represents the number of branches in the circuit.</p>
-</section>
-<section id="id18">
-<h3>Returns<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
-<p>Aa : a np array which represents the incident matrix of the circuit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">n : an integer which represents the number of nodes</div>
+<div class="line">in the “nodes” list.</div>
+<div class="line">cir_nd2 : np array with the nodes to the circuit. size(b,4).</div>
+<div class="line">cir_nd extended</div>
+<div class="line">b : an integer which contains the number of branches in the circuit.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">Aa : a np array which represents the incident matrix of the circuit.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -203,15 +221,18 @@ b : an integer which represents the number of branches in the circuit.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">getMurriztutakoIntzidentziaMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Aa</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#getMurriztutakoIntzidentziaMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.getMurriztutakoIntzidentziaMatrix" title="Link to this definition">¶</a></dt>
 <dd><p>This function return the matrix which will be used to solve the Tableau
 equations.</p>
-<section id="id19">
-<h3>Args<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
-<p>Aa : a np array which represents the incident matrix of the circuit.
-n : an integer which represents the number of nodes in the “nodes” list.</p>
-</section>
-<section id="id20">
-<h3>Returns<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
-<p>A : a np array wich represents the reduced matrix o i_mat.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">Aa : a np array which represents the incident matrix of the circuit.</div>
+<div class="line">n : an integer which represents the number of nodes</div>
+<div class="line">in the “nodes” list.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">A : a np array wich represents the reduced matrix o i_mat.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -219,14 +240,16 @@ n : an integer which represents the number of nodes in the “nodes” list.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">getNodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_nd2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#getNodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.getNodes" title="Link to this definition">¶</a></dt>
 <dd><p>This funcion takes the cir_nd2 matrix and returns a list made
 up by the nodes of the circuit.</p>
-<section id="id21">
-<h3>Args<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
-<p>cir_nd2: np array with the nodes of the circuit. size(b,4)</p>
-</section>
-<section id="id22">
-<h3>Returns<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h3>
-<p>nodes : a sorted-in-ascending-order np array of the nodes</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_nd2: np array with the nodes of the circuit. size(b,4)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">nodes : a sorted-in-ascending-order np array of the nodes</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -234,14 +257,17 @@ up by the nodes of the circuit.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">getNodesNumber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_nd2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#getNodesNumber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.getNodesNumber" title="Link to this definition">¶</a></dt>
 <dd><p>This funcion returns the size of the list of nodes from cir_nd2 using
 the getNodes function.</p>
-<section id="id23">
-<h3>Args<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
-<p>cir_nd2: np array with the nodes of the circuit. size(b,4)</p>
-</section>
-<section id="id24">
-<h3>Returns<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h3>
-<p>n : an integer which represents the number of nodes in the “nodes” list.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_nd2: np array with the nodes of the circuit. size(b,4)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">n : an integer which represents the number of nodes</div>
+<div class="line">in the “nodes” list.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -249,25 +275,27 @@ the getNodes function.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">luzatu_cir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_nd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_ctr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#luzatu_cir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.luzatu_cir" title="Link to this definition">¶</a></dt>
 <dd><p>This function expands the matrixes we obtained in the function before
 in order to fit with the number of the branches of the elements added.</p>
-<section id="id25">
-<h3>Args<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h3>
-<p>cir_el: np array of strings with the elements to parse. size(1,b)
-cir_nd: np array with the nodes to the circuit. size(b,4)
-cir_val: np array with the values of the elements. size(b,3)
-cir_ctrl: np array of strings with the element which branch
-controls the controlled sources. size(1,b)</p>
-</section>
-<section id="id26">
-<h3>Returns<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h3>
-<p>cir_el2: np array of strings with the elements to parse.
-size(b,n-1). cir_el extended
-cir_nd2: np array with the nodes to the circuit. size(b,4).
-cir_nd extended
-cir_val2: np array with the values of the elements. size(b,3)
-cir_val extended.
-cir_ctrl2: np array of strings with the element which branch
-controls the controlled sources. size(b,1). cir_ctrl extended.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_el: np array of strings with the elements to parse. size(1,b)</div>
+<div class="line">cir_nd: np array with the nodes to the circuit. size(b,4)</div>
+<div class="line">cir_val: np array with the values of the elements. size(b,3)</div>
+<div class="line">cir_ctrl: np array of strings with the element which branch</div>
+<div class="line">controls the controlled sources. size(1,b)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">cir_el2: np array of strings with the elements to parse.</div>
+<div class="line">size(b,n-1). cir_el extended</div>
+<div class="line">cir_nd2: np array with the nodes to the circuit. size(b,4).</div>
+<div class="line">cir_nd extended</div>
+<div class="line">cir_val2: np array with the values of the elements. size(b,3)</div>
+<div class="line">cir_val extended.</div>
+<div class="line">cir_ctrl2: np array of strings with the element which branch</div>
+<div class="line">controls the controlled sources. size(b,1). cir_ctrl extended.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -275,18 +303,20 @@ controls the controlled sources. size(b,1). cir_ctrl extended.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p1.</span></span><span class="sig-name descname"><span class="pre">obtener_ramas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_el2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_nd2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p1.html#obtener_ramas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p1.obtener_ramas" title="Link to this definition">¶</a></dt>
 <dd><p>This function returns a list of the branches connected to a node
 in the circuit.</p>
-<section id="id27">
-<h3>Args<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h3>
-<p>nodo : an integer which represents a node in the circuit
-cir_el2: np array of strings with the elements to parse.
-size(b,n-1). cir_el extended
-cir_nd2: np array with the nodes to the circuit. size(b,4).
-cir_nd extended</p>
-</section>
-<section id="id28">
-<h3>Returns<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h3>
-<p>lista : a list of the branches connected to a node in the circuit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">nodo : an integer which represents a node in the circuit</div>
+<div class="line">cir_el2: np array of strings with the elements to parse.</div>
+<div class="line">size(b,n-1). cir_el extended</div>
+<div class="line">cir_nd2: np array with the nodes to the circuit. size(b,4).</div>
+<div class="line">cir_nd extended</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">lista : a list of the branches connected to a node in the circuit.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -300,16 +330,16 @@ cir_nd extended</p>
 <div class="line">4.- Variable info</div>
 </div>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_el: reshaped cir_el</div>
+<div class="line">cir_nd: reshaped cir_nd. Now it will be a(b,2) matrix</div>
+<div class="line">b: # of branches</div>
+<div class="line">n: # number of nodes</div>
+<div class="line">nodes: an array with the circuit nodes sorted</div>
+<div class="line">el_num:  the # of elements</div>
+</div>
+</dd>
 </dl>
-<section id="id29">
-<h3>Args<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h3>
-<p>cir_el: reshaped cir_el
-cir_nd: reshaped cir_nd. Now it will be a(b,2) matrix
-b: # of branches
-n: # number of nodes
-nodes: an array with the circuit nodes sorted
-el_num:  the # of elements</p>
-</section>
 </dd></dl>
 
 </section>
@@ -358,40 +388,42 @@ numerically or graphically.</p>
 <dd><p>This function evaluates the equations of the Tableau method,
 using the M, N, and Us matrices, along with the reduced
 incidence matrix A.</p>
-<section id="id30">
-<h3>Args<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h3>
-<p>A: Reduced incidence matrix.
-M: Voltage matrix.
-N: Current matrix.
-Us: Vector of elements not controlled by voltage.</p>
-</section>
-<section id="id31">
-<h3>Returns<a class="headerlink" href="#id31" title="Link to this heading">¶</a></h3>
-<p>T: Tableau matrix, containing all equations in the order e, v, i.
-Sol: List of solutions for all equations in the same order.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">A: Reduced incidence matrix.</div>
+<div class="line">M: Voltage matrix.</div>
+<div class="line">N: Current matrix.</div>
+<div class="line">Us: Vector of elements not controlled by voltage.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">T: Tableau matrix, containing all equations in the order e, v, i.</div>
+<div class="line">Sol: List of solutions for all equations in the same order.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.build_csv_header">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">build_csv_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#build_csv_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.build_csv_header" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function build the csv header for the output files.</dt><dd><p>First column will be v or i if .dc analysis or t if .tr and it will
 be given by argument tvi.
 The header will be this form,
 t/v/i,e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">tvi: “v” or “i” if .dc analysis or “t” if .tran</div>
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">header: The header in csv format as string</div>
+</div>
+</dd>
 </dl>
-<section id="id32">
-<h3>Args<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h3>
-<p>tvi: “v” or “i” if .dc analysis or “t” if .tran
-b: # of branches
-n: # of nodes</p>
-</section>
-<section id="id33">
-<h3>Returns<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h3>
-<p>header: The header in csv format as string</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -402,39 +434,28 @@ n: # of nodes</p>
 5 matrices.
 If the file has not the proper dimensions it warns and exit.</p>
 </div></blockquote>
-<section id="id34">
-<h3>Args<a class="headerlink" href="#id34" title="Link to this heading">¶</a></h3>
-<p>filename: string with the name of the file</p>
-</section>
-<section id="id35">
-<h3>Returns<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><dl class="simple">
-<dt>An array with:</dt><dd><ul class="simple">
-<li><p>cir_el: np array of strings with the elements to parse. size(1,b)</p></li>
-<li><p>cir_nd: np array with the nodes to the circuit. size(b,4)</p></li>
-<li><p>cir_val: np array with the values of the elements. size(b,3)</p></li>
-<li><dl class="simple">
-<dt>cir_ctrl: np array of strings with the element which branch</dt><dd><p>controls the controlled sources. size(1,b)</p>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">filename: string with the name of the file</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">An array with:
+| - cir_el: np array of strings with the elements to parse.
+| size(1,b)
+| - cir_nd: np array with the nodes to the circuit. size(b,4)
+| - cir_val: np array with the values of the elements. size(b,3)
+| - cir_ctrl: np array of strings with the element which branch
+| controls the controlled sources. size(1,b)
+| - sim_cmds: np array of strings with the information of the
+| simulations.</div>
+</div>
+</dd>
+<dt>Rises:</dt><dd><div class="line-block">
+<div class="line">SystemExit</div>
+</div>
 </dd>
 </dl>
-</li>
-<li><dl class="simple">
-<dt>sim_cmds: np array of strings with the information of the</dt><dd><p>simulations.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</div></blockquote>
-</section>
-<section id="id36">
-<h3>Rises<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><p>SystemExit</p>
-</div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -442,56 +463,60 @@ If the file has not the proper dimensions it warns and exit.</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">getAdarrak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cir_el2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#getAdarrak"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.getAdarrak" title="Link to this definition">¶</a></dt>
 <dd><p>This function returns the size of the list of elements obtained from
 cir_el2.</p>
-<section id="id37">
-<h3>Args<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h3>
-<p>cir_el: np array of strings with the elements to parse. size(1,b)</p>
-</section>
-<section id="id38">
-<h3>Returns<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h3>
-<p>b : an integer which represents the number of branches in the circuit.</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">cir_el: np array of strings with the elements to parse. size(1,b)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">b : an integer which contains the number of branches in the circuit.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.getElemPosition">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">getElemPosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cir_el2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#getElemPosition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.getElemPosition" title="Link to this definition">¶</a></dt>
 <dd><p>Gives the position of an element in cir_el_luz</p>
-<section id="id39">
-<h3>Args<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h3>
-<p>elem : String with the name of the element
-cir_el_luz : extended np array of strings with the elements to parse.
-size(b,1)</p>
-</section>
-<section id="id40">
-<h3>Returns<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h3>
-<p>i : Integer with the position of the element</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">elem : String with the name of the element</div>
+<div class="line">cir_el_luz : extended np array of strings with the elements to parse.</div>
+<div class="line">size(b,1)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">i : Integer with the position of the element</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.getMNUs">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">getMNUs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#getMNUs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.getMNUs" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>Gives M, N and Us matrixes thath will be used in Tableau equations:</dt><dd><p>M*v + N*i = Us</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">b : Integer with the number of branches in the circuit</div>
+<div class="line">cir_el_luz : extended np array of strings with the elements to parse.</div>
+<div class="line">size(b,1)</div>
+<div class="line">cir_val_luz : extended np array with the values of the elements.</div>
+<div class="line">size(b,3)</div>
+<div class="line">cir_ctr_luz : extended np array of strings with the element which</div>
+<div class="line">branch controls the controlled sources. size(b,1)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">M : np array that contains the first matrix of Tableau equations.</div>
+<div class="line">N : np array that contains the second matrix of Tableau equations.</div>
+<div class="line">size(b,b)</div>
+<div class="line">Us : np array that contains the third matrix of Tableau equations.</div>
+</div>
+</dd>
 </dl>
-<section id="id41">
-<h3>Args<a class="headerlink" href="#id41" title="Link to this heading">¶</a></h3>
-<p>b : Integer with the number of branches in the circuit
-cir_el_luz : extended np array of strings with the elements to parse.
-size(b,1)
-cir_val_luz : extended np array with the values of the elements.
-size(b,3)
-cir_ctr_luz : extended np array of strings with the element which branch
-controls the controlled sources. size(b,1)</p>
-</section>
-<section id="id42">
-<h3>Returns<a class="headerlink" href="#id42" title="Link to this heading">¶</a></h3>
-<p>M : np array that contains the first matrix of Tableau equations. size(b,b)
-N : np array that contains the second matrix of Tableau equations.
-size(b,b)
-Us : np array that contains the third matrix of Tableau equations.</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -502,23 +527,23 @@ the different operations. If a operation is shown in the parser, it will
 appear as True in the dictionary and for DC and Transient analysis also
 some related values.</p>
 <blockquote>
-<div><p>PR : Prints information about the circuit
-OP : Prints the operating point of the circuit
-DC : Writes the DC sweep analysis in a cvs file
-TR : Writes the Transient analysis</p>
+<div><div class="line-block">
+<div class="line">PR : Prints information about the circuit</div>
+<div class="line">OP : Prints the operating point of the circuit</div>
+<div class="line">DC : Writes the DC sweep analysis in a cvs file</div>
+<div class="line">TR : Writes the Transient analysis</div>
+</div>
 </div></blockquote>
-<section id="id43">
-<h3>Args<a class="headerlink" href="#id43" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><p>circuit : Array of 4 elements that describe the circuit</p>
-</div></blockquote>
-</section>
-<section id="id44">
-<h3>Returns<a class="headerlink" href="#id44" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><p>d : Dictionary with .PR, .OP, .DC and .TR words.</p>
-</div></blockquote>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">circuit : Array of 4 elements that describe the circuit</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">d : Dictionary with .PR, .OP, .DC and .TR words.</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -526,125 +551,123 @@ TR : Writes the Transient analysis</p>
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">luzatu_cir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#luzatu_cir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.luzatu_cir" title="Link to this definition">¶</a></dt>
 <dd><p>Expands circuit matrices to handle multi-branch elements like transistors
 and controlled sources.</p>
-<section id="id45">
-<h3>Args<a class="headerlink" href="#id45" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>circuit: list of np.arrays</dt><dd><ul class="simple">
-<li><p>cir_el: np array of element names. size(1, b)</p></li>
-<li><p>cir_nd: np array of node connections. size(b, 4)</p></li>
-<li><p>cir_val: np array of element values. size(b, 3)</p></li>
-<li><p>cir_ctrl: np array of controlling elements (strings). size(1, b)</p></li>
-</ul>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">circuit: list of np.arrays
+| - cir_el: np array of strings with the elements to parse.
+| size(1,b)
+| - cir_nd: np array with the nodes to the circuit. size(b,4)
+| - cir_val: np array with the values of the elements. size(b,3)
+| - cir_ctrl: np array of strings with the element which branch
+| controls the controlled sources. size(1,b)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">Tuple of np.arrays:
+| - cir_el2: expanded element names
+| - cir_nd2: expanded node definitions
+| - cir_val2: expanded values
+| - cir_ctrl2: expanded controls</div>
+</div>
 </dd>
 </dl>
-</section>
-<section id="id46">
-<h3>Returns<a class="headerlink" href="#id46" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>Tuple of np.arrays:</dt><dd><ul class="simple">
-<li><p>cir_el2: expanded element names</p></li>
-<li><p>cir_nd2: expanded node definitions</p></li>
-<li><p>cir_val2: expanded values</p></li>
-<li><p>cir_ctrl2: expanded controls</p></li>
-</ul>
-</dd>
-</dl>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.plot_from_cvs">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">plot_from_cvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#plot_from_cvs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.plot_from_cvs" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function plots the values corresponding to the x string of the</dt><dd><p>file filename in the x-axis and the ones corresponding to the y
 string in the y-axis.
 The x and y strings must mach with some value of the header in the
 csv file filename.</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">filename: string with the name of the file (including the path).</div>
+<div class="line">x: string with some value of the header of the file.</div>
+<div class="line">y: string with some value of the header of the file.</div>
+</div>
+</dd>
 </dl>
-<section id="id47">
-<h3>Args<a class="headerlink" href="#id47" title="Link to this heading">¶</a></h3>
-<p>filename: string with the name of the file (including the path).
-x: string with some value of the header of the file.
-y: string with some value of the header of the file.</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.print_solution">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">print_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#print_solution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.print_solution" title="Link to this definition">¶</a></dt>
 <dd><p>This function prints the solution with format.</p>
-<section id="id48">
-<h3>Args<a class="headerlink" href="#id48" title="Link to this heading">¶</a></h3>
-<p>sol: np array with the solution of the Tableau equations
-(e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b)
-b: # of branches
-n: # of nodes</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">sol: np array with the solution of the Tableau equations</div>
+<div class="line">(e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b)</div>
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.save_as_csv_dc">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">save_as_csv_dc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#save_as_csv_dc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.save_as_csv_dc" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function gnerates a csv file with the name filename.</dt><dd><p>First it will save a header and then, it loops and save a line in
 csv format into the file with the dc solution of the circuit.</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+<div class="line">filename: string with the filename (incluiding the path)</div>
+<div class="line">MNUs : M, N and u matrices</div>
+<div class="line">circuit : The circuit parser updated</div>
+<div class="line">start : Start of DC analysis</div>
+<div class="line">end : End of DC analysis</div>
+<div class="line">step : Step of DC analysis</div>
+<div class="line">source : Name or identifier of the independent source</div>
+<div class="line">to be swept during the DC analysis.</div>
+</div>
+</dd>
 </dl>
-<section id="id49">
-<h3>Args<a class="headerlink" href="#id49" title="Link to this heading">¶</a></h3>
-<p>b: # of branches
-n: # of nodes
-filename: string with the filename (incluiding the path)
-MNUs : M, N and u matrices
-circuit : The circuit parser updated
-start : Start of DC analysis
-end : End of DC analysis
-step : Step of DC analysis
-source : Name or identifier of the independent source
-to be swept during the DC analysis.</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.save_as_csv_tr">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">save_as_csv_tr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#save_as_csv_tr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.save_as_csv_tr" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function generates a csv file with the name filename.</dt><dd><p>First it will save a header and then, it loops and save a line in
 csv format into the file making the transient analysis.</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+<div class="line">filename: string with the filename (incluiding the path)</div>
+<div class="line">MNUs : M, N and u matrices</div>
+<div class="line">circuit : The circuit parser updated</div>
+<div class="line">start : Start of transient analysis</div>
+<div class="line">end : End of transient analysis</div>
+<div class="line">step : Step of transient analysis</div>
+</div>
+</dd>
 </dl>
-<section id="id50">
-<h3>Args<a class="headerlink" href="#id50" title="Link to this heading">¶</a></h3>
-<p>b: # of branches
-n: # of nodes
-filename: string with the filename (incluiding the path)
-MNUs : M, N and u matrices
-circuit : The circuit parser updated
-start : Start of transient analysis
-end : End of transient analysis
-step : Step of transient analysis</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p2.save_sim_output">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p2.</span></span><span class="sig-name descname"><span class="pre">save_sim_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sims_folder_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p2.html#save_sim_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p2.save_sim_output" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function creates an absolute path to a filename inserting</dt><dd><p>a folder given by “sims_folder_name” and changing its extension
 by another given by “extensión” (. needs to be included).</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">filename: string with the filename (incluiding the path)</div>
+<div class="line">sims_folder_name: string with the name of the folder to save the sims</div>
+<div class="line">extension: new extensión for the file.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">new_file_path: the filename with the sims_folder_name inserted.</div>
+</div>
+</dd>
 </dl>
-<section id="id51">
-<h3>Args<a class="headerlink" href="#id51" title="Link to this heading">¶</a></h3>
-<p>filename: string with the filename (incluiding the path)
-sims_folder_name: string with the name of the folder to save the sims
-extension: new extensión for the file.</p>
-</section>
-<section id="id52">
-<h3>Returns<a class="headerlink" href="#id52" title="Link to this heading">¶</a></h3>
-<p>new_file_path: the filename with the sims_folder_name inserted.</p>
-</section>
 </dd></dl>
 
 </section>
@@ -689,21 +712,19 @@ for real-world non-linear behavior.</p>
 <div><p>This funcion takes the diode NR values and the elements and returns the
 same elements but with the equivalents replaced in the position given.</p>
 </div></blockquote>
-<section id="id53">
-<h3>Args<a class="headerlink" href="#id53" title="Link to this heading">¶</a></h3>
-<blockquote>
-<div><p>elements : Array with M, N and u matrices
-Diode_NR : NR equivalent values g and I
-k : Position of the diode on the parser</p>
-</div></blockquote>
-</section>
-<section id="id54">
-<h3>Returns<a class="headerlink" href="#id54" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>[M, N, u]<span class="classifier">The same matrices of elements in the arguments but with</span></dt><dd><p>the NR equivalent replaced in the k position</p>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">elements : Array with M, N and u matrices</div>
+<div class="line">Diode_NR : NR equivalent values g and I</div>
+<div class="line">k : Position of the diode on the parser</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">[M, N, u] : The same matrices of elements in the arguments but with</div>
+<div class="line">the NR equivalent replaced in the k position</div>
+</div>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -714,19 +735,19 @@ k : Position of the diode on the parser</p>
 and returns the same elements but with the equivalents replaced
 starting from the position given.</p>
 </div></blockquote>
-<section id="id55">
-<h3>Args<a class="headerlink" href="#id55" title="Link to this heading">¶</a></h3>
-<p>elements : Array with M, N and u matrices
-Transistor_NR : NR equivalent values G, IE and IC
-k : Starting position of the transistor on the parser</p>
-</section>
-<section id="id56">
-<h3>Returns<a class="headerlink" href="#id56" title="Link to this heading">¶</a></h3>
-<dl class="simple">
-<dt>[M, N, u]<span class="classifier">The same matrices of elements in the arguments but with</span></dt><dd><p>the NR equivalent replaced starting on the k position</p>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">elements : Array with M, N and u matrices</div>
+<div class="line">Transistor_NR : NR equivalent values G, IE and IC</div>
+<div class="line">k : Starting position of the transistor on the parser</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">[M, N, u] : The same matrices of elements in the arguments but with</div>
+<div class="line">the NR equivalent replaced starting on the k position</div>
+</div>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -736,14 +757,16 @@ k : Starting position of the transistor on the parser</p>
 <div><p>This function takes a circuit and its elements and in case there
 is a D or Q it returns the Newton Raphson equivalent.</p>
 </div></blockquote>
-<section id="id57">
-<h3>Args<a class="headerlink" href="#id57" title="Link to this heading">¶</a></h3>
-<p>A : Reduced incidence matrix
-circuit : Updated cir_parser
-elements : M, N and u matrices
-e : Error given to solve NR (Default value = 1e-5)
-it_max : Maximum iteration given to solve NR (Default value = 100)</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">A : Reduced incidence matrix</div>
+<div class="line">circuit : Updated cir_parser</div>
+<div class="line">elements : M, N and u matrices</div>
+<div class="line">e : Error given to solve NR (Default value = 1e-5)</div>
+<div class="line">it_max : Maximum iteration given to solve NR (Default value = 100)</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -753,20 +776,22 @@ it_max : Maximum iteration given to solve NR (Default value = 100)</p>
 <div><p>This function takes the transistors branches voltages, and transistor
 constants and returns Newton Raphson equivalent of the transistor.</p>
 </div></blockquote>
-<section id="id58">
-<h3>Args<a class="headerlink" href="#id58" title="Link to this heading">¶</a></h3>
-<p>Ies : Emitter saturation current
-Ics : Colector saturation current
-Bf : Common emitter current gain
-Vbe : Previous voltage value for BE connection
-Vbc : Previous voltage value for BC connection</p>
-</section>
-<section id="id59">
-<h3>Returns<a class="headerlink" href="#id59" title="Link to this heading">¶</a></h3>
-<p>G : Equivalent conductance of the transistor
-Ie : Equivalent current of the transistor on the emitter
-Ic : Equivalent current of the transistor on the collector</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">Ies : Emitter saturation current</div>
+<div class="line">Ics : Colector saturation current</div>
+<div class="line">Bf : Common emitter current gain</div>
+<div class="line">Vbe : Previous voltage value for BE connection</div>
+<div class="line">Vbc : Previous voltage value for BC connection</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">G : Equivalent conductance of the transistor</div>
+<div class="line">Ie : Equivalent current of the transistor on the emitter</div>
+<div class="line">Ic : Equivalent current of the transistor on the collector</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -783,18 +808,18 @@ Given,</p>
 <p>and</p>
 <p><span class="math notranslate nohighlight">\(I = I_0(e^{(\frac{V_{dj}}{nV_T})}-1) + gV_{dj}\)</span></p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">I0: Value of I0.</div>
+<div class="line">nD: Value of nD.</div>
+<div class="line">Vdj: Value of Vd.</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">gd: Conductance of the NR discrete equivalent for the diode.</div>
+<div class="line">Id: Current independent source of the NR discrete equivalent.</div>
+</div>
+</dd>
 </dl>
-<section id="id60">
-<h3>Args<a class="headerlink" href="#id60" title="Link to this heading">¶</a></h3>
-<p>I0: Value of I0.
-nD: Value of nD.
-Vdj: Value of Vd.</p>
-</section>
-<section id="id61">
-<h3>Returns<a class="headerlink" href="#id61" title="Link to this heading">¶</a></h3>
-<p>gd: Conductance of the NR discrete equivalent for the diode.
-Id: Current independent source of the NR discrete equivalent.</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -805,59 +830,61 @@ Id: Current independent source of the NR discrete equivalent.</p>
 non-linear elements. If there are, it also returns a list with the
 position of each one and the type of element.</p>
 </div></blockquote>
-<section id="id62">
-<h3>Args<a class="headerlink" href="#id62" title="Link to this heading">¶</a></h3>
-<p>circuit : The circuit parser updated</p>
-</section>
-<section id="id63">
-<h3>Returns<a class="headerlink" href="#id63" title="Link to this heading">¶</a></h3>
-<p>nl : True if there is at least one non-linear element, if not False
-nl_el : List with tuples of each non-lineal element and its position</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">circuit : The circuit parser updated</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">nl : True if there is at least one non-linear element, if not False</div>
+<div class="line">nl_el : List with tuples of each non-lineal element and its position</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p3.save_as_csv_dc">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p3.</span></span><span class="sig-name descname"><span class="pre">save_as_csv_dc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p3.html#save_as_csv_dc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p3.save_as_csv_dc" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function gnerates a csv file with the name filename.</dt><dd><p>First it will save a header and then, it loops and save a line in
 csv format into the file with the dc solution of the circuit.</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+<div class="line">filename: string with the filename (incluiding the path)</div>
+<div class="line">MNUs : M, N and u matrices</div>
+<div class="line">circuit : The circuit parser updated</div>
+<div class="line">start : Start of DC analysis</div>
+<div class="line">end : End of DC analysis</div>
+<div class="line">step : Step of DC analysis</div>
+<div class="line">source : Name or identifier of the independent source</div>
+<div class="line">to be swept during the DC analysis.</div>
+</div>
+</dd>
 </dl>
-<section id="id64">
-<h3>Args<a class="headerlink" href="#id64" title="Link to this heading">¶</a></h3>
-<p>b: # of branches
-n: # of nodes
-filename: string with the filename (incluiding the path)
-MNUs : M, N and u matrices
-circuit : The circuit parser updated
-start : Start of DC analysis
-end : End of DC analysis
-step : Step of DC analysis
-source : Name or identifier of the independent source
-to be swept during the DC analysis.</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p3.save_as_csv_tr">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p3.</span></span><span class="sig-name descname"><span class="pre">save_as_csv_tr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p3.html#save_as_csv_tr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p3.save_as_csv_tr" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function generates a csv file with the name filename.</dt><dd><p>First it will save a header and then, it loops and save a line in
 csv format into the file making the transient analysis.</p>
 </dd>
+<dt>Args;</dt><dd><div class="line-block">
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+<div class="line">filename: string with the filename (incluiding the path)</div>
+<div class="line">MNUs : M, N and u matrices</div>
+<div class="line">circuit : The circuit parser updated</div>
+<div class="line">start : Start of transient analysis</div>
+<div class="line">end : End of transient analysis</div>
+<div class="line">step : Step of transient analysis</div>
+</div>
+</dd>
 </dl>
-<section id="id65">
-<h3>Args<a class="headerlink" href="#id65" title="Link to this heading">¶</a></h3>
-<p>b: # of branches
-n: # of nodes
-filename: string with the filename (incluiding the path)
-MNUs : M, N and u matrices
-circuit : The circuit parser updated
-start : Start of transient analysis
-end : End of transient analysis
-step : Step of transient analysis</p>
-</section>
 </dd></dl>
 
 </section>
@@ -903,20 +930,22 @@ If it is on the first iteration of the transient loop it will use the
 starting values and else it uses the values from the previous iteration
 as starting values.</p>
 </div></blockquote>
-<section id="id66">
-<h3>Args<a class="headerlink" href="#id66" title="Link to this heading">¶</a></h3>
-<p>A : Reduced incidence matrix
-circuit : The circuit parser updated
-MNUs : M, N and u matrixes
-h : Diference between a time stamp and the next
-t : Iteration number in the transient loop
-pre_sol : Solution of the previous iteration</p>
-</section>
-<section id="id67">
-<h3>Returns<a class="headerlink" href="#id67" title="Link to this heading">¶</a></h3>
-<p>[M, N, u] : The same matrixes of elements in the arguments but after
-applying the Euler Backward method</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">A : Reduced incidence matrix</div>
+<div class="line">circuit : The circuit parser updated</div>
+<div class="line">MNUs : M, N and u matrixes</div>
+<div class="line">h : Diference between a time stamp and the next</div>
+<div class="line">t : Iteration number in the transient loop</div>
+<div class="line">pre_sol : Solution of the previous iteration</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">[M, N, u] : The same matrixes of elements in the arguments but after</div>
+<div class="line">applying the Euler Backward method</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -927,53 +956,57 @@ applying the Euler Backward method</p>
 any dynamic elements. If there are, it also returns a list with the
 position of each one and the type of element.</p>
 </div></blockquote>
-<section id="id68">
-<h3>Args<a class="headerlink" href="#id68" title="Link to this heading">¶</a></h3>
-<p>circuit : The circuit parser updated</p>
-</section>
-<section id="id69">
-<h3>Returns<a class="headerlink" href="#id69" title="Link to this heading">¶</a></h3>
-<p>d : True if there is at least one dynamic element, if not False
-d_el : List with tuples of each dynamic element and its position</p>
-</section>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">circuit : The circuit parser updated</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">d : True if there is at least one dynamic element, if not False</div>
+<div class="line">d_el : List with tuples of each dynamic element and its position</div>
+</div>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p4.prepare_dynamic_OP">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p4.</span></span><span class="sig-name descname"><span class="pre">prepare_dynamic_OP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p4.html#prepare_dynamic_OP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p4.prepare_dynamic_OP" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function calculates the operation</dt><dd><p>point with capacitors and inductors.</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">MNUs : M, N and u matrixes</div>
+<div class="line">circuit : The circuit parser updated</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">[M, N, u] : Updated MNU matrixes</div>
+</div>
+</dd>
 </dl>
-<section id="id70">
-<h3>Args<a class="headerlink" href="#id70" title="Link to this heading">¶</a></h3>
-<p>MNUs : M, N and u matrixes
-circuit : The circuit parser updated
-Returns
-——-
-[M, N, u] : Updated MNU matrixes</p>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="zlel.zlel_p4.save_as_csv_tr">
 <span class="sig-prename descclassname"><span class="pre">zlel.zlel_p4.</span></span><span class="sig-name descname"><span class="pre">save_as_csv_tr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MNUs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p4.html#save_as_csv_tr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p4.save_as_csv_tr" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dd><dl>
 <dt>This function generates a csv file with the name filename.</dt><dd><p>First it will save a header and then, it loops and save a line in
 csv format into the file making the transient analysis.</p>
 </dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">b: # of branches</div>
+<div class="line">n: # of nodes</div>
+<div class="line">filename: string with the filename (incluiding the path)</div>
+<div class="line">MNUs : M, N and u matrixes</div>
+<div class="line">circuit : The circuit parser updated</div>
+<div class="line">start : Start of transient analysis</div>
+<div class="line">end : End of transient analysis</div>
+<div class="line">step : Step of transient analysis</div>
+<div class="line">operation: Dictionary with .PR, .OP, .DC and .TR words.</div>
+</div>
+</dd>
 </dl>
-<section id="id71">
-<h3>Args<a class="headerlink" href="#id71" title="Link to this heading">¶</a></h3>
-<p>b: # of branches
-n: # of nodes
-filename: string with the filename (incluiding the path)
-MNUs : M, N and u matrixes
-circuit : The circuit parser updated
-start : Start of transient analysis
-end : End of transient analysis
-step : Step of transient analysis</p>
-</section>
 </dd></dl>
 
 </section>
@@ -1030,7 +1063,7 @@ step : Step of transient analysis</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      &#169;2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
       
       |
       Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
