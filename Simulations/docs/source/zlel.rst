@@ -5,9 +5,6 @@ zlel.zlel\_p1 module
 --------------------
 
 .. automodule:: zlel.zlel_p1
-   :members:
-   :show-inheritance:
-   :undoc-members:
 
 zlel.zlel\_p2 module
 --------------------
@@ -16,6 +13,7 @@ zlel.zlel\_p2 module
    :members:
    :show-inheritance:
    :undoc-members:
+   :docstring: module
 
 zlel.zlel\_p3 module
 --------------------
@@ -24,6 +22,7 @@ zlel.zlel\_p3 module
    :members:
    :show-inheritance:
    :undoc-members:
+   :docstring: module
 
 zlel.zlel\_p4 module
 --------------------
@@ -32,3 +31,4 @@ zlel.zlel\_p4 module
    :members:
    :show-inheritance:
    :undoc-members:
+   :docstring: module

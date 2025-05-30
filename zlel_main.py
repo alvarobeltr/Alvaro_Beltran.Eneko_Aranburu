@@ -2,13 +2,32 @@
 # -*- coding: utf-8 -*-
 """
 .. module:: zlel_main.py
-    :synopsis:
+    :synopsis: Main execution script for ZLEL circuit simulator
 
-.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com)
-    eta Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
+.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com),
+                 Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)
 
+This script acts as the main entry point for the ZLEL (Linear and Nonlinear
+Electric Circuits) simulator. It performs the following tasks:
 
+- Loads a `.cir` circuit file and parses its contents
+- Expands multi-terminal elements (e.g., transistors) for MNA compatibility
+- Detects potential circuit topology errors (e.g., parallel voltage sources,
+                                             series current sources)
+- Builds incidence and reduced matrices
+- Applies Modified Nodal Analysis (MNA) via the Tableau method
+- Prepares matrices to handle dynamic elements for operating point (.OP)
+- Uses the Newton-Raphson method to solve nonlinear systems
+- Executes simulation commands found in the circuit file:
+    - .PR: print circuit info and topology
+    - .OP: solve and print the operating point
+    - .DC: sweep analysis, results saved to CSV
+    - .TR: transient simulation using backward Euler, saved to CSV
+
+This script combines all core functionalities from the supporting `zlel_pX.py`
+modules and acts as a batch simulation engine.
 """
+
 
 import zlel.zlel_p1 as zl1
 import zlel.zlel_p2 as zl2
