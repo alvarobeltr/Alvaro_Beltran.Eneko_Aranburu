@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zlel.zlel_p3 &#8212; ZLEL 0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=837179f8"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for zlel.zlel_p3</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: zlel_p3.py</span>
+
+<span class="sd">    :synopsis: Non-linear element handling and Newton-Raphson implementation</span>
+<span class="sd">        for electric circuit simulation</span>
+
+<span class="sd">.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com),</span>
+<span class="sd">    Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus)</span>
+
+<span class="sd">This module extends the circuit analysis capabilities of the ZLEL simulator</span>
+<span class="sd">by introducing support for non-linear components such as diodes and bipolar</span>
+<span class="sd">transistors (BJTs). It includes:</span>
+
+<span class="sd">- Detection of non-linear elements in parsed circuits</span>
+<span class="sd">- Calculation of diode and transistor models using the Newton-Raphson (NR)</span>
+<span class="sd">    iterative method</span>
+<span class="sd">- Replacement of original non-linear elements with linear equivalents in the</span>
+<span class="sd">    MNA system at each NR iteration</span>
+<span class="sd">- Integration of the NR solver into DC and transient simulation workflows</span>
+<span class="sd">- Support functions for calculating diode and transistor equivalent conductance</span>
+<span class="sd">    and independent current sources</span>
+<span class="sd">- Enhanced `.tr` and `.dc` simulations that accommodate non-linearities</span>
+
+<span class="sd">This module is critical for enabling convergence to the operating point of</span>
+<span class="sd">circuits containing exponential components and ensuring accurate simulations</span>
+<span class="sd">for real-world non-linear behavior.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;zlel.zlel_p3&quot;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">zlel.zlel_p1</span> <span class="k">as</span> <span class="nn">zl1</span>
+    <span class="kn">import</span> <span class="nn">zlel.zlel_p2</span> <span class="k">as</span> <span class="nn">zl2</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">zlel_p1</span> <span class="k">as</span> <span class="nn">zl1</span>
+    <span class="kn">import</span> <span class="nn">zlel_p2</span> <span class="k">as</span> <span class="nn">zl2</span>
+
+
+<div class="viewcode-block" id="non_linear">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.non_linear">[docs]</a>
+<span class="k">def</span> <span class="nf">non_linear</span><span class="p">(</span><span class="n">circuit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function takes a circuit and returns whether there are any</span>
+<span class="sd">        non-linear elements. If there are, it also returns a list with the</span>
+<span class="sd">        position of each one and the type of element.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nl : True if there is at least one non-linear element, if not False</span>
+<span class="sd">    nl_el : List with tuples of each non-lineal element and its position</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nl</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">nl_el</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+            <span class="n">nl</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">nl_el</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Q&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;be&quot;</span> <span class="ow">in</span> <span class="n">el</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">nl</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">nl_el</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">nl</span><span class="p">,</span> <span class="n">nl_el</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="diode_NR">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.diode_NR">[docs]</a>
+<span class="k">def</span> <span class="nf">diode_NR</span><span class="p">(</span><span class="n">I0</span><span class="p">,</span> <span class="n">nD</span><span class="p">,</span> <span class="n">Vdj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; https://documentation.help/Sphinx/math.html</span>
+<span class="sd">        Calculates the g and the I of a diode for a NR discrete equivalent</span>
+<span class="sd">        Given,</span>
+
+<span class="sd">        :math:`Id = I_0(e^{(\\frac{V_d}{nV_T})}-1)`</span>
+
+<span class="sd">        The NR discrete equivalent will be,</span>
+
+<span class="sd">        :math:`i_{j+1} + g v_{j+1} = I`</span>
+
+<span class="sd">        where,</span>
+
+<span class="sd">        :math:`g = -\\frac{I_0}{nV_T}e^{(\\frac{V_d}{nV_T})}`</span>
+
+<span class="sd">        and</span>
+
+<span class="sd">        :math:`I = I_0(e^{(\\frac{V_{dj}}{nV_T})}-1) + gV_{dj}`</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    I0: Value of I0.</span>
+<span class="sd">    nD: Value of nD.</span>
+<span class="sd">    Vdj: Value of Vd.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    gd: Conductance of the NR discrete equivalent for the diode.</span>
+<span class="sd">    Id: Current independent source of the NR discrete equivalent.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Vt</span> <span class="o">=</span> <span class="mf">8.6173324e-5</span><span class="o">*</span><span class="mi">300</span><span class="o">*</span><span class="n">nD</span>
+    <span class="n">gd</span> <span class="o">=</span> <span class="o">-</span><span class="n">I0</span><span class="o">/</span><span class="p">(</span><span class="n">Vt</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vdj</span><span class="o">/</span><span class="p">(</span><span class="n">Vt</span><span class="p">)))</span>
+    <span class="n">Ij</span> <span class="o">=</span> <span class="n">I0</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vdj</span><span class="o">/</span><span class="p">(</span><span class="n">Vt</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">Id</span> <span class="o">=</span> <span class="n">Ij</span> <span class="o">+</span> <span class="n">gd</span><span class="o">*</span><span class="n">Vdj</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">gd</span><span class="p">,</span> <span class="n">Id</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="Transistor_NR">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.Transistor_NR">[docs]</a>
+<span class="k">def</span> <span class="nf">Transistor_NR</span><span class="p">(</span><span class="n">Ies</span><span class="p">,</span> <span class="n">Ics</span><span class="p">,</span> <span class="n">Bf</span><span class="p">,</span> <span class="n">Vbe</span><span class="p">,</span> <span class="n">Vbc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function takes the transistors branches voltages, and transistor</span>
+<span class="sd">        constants and returns Newton Raphson equivalent of the transistor.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    Ies : Emitter saturation current</span>
+<span class="sd">    Ics : Colector saturation current</span>
+<span class="sd">    Bf : Common emitter current gain</span>
+<span class="sd">    Vbe : Previous voltage value for BE connection</span>
+<span class="sd">    Vbc : Previous voltage value for BC connection</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    G : Equivalent conductance of the transistor</span>
+<span class="sd">    Ie : Equivalent current of the transistor on the emitter</span>
+<span class="sd">    Ic : Equivalent current of the transistor on the collector</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">VT</span> <span class="o">=</span> <span class="mf">8.6173324e-5</span><span class="o">*</span><span class="n">T</span>
+    <span class="n">aF</span> <span class="o">=</span> <span class="n">Bf</span><span class="o">/</span><span class="p">(</span><span class="n">Bf</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">aR</span> <span class="o">=</span> <span class="n">Ies</span><span class="o">/</span><span class="n">Ics</span><span class="o">*</span><span class="n">aF</span>
+    <span class="n">g11</span> <span class="o">=</span> <span class="o">-</span><span class="n">Ies</span><span class="o">/</span><span class="n">VT</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vbe</span><span class="o">/</span><span class="n">VT</span><span class="p">)</span>
+    <span class="n">g22</span> <span class="o">=</span> <span class="o">-</span><span class="n">Ics</span><span class="o">/</span><span class="n">VT</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vbc</span><span class="o">/</span><span class="n">VT</span><span class="p">)</span>
+    <span class="n">g21</span> <span class="o">=</span> <span class="o">-</span><span class="n">aF</span><span class="o">*</span><span class="n">g11</span>
+    <span class="n">g12</span> <span class="o">=</span> <span class="o">-</span><span class="n">aR</span><span class="o">*</span><span class="n">g22</span>
+    <span class="n">Ie</span> <span class="o">=</span> <span class="n">g11</span><span class="o">*</span><span class="n">Vbe</span> <span class="o">+</span> <span class="n">g12</span><span class="o">*</span><span class="n">Vbc</span> <span class="o">+</span> <span class="n">Ies</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vbe</span><span class="o">/</span><span class="n">VT</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">aR</span><span class="o">*</span><span class="n">Ics</span><span class="o">*</span><span class="p">(</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vbc</span><span class="o">/</span><span class="n">VT</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">Ic</span> <span class="o">=</span> <span class="n">g21</span><span class="o">*</span><span class="n">Vbe</span> <span class="o">+</span> <span class="n">g22</span><span class="o">*</span><span class="n">Vbc</span> <span class="o">-</span> <span class="n">aF</span><span class="o">*</span><span class="n">Ies</span><span class="o">*</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vbe</span><span class="o">/</span><span class="n">VT</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">Ics</span><span class="o">*</span><span class="p">(</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Vbc</span><span class="o">/</span><span class="n">VT</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="p">[[</span><span class="n">g11</span><span class="p">,</span> <span class="n">g12</span><span class="p">],</span> <span class="p">[</span><span class="n">g21</span><span class="p">,</span> <span class="n">g22</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">G</span><span class="p">,</span> <span class="p">[</span><span class="n">Ie</span><span class="p">,</span> <span class="n">Ic</span><span class="p">]]</span></div>
+
+
+
+<div class="viewcode-block" id="MNu_D_NR">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.MNu_D_NR">[docs]</a>
+<span class="k">def</span> <span class="nf">MNu_D_NR</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">Diode_NR</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This funcion takes the diode NR values and the elements and returns the</span>
+<span class="sd">        same elements but with the equivalents replaced in the position given.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">        elements : Array with M, N and u matrices</span>
+<span class="sd">        Diode_NR : NR equivalent values g and I</span>
+<span class="sd">        k : Position of the diode on the parser</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    [M, N, u] : The same matrices of elements in the arguments but with</span>
+<span class="sd">        the NR equivalent replaced in the k position</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">Diode_NR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Ij</span> <span class="o">=</span> <span class="n">Diode_NR</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">M</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
+    <span class="n">N</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ij</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="MNu_Q_NR">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.MNu_Q_NR">[docs]</a>
+<span class="k">def</span> <span class="nf">MNu_Q_NR</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">Transistor_NR</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This funcion takes the transistor NR equivalent values and the elements</span>
+<span class="sd">        and returns the same elements but with the equivalents replaced</span>
+<span class="sd">        starting from the position given.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    elements : Array with M, N and u matrices</span>
+<span class="sd">    Transistor_NR : NR equivalent values G, IE and IC</span>
+<span class="sd">    k : Starting position of the transistor on the parser</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    [M, N, u] : The same matrices of elements in the arguments but with</span>
+<span class="sd">        the NR equivalent replaced starting on the k position</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">elements</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">Transistor_NR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Ie</span> <span class="o">=</span> <span class="n">Transistor_NR</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">Ic</span> <span class="o">=</span> <span class="n">Transistor_NR</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">M</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span>
+    <span class="n">N</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">N</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ie</span>
+    <span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ic</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">u</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="NR">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.NR">[docs]</a>
+<span class="k">def</span> <span class="nf">NR</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">it_max</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function takes a circuit and its elements and in case there</span>
+<span class="sd">        is a D or Q it returns the Newton Raphson equivalent.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    A : Reduced incidence matrix</span>
+<span class="sd">    circuit : Updated cir_parser</span>
+<span class="sd">    elements : M, N and u matrices</span>
+<span class="sd">    e : Error given to solve NR (Default value = 1e-5)</span>
+<span class="sd">    it_max : Maximum iteration given to solve NR (Default value = 100)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_nl</span> <span class="o">=</span> <span class="n">non_linear</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="n">nl_el</span> <span class="o">=</span> <span class="n">is_nl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">is_nl</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">ft</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">nl_el</span><span class="p">)),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">Vd0</span> <span class="o">=</span> <span class="mf">0.6</span>
+        <span class="n">Vbe0</span> <span class="o">=</span> <span class="mf">0.6</span>
+        <span class="n">Vbc0</span> <span class="o">=</span> <span class="mf">0.6</span>
+        <span class="n">Vs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">el</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">nl_el</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">el</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                <span class="n">Vs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vd0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">Vs</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">Vbe0</span><span class="p">,</span> <span class="n">Vbc0</span><span class="p">])</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">cir_val</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="n">out</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">it</span> <span class="o">&lt;</span> <span class="n">it_max</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nl_el</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">el</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                    <span class="n">Vd0</span> <span class="o">=</span> <span class="n">Vs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">I0</span> <span class="o">=</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">D_NR</span> <span class="o">=</span> <span class="n">diode_NR</span><span class="p">(</span><span class="n">I0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">Vd0</span><span class="p">)</span>
+                    <span class="n">elements</span> <span class="o">=</span> <span class="n">MNu_D_NR</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">D_NR</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">Vbe0</span> <span class="o">=</span> <span class="n">Vs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">Vbc0</span> <span class="o">=</span> <span class="n">Vs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">Ies</span> <span class="o">=</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">Ics</span> <span class="o">=</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">BF</span> <span class="o">=</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">Q_NR</span> <span class="o">=</span> <span class="n">Transistor_NR</span><span class="p">(</span><span class="n">Ies</span><span class="p">,</span> <span class="n">Ics</span><span class="p">,</span> <span class="n">BF</span><span class="p">,</span> <span class="n">Vbe0</span><span class="p">,</span> <span class="n">Vbc0</span><span class="p">)</span>
+                    <span class="n">elements</span> <span class="o">=</span> <span class="n">MNu_Q_NR</span><span class="p">(</span><span class="n">elements</span><span class="p">,</span> <span class="n">Q_NR</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">Tableau</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">elements</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">elements</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">elm</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">nl_el</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">elm</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                    <span class="n">VDj</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">VDj</span><span class="o">-</span><span class="n">Vs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">):</span>
+                        <span class="n">ft</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">Vs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">VDj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">VBEj</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span>
+                    <span class="n">VBCj</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">+</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">VBEj</span><span class="o">-</span><span class="n">Vs</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">VBCj</span><span class="o">-</span><span class="n">Vs</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">e</span><span class="p">):</span>
+                        <span class="n">ft</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">Vs</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">VBEj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">Vs</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">VBCj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ft</span><span class="p">)</span>
+            <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="save_as_csv_tr">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.save_as_csv_tr">[docs]</a>
+<span class="k">def</span> <span class="nf">save_as_csv_tr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This function generates a csv file with the name filename.</span>
+<span class="sd">        First it will save a header and then, it loops and save a line in</span>
+<span class="sd">        csv format into the file making the transient analysis.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    b: # of branches</span>
+<span class="sd">    n: # of nodes</span>
+<span class="sd">    filename: string with the filename (incluiding the path)</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    start : Start of transient analysis</span>
+<span class="sd">    end : End of transient analysis</span>
+<span class="sd">    step : Step of transient analysis</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Aa</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getInzidentziaMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getMurriztutakoIntzidentziaMatrix</span><span class="p">(</span><span class="n">Aa</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">cir_el</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cir_val</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">build_csv_header</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">save_sim_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;sims&quot;</span><span class="p">,</span> <span class="s2">&quot;.tr&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+        <span class="c1"># Get the indices of the elements corresponding to the sources.</span>
+        <span class="c1"># The freq parameter cannot be 0 this is why we choose cir_tr[0].</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cir_el</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Y&quot;</span><span class="p">):</span>
+                    <span class="n">w</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span>
+                        <span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">180</span><span class="p">)</span>
+                        <span class="p">)</span>
+            <span class="n">NR</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">)</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">Tableau</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="c1"># Inserte the time</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+            <span class="c1"># sol to csv</span>
+            <span class="n">sol_csv</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">%.9f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">sol</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sol_csv</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="n">step</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># 10 decimals to avoid precision errors</span></div>
+
+
+
+<div class="viewcode-block" id="save_as_csv_dc">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p3.save_as_csv_dc">[docs]</a>
+<span class="k">def</span> <span class="nf">save_as_csv_dc</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This function gnerates a csv file with the name filename.</span>
+<span class="sd">        First it will save a header and then, it loops and save a line in</span>
+<span class="sd">        csv format into the file with the dc solution of the circuit.</span>
+
+<span class="sd">    Args</span>
+<span class="sd">    ----</span>
+<span class="sd">    b: # of branches</span>
+<span class="sd">    n: # of nodes</span>
+<span class="sd">    filename: string with the filename (incluiding the path)</span>
+<span class="sd">    MNUs : M, N and u matrices</span>
+<span class="sd">    circuit : The circuit parser updated</span>
+<span class="sd">    start : Start of DC analysis</span>
+<span class="sd">    end : End of DC analysis</span>
+<span class="sd">    step : Step of DC analysis</span>
+<span class="sd">    source : Name or identifier of the independent source</span>
+<span class="sd">    to be swept during the DC analysis.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">source</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">build_csv_header</span><span class="p">(</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">build_csv_header</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="n">Aa</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getInzidentziaMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getMurriztutakoIntzidentziaMatrix</span><span class="p">(</span><span class="n">Aa</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="n">cir_el</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">source</span> <span class="o">+</span> <span class="s2">&quot;.dc&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">save_sim_output</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;sims&quot;</span><span class="p">,</span> <span class="n">ext</span><span class="p">)</span>
+
+    <span class="n">eli</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cir_el</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">source</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
+               <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">eli</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Source &#39;</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&#39; not found in circuit.&quot;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="n">step</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="n">step</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="c1"># while v &lt;= end:</span>
+            <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="n">eli</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="c1"># print(Us)</span>
+            <span class="n">NR</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">)</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">Tableau</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="c1"># Insert the time</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="c1"># sol to csv</span>
+            <span class="n">sol_csv</span> <span class="o">=</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">%.9f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">sol</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sol_csv</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="n">step</span></div>
+
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">https://stackoverflow.com/questions/419163/what-does-if-name-main-do</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1">#  start = time.perf_counter()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;../cirs/all/2_zlel_Q_ezaugarri.cir&quot;</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">cir_parser</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">luzatu_cir</span><span class="p">(</span><span class="n">cp</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">circuit</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+        <span class="n">op</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">getSimulations</span><span class="p">(</span><span class="n">cp</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+
+        <span class="n">b</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">getAdarrak</span><span class="p">(</span><span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getNodesNumber</span><span class="p">(</span><span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getNodes</span><span class="p">(</span><span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">el_num</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getEl_num</span><span class="p">(</span><span class="n">cp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">MNUs</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">getMNUs</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+        <span class="n">Aa</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getInzidentziaMatrix</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getMurriztutakoIntzidentziaMatrix</span><span class="p">(</span><span class="n">Aa</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">NR</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">)</span>
+        <span class="c1"># Verificar qué simulaciones ejecutar</span>
+        <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.OP&quot;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Realizar análisis de punto de operación (OP)&quot;</span><span class="p">)</span>
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">zl2</span><span class="o">.</span><span class="n">Tableau</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">MNUs</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">zl2</span><span class="o">.</span><span class="n">print_solution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.PR&quot;</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Realizar impresión de información (PR)&quot;</span><span class="p">)</span>
+            <span class="n">zl1</span><span class="o">.</span><span class="n">print_cir_info</span><span class="p">(</span><span class="n">circuit</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">circuit</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">el_num</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.DC&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># Indica si se debe hacer la simulación</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.DC&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.DC&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Realizar barrido DC desde </span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2"> hasta </span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2"> &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;con paso </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">, fuente: </span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">save_as_csv_dc</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span>
+                           <span class="n">start</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.TR&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="n">op</span><span class="p">[</span><span class="s2">&quot;.TR&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Realizar análisis transitorio desde </span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2">s hasta &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2">s con paso </span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+            <span class="n">save_as_csv_tr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">MNUs</span><span class="p">,</span> <span class="n">circuit</span><span class="p">,</span>
+                           <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ZLEL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
