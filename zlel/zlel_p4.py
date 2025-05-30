@@ -51,14 +51,12 @@ def dynamic(circuit):
         any dynamic elements. If there are, it also returns a list with the
         position of each one and the type of element.
 
-    Args
-    ----
-    circuit : The circuit parser updated
+    Args:
+        | circuit : The circuit parser updated
 
-    Returns
-    -------
-    d : True if there is at least one dynamic element, if not False
-    d_el : List with tuples of each dynamic element and its position
+    Returns:
+        | d : True if there is at least one dynamic element, if not False
+        | d_el : List with tuples of each dynamic element and its position
 
     """
     d = False
@@ -84,19 +82,17 @@ def Euler_BackWard(A, circuit, MNUs, h, t, pre_sol):
         starting values and else it uses the values from the previous iteration
         as starting values.
 
-    Args
-    ----
-    A : Reduced incidence matrix
-    circuit : The circuit parser updated
-    MNUs : M, N and u matrixes
-    h : Diference between a time stamp and the next
-    t : Iteration number in the transient loop
-    pre_sol : Solution of the previous iteration
+    Args:
+        | A : Reduced incidence matrix
+        | circuit : The circuit parser updated
+        | MNUs : M, N and u matrixes
+        | h : Diference between a time stamp and the next
+        | t : Iteration number in the transient loop
+        | pre_sol : Solution of the previous iteration
 
-    Returns
-    -------
-    [M, N, u] : The same matrixes of elements in the arguments but after
-    applying the Euler Backward method
+    Returns:
+        | [M, N, u] : The same matrixes of elements in the arguments but after
+        | applying the Euler Backward method
 
     """
     d = dynamic(circuit)
@@ -134,16 +130,16 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, operation):
         First it will save a header and then, it loops and save a line in
         csv format into the file making the transient analysis.
 
-    Args
-    ----
-    b: # of branches
-    n: # of nodes
-    filename: string with the filename (incluiding the path)
-    MNUs : M, N and u matrixes
-    circuit : The circuit parser updated
-    start : Start of transient analysis
-    end : End of transient analysis
-    step : Step of transient analysis
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+        | MNUs : M, N and u matrixes
+        | circuit : The circuit parser updated
+        | start : Start of transient analysis
+        | end : End of transient analysis
+        | step : Step of transient analysis
+        | operation: Dictionary with .PR, .OP, .DC and .TR words.
     """
 
     Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
@@ -182,13 +178,11 @@ def prepare_dynamic_OP(circuit, MNUs):
     """ This function calculates the operation
         point with capacitors and inductors.
 
-    Args
-    ----
-    MNUs : M, N and u matrixes
-    circuit : The circuit parser updated
-    Returns
-    -------
-    [M, N, u] : Updated MNU matrixes
+    Args:
+        | MNUs : M, N and u matrixes
+        | circuit : The circuit parser updated
+    Returns:
+        | [M, N, u] : Updated MNU matrixes
     """
     cir_el = circuit[0]
     M, N, U = MNUs

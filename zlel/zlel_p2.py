@@ -46,12 +46,11 @@ else:
 def print_solution(sol, b, n):
     """ This function prints the solution with format.
 
-        Args
-        ----
-        sol: np array with the solution of the Tableau equations
-        (e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b)
-        b: # of branches
-        n: # of nodes
+        Args:
+            | sol: np array with the solution of the Tableau equations
+            | (e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b)
+            | b: # of branches
+            | n: # of nodes
 
     """
 
@@ -90,15 +89,13 @@ def build_csv_header(tvi, b, n):
         The header will be this form,
         t/v/i,e_1,..,e_n-1,v_1,..,v_b,i_1,..i_b
 
-    Args
-    ----
-    tvi: "v" or "i" if .dc analysis or "t" if .tran
-    b: # of branches
-    n: # of nodes
+    Args:
+        | tvi: "v" or "i" if .dc analysis or "t" if .tran
+        | b: # of branches
+        | n: # of nodes
 
-    Returns
-    -------
-    header: The header in csv format as string
+    Returns:
+        | header: The header in csv format as string
     """
     header = tvi
     for i in range(1, n):
@@ -115,15 +112,13 @@ def save_sim_output(filename, sims_folder_name, extension):
         a folder given by "sims_folder_name" and changing its extension
         by another given by "extensión" (. needs to be included).
 
-    Args
-    ----
-    filename: string with the filename (incluiding the path)
-    sims_folder_name: string with the name of the folder to save the sims
-    extension: new extensión for the file.
+    Args:
+        | filename: string with the filename (incluiding the path)
+        | sims_folder_name: string with the name of the folder to save the sims
+        | extension: new extensión for the file.
 
-    Returns
-    -------
-    new_file_path: the filename with the sims_folder_name inserted.
+    Returns:
+        | new_file_path: the filename with the sims_folder_name inserted.
 
     """
 
@@ -151,16 +146,15 @@ def save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step):
         First it will save a header and then, it loops and save a line in
         csv format into the file making the transient analysis.
 
-    Args
-    ----
-    b: # of branches
-    n: # of nodes
-    filename: string with the filename (incluiding the path)
-    MNUs : M, N and u matrices
-    circuit : The circuit parser updated
-    start : Start of transient analysis
-    end : End of transient analysis
-    step : Step of transient analysis
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+        | MNUs : M, N and u matrices
+        | circuit : The circuit parser updated
+        | start : Start of transient analysis
+        | end : End of transient analysis
+        | step : Step of transient analysis
     """
 
     Us = MNUs[2]
@@ -198,18 +192,17 @@ def save_as_csv_dc(b, n, filename, MNUs, circuit, start, step, end, source):
         First it will save a header and then, it loops and save a line in
         csv format into the file with the dc solution of the circuit.
 
-    Args
-    ----
-    b: # of branches
-    n: # of nodes
-    filename: string with the filename (incluiding the path)
-    MNUs : M, N and u matrices
-    circuit : The circuit parser updated
-    start : Start of DC analysis
-    end : End of DC analysis
-    step : Step of DC analysis
-    source : Name or identifier of the independent source
-    to be swept during the DC analysis.
+    Args:
+        | b: # of branches
+        | n: # of nodes
+        | filename: string with the filename (incluiding the path)
+        | MNUs : M, N and u matrices
+        | circuit : The circuit parser updated
+        | start : Start of DC analysis
+        | end : End of DC analysis
+        | step : Step of DC analysis
+        | source : Name or identifier of the independent source
+        | to be swept during the DC analysis.
 
     """
     if source[0].lower() == "v":
@@ -251,11 +244,10 @@ def plot_from_cvs(filename, x, y, title):
         The x and y strings must mach with some value of the header in the
         csv file filename.
 
-    Args
-    ----
-    filename: string with the name of the file (including the path).
-    x: string with some value of the header of the file.
-    y: string with some value of the header of the file.
+    Args:
+        | filename: string with the name of the file (including the path).
+        | x: string with some value of the header of the file.
+        | y: string with some value of the header of the file.
 
     """
     data = np.genfromtxt(filename, delimiter=',', skip_header=0,
@@ -275,24 +267,22 @@ def cir_parser(filename):
         5 matrices.
         If the file has not the proper dimensions it warns and exit.
 
-    Args
-    ----
-    filename: string with the name of the file
+    Args:
+        | filename: string with the name of the file
 
-    Returns
-    -------
-        An array with:
-            - cir_el: np array of strings with the elements to parse. size(1,b)
-            - cir_nd: np array with the nodes to the circuit. size(b,4)
-            - cir_val: np array with the values of the elements. size(b,3)
-            - cir_ctrl: np array of strings with the element which branch
-                controls the controlled sources. size(1,b)
-            - sim_cmds: np array of strings with the information of the
-                simulations.
+    Returns:
+        | An array with:
+            | - cir_el: np array of strings with the elements to parse.
+            | size(1,b)
+            | - cir_nd: np array with the nodes to the circuit. size(b,4)
+            | - cir_val: np array with the values of the elements. size(b,3)
+            | - cir_ctrl: np array of strings with the element which branch
+            | controls the controlled sources. size(1,b)
+            | - sim_cmds: np array of strings with the information of the
+            | simulations.
 
-    Rises
-    -----
-        SystemExit
+    Rises:
+        | SystemExit
 
     """
     try:
@@ -331,19 +321,16 @@ def getSimulations(sim_cmds):
     the different operations. If a operation is shown in the parser, it will
     appear as True in the dictionary and for DC and Transient analysis also
     some related values.
+            | PR : Prints information about the circuit
+            | OP : Prints the operating point of the circuit
+            | DC : Writes the DC sweep analysis in a cvs file
+            | TR : Writes the Transient analysis
 
-            PR : Prints information about the circuit
-            OP : Prints the operating point of the circuit
-            DC : Writes the DC sweep analysis in a cvs file
-            TR : Writes the Transient analysis
+    Args:
+        | circuit : Array of 4 elements that describe the circuit
 
-    Args
-    ----
-        circuit : Array of 4 elements that describe the circuit
-
-    Returns
-    -------
-        d : Dictionary with .PR, .OP, .DC and .TR words.
+    Returns:
+        | d : Dictionary with .PR, .OP, .DC and .TR words.
 
     """
 
@@ -378,21 +365,21 @@ def luzatu_cir(circuit):
     Expands circuit matrices to handle multi-branch elements like transistors
     and controlled sources.
 
-    Args
-    ----
-    circuit: list of np.arrays
-        - cir_el: np array of element names. size(1, b)
-        - cir_nd: np array of node connections. size(b, 4)
-        - cir_val: np array of element values. size(b, 3)
-        - cir_ctrl: np array of controlling elements (strings). size(1, b)
+    Args:
+        | circuit: list of np.arrays
+            | - cir_el: np array of strings with the elements to parse.
+            | size(1,b)
+            | - cir_nd: np array with the nodes to the circuit. size(b,4)
+            | - cir_val: np array with the values of the elements. size(b,3)
+            | - cir_ctrl: np array of strings with the element which branch
+            | controls the controlled sources. size(1,b)
 
-    Returns
-    -------
-    Tuple of np.arrays:
-        - cir_el2: expanded element names
-        - cir_nd2: expanded node definitions
-        - cir_val2: expanded values
-        - cir_ctrl2: expanded controls
+    Returns:
+        | Tuple of np.arrays:
+            | - cir_el2: expanded element names
+            | - cir_nd2: expanded node definitions
+            | - cir_val2: expanded values
+            | - cir_ctrl2: expanded controls
     """
     cir_el, cir_nd, cir_val, cir_ctr, _ = circuit
 
@@ -436,15 +423,13 @@ def getElemPosition(elem, cir_el2):
     """
     Gives the position of an element in cir_el_luz
 
-    Args
-    ----
-    elem : String with the name of the element
-    cir_el_luz : extended np array of strings with the elements to parse.
-    size(b,1)
+    Args:
+        | elem : String with the name of the element
+        | cir_el_luz : extended np array of strings with the elements to parse.
+        | size(b,1)
 
-    Returns
-    -------
-    i : Integer with the position of the element
+    Returns:
+        | i : Integer with the position of the element
 
     """
     for i in range(0, np.size(cir_el2)):
@@ -457,13 +442,11 @@ def getAdarrak(cir_el2):
     This function returns the size of the list of elements obtained from
     cir_el2.
 
-    Args
-    ----
-    cir_el: np array of strings with the elements to parse. size(1,b)
+    Args:
+        | cir_el: np array of strings with the elements to parse. size(1,b)
 
-    Returns
-    -------
-    b : an integer which represents the number of branches in the circuit.
+    Returns:
+        | b : an integer which contains the number of branches in the circuit.
 
     """
     return np.size(cir_el2)
@@ -474,22 +457,20 @@ def getMNUs(circuit2):
     Gives M, N and Us matrixes thath will be used in Tableau equations:
         M*v + N*i = Us
 
-    Args
-    ----
-    b : Integer with the number of branches in the circuit
-    cir_el_luz : extended np array of strings with the elements to parse.
-    size(b,1)
-    cir_val_luz : extended np array with the values of the elements.
-    size(b,3)
-    cir_ctr_luz : extended np array of strings with the element which branch
-    controls the controlled sources. size(b,1)
+    Args:
+        | b : Integer with the number of branches in the circuit
+        | cir_el_luz : extended np array of strings with the elements to parse.
+        | size(b,1)
+        | cir_val_luz : extended np array with the values of the elements.
+        | size(b,3)
+        | cir_ctr_luz : extended np array of strings with the element which
+        | branch controls the controlled sources. size(b,1)
 
-    Returns
-    -------
-    M : np array that contains the first matrix of Tableau equations. size(b,b)
-    N : np array that contains the second matrix of Tableau equations.
-    size(b,b)
-    Us : np array that contains the third matrix of Tableau equations.
+    Returns:
+        | M : np array that contains the first matrix of Tableau equations.
+        | N : np array that contains the second matrix of Tableau equations.
+        | size(b,b)
+        | Us : np array that contains the third matrix of Tableau equations.
 """
 
     cir_el2 = circuit2[0]
@@ -546,17 +527,15 @@ def Tableau(A, M, N, Us):
     using the M, N, and Us matrices, along with the reduced
     incidence matrix A.
 
-    Args
-    ----
-    A: Reduced incidence matrix.
-    M: Voltage matrix.
-    N: Current matrix.
-    Us: Vector of elements not controlled by voltage.
+    Args:
+        | A: Reduced incidence matrix.
+        | M: Voltage matrix.
+        | N: Current matrix.
+        | Us: Vector of elements not controlled by voltage.
 
-    Returns
-    -------
-    T: Tableau matrix, containing all equations in the order e, v, i.
-    Sol: List of solutions for all equations in the same order.
+    Returns:
+        | T: Tableau matrix, containing all equations in the order e, v, i.
+        | Sol: List of solutions for all equations in the same order.
 """
     b1, b2 = A.shape
     T_size = b1 + 2 * b2
