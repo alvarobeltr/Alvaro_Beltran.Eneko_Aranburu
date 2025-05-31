@@ -321,10 +321,10 @@ def getSimulations(sim_cmds):
     the different operations. If a operation is shown in the parser, it will
     appear as True in the dictionary and for DC and Transient analysis also
     some related values.
-            | PR : Prints information about the circuit
-            | OP : Prints the operating point of the circuit
-            | DC : Writes the DC sweep analysis in a cvs file
-            | TR : Writes the Transient analysis
+        | PR : Prints information about the circuit
+        | OP : Prints the operating point of the circuit
+        | DC : Writes the DC sweep analysis in a cvs file
+        | TR : Writes the Transient analysis
 
     Args:
         | circuit : Array of 4 elements that describe the circuit

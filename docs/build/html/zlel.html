@@ -3,17 +3,17 @@
 <html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>zlel package &#8212; ZLEL 0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <title>zlel package &#8212; ZLEL 2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
-    <script src="_static/documentation_options.js?v=837179f8"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/documentation_options.js?v=60dbed4a"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="zlel_main module" href="zlel_main.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -33,9 +33,6 @@
             
   <section id="zlel-package">
 <h1>zlel package<a class="headerlink" href="#zlel-package" title="Link to this heading">¶</a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
-</section>
 <section id="module-zlel.zlel_p1">
 <span id="zlel-zlel-p1-module"></span><h2>zlel.zlel_p1 module<a class="headerlink" href="#module-zlel.zlel_p1" title="Link to this heading">¶</a></h2>
 <dl class="py function" id="module-zlel_p1.py">
@@ -800,13 +797,13 @@ constants and returns Newton Raphson equivalent of the transistor.</p>
 <dd><dl>
 <dt><a class="reference external" href="https://documentation.help/Sphinx/math.html">https://documentation.help/Sphinx/math.html</a></dt><dd><p>Calculates the g and the I of a diode for a NR discrete equivalent
 Given,</p>
-<p><span class="math notranslate nohighlight">\(Id = I_0(e^{(\frac{V_d}{nV_T})}-1)\)</span></p>
+<p><img class="math" src="_images/math/56fe6e25a9793d165947467cc712fdb51a209e46.png" alt="Id = I_0(e^{(\frac{V_d}{nV_T})}-1)"/></p>
 <p>The NR discrete equivalent will be,</p>
-<p><span class="math notranslate nohighlight">\(i_{j+1} + g v_{j+1} = I\)</span></p>
+<p><img class="math" src="_images/math/a9bfeb1947343d494011fffb639cab40e401e0b6.png" alt="i_{j+1} + g v_{j+1} = I"/></p>
 <p>where,</p>
-<p><span class="math notranslate nohighlight">\(g = -\frac{I_0}{nV_T}e^{(\frac{V_d}{nV_T})}\)</span></p>
+<p><img class="math" src="_images/math/b0b6f565fdc45e9a0b89c0a36c131869192dcb8d.png" alt="g = -\frac{I_0}{nV_T}e^{(\frac{V_d}{nV_T})}"/></p>
 <p>and</p>
-<p><span class="math notranslate nohighlight">\(I = I_0(e^{(\frac{V_{dj}}{nV_T})}-1) + gV_{dj}\)</span></p>
+<p><img class="math" src="_images/math/acf2ebb8b96ea91b3661dc8d42546d2614cec27d.png" alt="I = I_0(e^{(\frac{V_{dj}}{nV_T})}-1) + gV_{dj}"/></p>
 </dd>
 <dt>Args:</dt><dd><div class="line-block">
 <div class="line">I0: Value of I0.</div>
@@ -1010,9 +1007,6 @@ csv format into the file making the transient analysis.</p>
 </dd></dl>
 
 </section>
-<section id="module-zlel">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-zlel" title="Link to this heading">¶</a></h2>
-</section>
 </section>
 
 
@@ -1020,7 +1014,7 @@ csv format into the file making the transient analysis.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">ZLEL</a></h1>
 
@@ -1032,11 +1026,23 @@ csv format into the file making the transient analysis.</p>
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="zlel_main.html">zlel_main module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">zlel package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p1">zlel.zlel_p1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p2">zlel.zlel_p2 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p3">zlel.zlel_p3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p4">zlel.zlel_p4 module</a></li>
+</ul>
+</li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="zlel_main.html" title="previous chapter">zlel_main module</a></li>
   </ul></li>
 </ul>
 </div>
@@ -1063,10 +1069,10 @@ csv format into the file making the transient analysis.</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;2025, Alvaro Beltran De Nanclares (abeltrandenanc002@ikasle.ehu.eus), Eneko Aranburu (earanburu006@gmail.com).
+      &#169;2025, Eneko Aranburu (earanburu006@ikasle.ehu.eus), Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus).
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
       |
