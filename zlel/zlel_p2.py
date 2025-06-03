@@ -634,4 +634,3 @@ if __name__ == "__main__":
         print(f"Realizar análisis transitorio desde {start}s hasta {end}s con "
               f"paso {step}s")
         save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step)
-    
