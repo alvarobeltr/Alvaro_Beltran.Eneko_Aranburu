@@ -82,3 +82,17 @@ if __name__ == "__main__":
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         zl4.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
+    import matplotlib.pyplot as plt
+
+# Supongamos que tu CSV tiene columnas 'Fecha' y 'Ventas'
+    import pandas as pd
+
+# Reemplaza 'archivo.csv' con la ruta a tu archivo
+    df = pd.read_csv("cirs/all/sims/1_zlel_anpli.tr")
+    plt.plot(df['t'], df['v2'])
+    plt.title('Ventas a lo largo del tiempo')
+    plt.xlabel('Fecha')
+    plt.ylabel('Ventas')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
