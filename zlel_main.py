@@ -33,6 +33,7 @@ import zlel.zlel_p1 as zl1
 import zlel.zlel_p2 as zl2
 import zlel.zlel_p3 as zl3
 import zlel.zlel_p4 as zl4
+import zlel.zlel_p5 as zl5
 import sys
 
 
@@ -45,11 +46,11 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/all/1_zlel_anpli.cir"
+        filename = "cirs/all/4_zlel_q_asetasun.cir"
 
     cp = zl2.cir_parser(filename)
-    circuit = zl2.luzatu_cir(cp)
-    pp = zl1.cir_parser(filename)
+    circuit = zl5.luzatu_cir(cp)
+    # pp = zl1.cir_parser(filename)
     nodes = zl1.getNodes(circuit[1])
     zl1.ErreferentziNodoa(nodes)
     b = zl2.getAdarrak(circuit[0])
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     zl1.KonexioBakarrekoNodoak(Aa, nodes)
     op = zl2.getSimulations(cp[4])
     el_num = zl1.getEl_num(cp[0])
-    MNUs = zl2.getMNUs(circuit)
+    MNUs = zl5.getMNUs(circuit)
     MNUs = zl4.prepare_dynamic_OP(circuit, MNUs)
     zl3.NR(A, circuit, MNUs)
     if op[".PR"]:
@@ -82,17 +83,4 @@ if __name__ == "__main__":
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         zl4.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
-    import matplotlib.pyplot as plt
-
-# Supongamos que tu CSV tiene columnas 'Fecha' y 'Ventas'
-    import pandas as pd
-
-# Reemplaza 'archivo.csv' con la ruta a tu archivo
-    df = pd.read_csv("cirs/all/sims/1_zlel_anpli.tr")
-    plt.plot(df['t'], df['v2'])
-    plt.title('Ventas a lo largo del tiempo')
-    plt.xlabel('Fecha')
-    plt.ylabel('Ventas')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
+    
