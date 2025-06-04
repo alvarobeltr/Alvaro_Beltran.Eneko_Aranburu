@@ -33,6 +33,7 @@ import zlel.zlel_p1 as zl1
 import zlel.zlel_p2 as zl2
 import zlel.zlel_p3 as zl3
 import zlel.zlel_p4 as zl4
+import zlel.zlel_p5 as zl5
 import sys
 
 
@@ -45,10 +46,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
-        filename = "cirs/all/1_zlel_anpli.cir"
+        filename = "cirs/all/4_zlel_q_aktibo.cir"
 
     cp = zl2.cir_parser(filename)
-    circuit = zl2.luzatu_cir(cp)
+    circuit = zl5.luzatu_cir(cp)
     pp = zl1.cir_parser(filename)
     nodes = zl1.getNodes(circuit[1])
     zl1.ErreferentziNodoa(nodes)
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     zl1.KonexioBakarrekoNodoak(Aa, nodes)
     op = zl2.getSimulations(cp[4])
     el_num = zl1.getEl_num(cp[0])
-    MNUs = zl2.getMNUs(circuit)
+    MNUs = zl5.getMNUs(circuit)
     MNUs = zl4.prepare_dynamic_OP(circuit, MNUs)
     zl3.NR(A, circuit, MNUs)
     if op[".PR"]:
@@ -78,7 +79,11 @@ if __name__ == "__main__":
         source = op[".DC"][2]
         zl3.save_as_csv_dc(b, n, filename, MNUs, circuit,
                            start, step, end, source)
+        csv_path = zl2.save_sim_output(filename, "sims", "_" + source + ".dc")
+        zl2.plot_from_cvs(csv_path, "V", "i1", f"DC sweep of {source}")
 
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         zl4.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
+        csv_path = zl2.save_sim_output(filename, "sims", ".tr")
+        zl2.plot_from_cvs(csv_path, "t", "i2", "Transient analysis")

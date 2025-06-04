@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zlel.zlel_p5 &#8212; ZLEL 2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=60dbed4a"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for zlel.zlel_p5</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: zlel_p1.py</span>
+<span class="sd">    :synopsis: This module contains functions that are used in the main program</span>
+<span class="sd">        in order to parse the matrixes that will be used to solve</span>
+<span class="sd">        the circuit.It is added a way to solve active transistors.</span>
+
+<span class="sd">.. moduleauthor:: Eneko Aranburu (earanburu006@gmail.com)</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;zlel.zlel_p5&quot;</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">zlel.zlel_p1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">zl1</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">zlel_p1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">zl1</span>
+
+
+<div class="viewcode-block" id="luzatu_cir">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p5.luzatu_cir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">luzatu_cir</span><span class="p">(</span><span class="n">circuit</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Expands circuit matrices to handle multi-branch elements like transistors</span>
+<span class="sd">    and controlled sources.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        | circuit: list of np.arrays</span>
+<span class="sd">            | - cir_el: np array of strings with the elements to parse.</span>
+<span class="sd">            | size(1,b)</span>
+<span class="sd">            | - cir_nd: np array with the nodes to the circuit. size(b,4)</span>
+<span class="sd">            | - cir_val: np array with the values of the elements. size(b,3)</span>
+<span class="sd">            | - cir_ctrl: np array of strings with the element which branch</span>
+<span class="sd">            | controls the controlled sources. size(1,b)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        | Tuple of np.arrays:</span>
+<span class="sd">            | - cir_el2: expanded element names</span>
+<span class="sd">            | - cir_nd2: expanded node definitions</span>
+<span class="sd">            | - cir_val2: expanded values</span>
+<span class="sd">            | - cir_ctrl2: expanded controls</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cir_el</span><span class="p">,</span> <span class="n">cir_nd</span><span class="p">,</span> <span class="n">cir_val</span><span class="p">,</span> <span class="n">cir_ctr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">circuit</span>
+
+    <span class="n">cir_el2</span><span class="p">,</span> <span class="n">cir_nd2</span><span class="p">,</span> <span class="n">cir_val2</span><span class="p">,</span> <span class="n">cir_ctr2</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">cir_el</span><span class="p">)):</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">cir_el</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;q&quot;</span><span class="p">:</span>
+            <span class="c1"># Expand transistor into two pseudo-branches</span>
+            <span class="n">cir_el2</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;_be&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;_bc&quot;</span><span class="p">]]</span>
+            <span class="n">cir_nd2</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+            <span class="n">cir_val2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="n">cir_ctr2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+        <span class="k">elif</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;k&quot;</span><span class="p">:</span>
+            <span class="n">cir_el2</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;_be&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;_ce&quot;</span><span class="p">]]</span>
+            <span class="n">cir_nd2</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+            <span class="n">cir_val2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="n">cir_ctr2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+        <span class="k">elif</span> <span class="n">element</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+            <span class="c1"># Expand controlled source into input/output components</span>
+            <span class="n">cir_el2</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;_in&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">element</span> <span class="o">+</span> <span class="s2">&quot;_ou&quot;</span><span class="p">]]</span>
+            <span class="n">cir_nd2</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                        <span class="p">[</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+            <span class="n">cir_val2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+            <span class="n">cir_ctr2</span> <span class="o">+=</span> <span class="p">[</span><span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Keep standard elements unchanged</span>
+            <span class="n">cir_el2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cir_el</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">cir_nd2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cir_nd</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">cir_val2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cir_val</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">cir_ctr2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cir_ctr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">cir_el2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cir_el2</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">cir_nd2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cir_nd2</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">cir_val2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cir_val2</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">cir_ctr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cir_ctr2</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">cir_el2</span><span class="p">,</span> <span class="n">cir_nd2</span><span class="p">,</span> <span class="n">cir_val2</span><span class="p">,</span> <span class="n">cir_ctr2</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="getMNUs">
+<a class="viewcode-back" href="../../zlel.html#zlel.zlel_p5.getMNUs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">getMNUs</span><span class="p">(</span><span class="n">circuit2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gives M, N and Us matrixes thath will be used in Tableau equations:</span>
+<span class="sd">        M*v + N*i = Us</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        | b : Integer with the number of branches in the circuit</span>
+<span class="sd">        | cir_el_luz : extended np array of strings with the elements to parse.</span>
+<span class="sd">        | size(b,1)</span>
+<span class="sd">        | cir_val_luz : extended np array with the values of the elements.</span>
+<span class="sd">        | size(b,3)</span>
+<span class="sd">        | cir_ctr_luz : extended np array of strings with the element which</span>
+<span class="sd">        | branch controls the controlled sources. size(b,1)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        | M : np array that contains the first matrix of Tableau equations.</span>
+<span class="sd">        | N : np array that contains the second matrix of Tableau equations.</span>
+<span class="sd">        | size(b,b)</span>
+<span class="sd">        | Us : np array that contains the third matrix of Tableau equations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+    <span class="n">cir_el2</span> <span class="o">=</span> <span class="n">circuit2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cir_val2</span> <span class="o">=</span> <span class="n">circuit2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">cir_ctr2</span> <span class="o">=</span> <span class="n">circuit2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getAdarrak</span><span class="p">(</span><span class="n">cir_el2</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">Us</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">Us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">Us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;ou&quot;</span> <span class="ow">in</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;e&quot;</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getElemPosition</span><span class="p">(</span><span class="n">cir_ctr2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_el2</span><span class="p">)</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;g&quot;</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getElemPosition</span><span class="p">(</span><span class="n">cir_ctr2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_el2</span><span class="p">)</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getElemPosition</span><span class="p">(</span><span class="n">cir_ctr2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_el2</span><span class="p">)</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*-</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">zl1</span><span class="o">.</span><span class="n">getElemPosition</span><span class="p">(</span><span class="n">cir_ctr2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cir_el2</span><span class="p">)</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>
+            <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">Us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span>
+            <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">Us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;k&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;be&quot;</span> <span class="ow">in</span> <span class="n">cir_el2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">Us</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">N</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">cir_val2</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">Us</span><span class="p">]</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">ZLEL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../zlel_main.html">zlel_main module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../zlel.html">zlel package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Eneko Aranburu (earanburu006@ikasle.ehu.eus), Alvaro Beltran (abeltrandenanc002@ikasle.ehu.eus).
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

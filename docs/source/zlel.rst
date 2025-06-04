@@ -32,3 +32,11 @@ zlel.zlel\_p4 module
    :members:
    :show-inheritance:
    :undoc-members:
+
+zlel.zlel\_p5 module
+--------------------
+
+.. automodule:: zlel.zlel_p5
+   :members:
+   :show-inheritance:
+   :undoc-members:

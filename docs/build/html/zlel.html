@@ -1007,6 +1007,62 @@ csv format into the file making the transient analysis.</p>
 </dd></dl>
 
 </section>
+<section id="module-zlel.zlel_p5">
+<span id="zlel-zlel-p5-module"></span><h2>zlel.zlel_p5 module<a class="headerlink" href="#module-zlel.zlel_p5" title="Link to this heading">¶</a></h2>
+<dl class="py function" id="module-0">
+<dt class="sig sig-object py" id="zlel.zlel_p5.getMNUs">
+<span class="sig-prename descclassname"><span class="pre">zlel.zlel_p5.</span></span><span class="sig-name descname"><span class="pre">getMNUs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p5.html#getMNUs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p5.getMNUs" title="Link to this definition">¶</a></dt>
+<dd><dl>
+<dt>Gives M, N and Us matrixes thath will be used in Tableau equations:</dt><dd><p>M*v + N*i = Us</p>
+</dd>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">b : Integer with the number of branches in the circuit</div>
+<div class="line">cir_el_luz : extended np array of strings with the elements to parse.</div>
+<div class="line">size(b,1)</div>
+<div class="line">cir_val_luz : extended np array with the values of the elements.</div>
+<div class="line">size(b,3)</div>
+<div class="line">cir_ctr_luz : extended np array of strings with the element which</div>
+<div class="line">branch controls the controlled sources. size(b,1)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">M : np array that contains the first matrix of Tableau equations.</div>
+<div class="line">N : np array that contains the second matrix of Tableau equations.</div>
+<div class="line">size(b,b)</div>
+<div class="line">Us : np array that contains the third matrix of Tableau equations.</div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="zlel.zlel_p5.luzatu_cir">
+<span class="sig-prename descclassname"><span class="pre">zlel.zlel_p5.</span></span><span class="sig-name descname"><span class="pre">luzatu_cir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/zlel/zlel_p5.html#luzatu_cir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#zlel.zlel_p5.luzatu_cir" title="Link to this definition">¶</a></dt>
+<dd><p>Expands circuit matrices to handle multi-branch elements like transistors
+and controlled sources.</p>
+<dl>
+<dt>Args:</dt><dd><div class="line-block">
+<div class="line">circuit: list of np.arrays
+| - cir_el: np array of strings with the elements to parse.
+| size(1,b)
+| - cir_nd: np array with the nodes to the circuit. size(b,4)
+| - cir_val: np array with the values of the elements. size(b,3)
+| - cir_ctrl: np array of strings with the element which branch
+| controls the controlled sources. size(1,b)</div>
+</div>
+</dd>
+<dt>Returns:</dt><dd><div class="line-block">
+<div class="line">Tuple of np.arrays:
+| - cir_el2: expanded element names
+| - cir_nd2: expanded node definitions
+| - cir_val2: expanded values
+| - cir_ctrl2: expanded controls</div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -1034,6 +1090,7 @@ csv format into the file making the transient analysis.</p>
 <li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p2">zlel.zlel_p2 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p3">zlel.zlel_p3 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p4">zlel.zlel_p4 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-zlel.zlel_p5">zlel.zlel_p5 module</a></li>
 </ul>
 </li>
 </ul>
