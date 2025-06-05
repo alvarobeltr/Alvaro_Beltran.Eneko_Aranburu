@@ -46,11 +46,19 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
+<<<<<<< HEAD
         filename = "cirs/all/4_zlel_q_aktibo.cir"
 
     cp = zl2.cir_parser(filename)
     circuit = zl5.luzatu_cir(cp)
     pp = zl1.cir_parser(filename)
+=======
+        filename = "cirs/all/4_zlel_q_asetasun.cir"
+
+    cp = zl2.cir_parser(filename)
+    circuit = zl5.luzatu_cir(cp)
+    # pp = zl1.cir_parser(filename)
+>>>>>>> cc8100a8581571606a02247cc6c8835270729296
     nodes = zl1.getNodes(circuit[1])
     zl1.ErreferentziNodoa(nodes)
     b = zl2.getAdarrak(circuit[0])
@@ -85,5 +93,9 @@ if __name__ == "__main__":
     if op[".TR"][0]:
         start, end, step = op[".TR"][1]
         zl4.save_as_csv_tr(b, n, filename, MNUs, circuit, start, end, step, op)
+<<<<<<< HEAD
         csv_path = zl2.save_sim_output(filename, "sims", ".tr")
         zl2.plot_from_cvs(csv_path, "t", "i2", "Transient analysis")
+=======
+    
+>>>>>>> cc8100a8581571606a02247cc6c8835270729296

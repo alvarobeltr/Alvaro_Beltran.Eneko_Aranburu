@@ -608,17 +608,19 @@ if __name__ == "__main__":
     nodes = zl1.getNodes(circuit[1])
     el_num = zl1.getEl_num(cp[0])
     MNUs = getMNUs(circuit)
+    Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
+    A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
     # Verificar qué simulaciones ejecutar
     if op[".OP"]:
         print("Realizar análisis de punto de operación (OP)")
-        Aa = zl1.getInzidentziaMatrix(n, b, circuit[1])
-        A = zl1.getMurriztutakoIntzidentziaMatrix(Aa, n)
 
         sol = Tableau(A, MNUs[0], MNUs[1], MNUs[2])
         print_solution(sol, b, n)
     if op[".PR"]:
         print("Realizar impresión de información (PR)")
         zl1.print_cir_info(circuit[0], circuit[1], b, n, nodes, el_num)
+        print("\nIncidence Matrix: ")
+        print(Aa)
 
     if op[".DC"][0]:  # El primer valor indica si se debe hacer la simulación
         start, end, step = op[".DC"][1]

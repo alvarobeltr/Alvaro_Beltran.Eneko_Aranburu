@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 """
+<<<<<<< HEAD
 Created on Wed Jun  4 13:01:51 2025
 
 @author:
 """
 
 import numpy as np
+import sys
 
 if __name__ == "zlel.zlel_p5":
     import zlel.zlel_p1 as zl1
+    import zlel.zlel_p2 as zl2
 else:
     import zlel_p1 as zl1
+    import zlel_p2 as zl2
 
 
 def luzatu_cir(circuit):
@@ -49,12 +53,20 @@ def luzatu_cir(circuit):
             cir_val2 += [cir_val[i], cir_val[i]]
             cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
 
-        # elif element[0].lower() == "k":
-        #     cir_el2 += [[element + "_be"], [element + "_ce"]]
-        #     cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0],
-        #                 [cir_nd[i][0], cir_nd[i][2], 0, 0]]
-        #     cir_val2 += [cir_val[i], cir_val[i]]
-        #     cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
+        elif element[0].lower() == "k":
+            cir_el2 += [[element + "_be"], [element + "_ce"]]
+            cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0],
+                        [cir_nd[i][0], cir_nd[i][2], 0, 0]]
+            cir_val2 += [cir_val[i], cir_val[i]]
+            cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
+
+        elif element[0].lower() == "m":
+            # Expand transistor into two pseudo-branches
+            cir_el2 += [[element + "_be"], [element + "_ce"]]
+            cir_nd2 += [[cir_nd[i][1], cir_nd[i][2], 0, 0],
+                        [cir_nd[i][0], cir_nd[i][2], 0, 0]]
+            cir_val2 += [cir_val[i], cir_val[i]]
+            cir_ctr2 += [cir_ctr[i], cir_ctr[i]]
 
         elif element[0].lower() == "a":
             # Expand controlled source into input/output components
@@ -103,7 +115,7 @@ def getMNUs(circuit2):
     cir_el2 = circuit2[0]
     cir_val2 = circuit2[2]
     cir_ctr2 = circuit2[3]
-    b = zl1.getAdarrak(cir_el2)
+    b = zl2.getAdarrak(cir_el2)
     M = np.zeros((b, b), dtype=float)
     N = np.zeros((b, b), dtype=float)
     Us = np.zeros((b, 1), dtype=float)
@@ -123,19 +135,19 @@ def getMNUs(circuit2):
             else:
                 N[i][i] = 1
         elif cir_el2[i, 0][0].lower() == "e":
-            j = zl1.getElemPosition(cir_ctr2[i], cir_el2)
+            j = zl2.getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
             M[i][j] = cir_val2[i][0]*(-1)
         elif cir_el2[i, 0][0].lower() == "g":
-            j = zl1.getElemPosition(cir_ctr2[i], cir_el2)
+            j = zl2.getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
             M[i][j] = -cir_val2[i][0]
         elif cir_el2[i, 0][0].lower() == "f":
-            j = zl1.getElemPosition(cir_ctr2[i], cir_el2)
+            j = zl2.getElemPosition(cir_ctr2[i], cir_el2)
             N[i][i] = 1
             N[i][j] = cir_val2[i][0]*-1
         elif cir_el2[i, 0][0].lower() == "h":
-            j = zl1.getElemPosition(cir_ctr2[i], cir_el2)
+            j = zl2.getElemPosition(cir_ctr2[i], cir_el2)
             M[i][i] = 1
             N[i][j] = -cir_val2[i][0]
         elif cir_el2[i, 0][0].lower() == "b":
@@ -144,13 +156,32 @@ def getMNUs(circuit2):
         elif cir_el2[i, 0][0].lower() == "y":
             N[i][i] = 1
             Us[i] = cir_val2[i][0]
-        # elif cir_el2[i, 0][0].lower() == "k":
-        #     if "be" in cir_el2[i, 0].lower():
-        #         M[i][i] = 1
-        #         N[i][i] = -cir_val2[i][1]
-        #         Us[i] = cir_val2[i][0]
-        #     else:
-        #         N[i][i] = 1
-        #         N[i][i-1] = -cir_val2[i][2]
+        elif cir_el2[i, 0][0].lower() == "k":
+            if "be" in cir_el2[i, 0].lower():
+                M[i][i] = 1
+                N[i][i] = -cir_val2[i][1]
+                Us[i] = cir_val2[i][0]
+            else:
+                N[i][i] = 1
+                N[i][i-1] = -cir_val2[i][2]
+        elif cir_el2[i, 0][0].lower() == "m":
+            name = cir_el2[i, 0].lower()
+            if "be" in name:
+                v0 = cir_val2[i][0]
+                Rbb = cir_val2[i][1]
+                N[i][i] = -Rbb
+                M[i][i] = 1
+                Us[i] = v0
+            elif "ce" in name:
+                Rsat = cir_val2[i][2]
+                M[i][i] = 1
+                N[i][i] = -Rsat
 
     return [M, N, Us]
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    else:
+        filename = "cirs/all/1_zlel_anpli.cir"
